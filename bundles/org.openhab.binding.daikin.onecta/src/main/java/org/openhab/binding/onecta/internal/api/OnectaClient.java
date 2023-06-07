@@ -1,7 +1,5 @@
 package org.openhab.binding.onecta.internal.api;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -18,6 +16,7 @@ import org.eclipse.jetty.http.HttpMethod;
 import org.openhab.binding.onecta.internal.api.dto.authentication.ReqAuthenticationRoot;
 import org.openhab.binding.onecta.internal.api.dto.authentication.RespAuthenticationRoot;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
+import org.openhab.binding.onecta.internal.api.dto.units.Units;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,11 +36,10 @@ public class OnectaClient {
     private String refreshToken = "";
     private String clientId = "";
 
+    private Units onectaData = new Units();
     private HttpClient httpClient;
 
     private RespAuthenticationRoot respAuthenticationRoot = new RespAuthenticationRoot();
-
-    private List<Unit> units = new ArrayList<>();
 
     public OnectaClient(HttpClient httpClient) {
         this.httpClient = httpClient;
@@ -79,7 +77,7 @@ public class OnectaClient {
         }
     }
 
-    public List<Unit> fetchOnectaData() {
+    public Units fetchOnectaData() {
 
         Response response;
         try {
@@ -93,17 +91,13 @@ public class OnectaClient {
 
             JsonArray jsonArray = JsonParser.parseString(((HttpContentResponse) response).getContentAsString())
                     .getAsJsonArray();
-            JsonObject jsonResponse2 = jsonArray.get(0).getAsJsonObject();
-
+            onectaData.getUnits().clear();
             for (int i = 0; i < jsonArray.size(); i++) {
-                units.add(Objects.requireNonNull(new Gson().fromJson(jsonArray.get(i).getAsJsonObject(), Unit.class)));
+                onectaData.getUnits().add(
+                        Objects.requireNonNull(new Gson().fromJson(jsonArray.get(i).getAsJsonObject(), Unit.class)));
             }
 
-            // onectaDataRoot.units = Objects
-            // .requireNonNull(new Gson().fromJson(jsonArray.getAsJsonArray(), Unit.class));
-
-            logger.warn("log ...");
-            return units;
+            return onectaData;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (TimeoutException e) {
@@ -125,7 +119,7 @@ public class OnectaClient {
         return !respAuthenticationRoot.getAuthenticationResult().getAccessToken().isBlank();
     }
 
-    public List<Unit> getUnits() {
-        return units;
+    public Units getOnectaData() {
+        return onectaData;
     }
 }

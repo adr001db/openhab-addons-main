@@ -10,14 +10,17 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.onecta.internal;
+package org.openhab.binding.onecta.internal.device;
 
 import static org.openhab.binding.onecta.internal.OnectaBindingConstants.CHANNEL_1;
 
+import java.util.Objects;
 import java.util.concurrent.ScheduledFuture;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.openhab.binding.onecta.internal.OnectaConfiguration;
+import org.openhab.binding.onecta.internal.api.dto.units.Unit;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingStatus;
@@ -91,6 +94,8 @@ public class OnectaDeviceHandler extends BaseThingHandler {
             }
         });
 
+        thing.setProperty("name", "");
+
         // These logging types should be primarily used by bindings
         // logger.trace("Example trace message");
         // logger.debug("Example debug message");
@@ -104,5 +109,15 @@ public class OnectaDeviceHandler extends BaseThingHandler {
         // Add a description to give user information to understand why thing does not work as expected. E.g.
         // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
         // "Can not access device as username and/or password are invalid");
+    }
+
+    public void setUnit(Unit unit) {
+        if (!Objects.isNull(unit)) {
+            getThing().setLabel(
+                    String.format("Daikin Onecta Unit (%s)", unit.getManagementPoints()[1].getName().getValue()));
+            getThing().setProperty("name", unit.getManagementPoints()[1].getName().getValue());
+        } else {
+            getThing().setProperty("name", "Unit not available at Onecta, unitID does not exists.");
+        }
     }
 }

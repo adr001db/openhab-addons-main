@@ -10,42 +10,52 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.onecta.internal;
+package org.openhab.binding.onecta.internal.bridge;
 
-import static org.openhab.binding.onecta.internal.OnectaBindingConstants.*;
+import static org.openhab.binding.onecta.internal.OnectaBindingConstants.CHANNEL_1;
+import static org.openhab.binding.onecta.internal.OnectaBindingConstants.DEVICE_THING_TYPE;
 
+import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.openhab.core.library.types.StringType;
+import org.eclipse.jetty.client.HttpClient;
+import org.openhab.binding.onecta.internal.OnectaConfiguration;
+import org.openhab.binding.onecta.internal.api.OnectaClient;
+import org.openhab.binding.onecta.internal.api.dto.units.Unit;
+import org.openhab.binding.onecta.internal.device.OnectaDeviceHandler;
+import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingStatus;
-import org.openhab.core.thing.binding.BaseThingHandler;
+import org.openhab.core.thing.binding.BaseBridgeHandler;
 import org.openhab.core.types.Command;
 import org.openhab.core.types.RefreshType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link OnectaHandler} is responsible for handling commands, which are
+ * The {@link OnectaBridgeHandler} is responsible for handling commands, which are
  * sent to one of the channels.
  *
  * @author Alexander Drent - Initial contribution
  */
 @NonNullByDefault
-public class OnectaHandler extends BaseThingHandler {
+public class OnectaBridgeHandler extends BaseBridgeHandler {
     public static final String CHANNEL_AC_HOMEKITMODE = "homekitmode";
-    private final Logger logger = LoggerFactory.getLogger(OnectaHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(OnectaBridgeHandler.class);
 
     private @Nullable OnectaConfiguration config;
 
     private @Nullable ScheduledFuture<?> pollingJob;
 
-    public OnectaHandler(Thing thing) {
-        super(thing);
+    private OnectaClient onectaClient;
+
+    public OnectaBridgeHandler(Bridge bridge, HttpClient httpClient) {
+        super(bridge);
+        this.onectaClient = new OnectaClient(httpClient);
     }
 
     @Override
@@ -81,10 +91,14 @@ public class OnectaHandler extends BaseThingHandler {
         // the framework is then able to reuse the resources from the thing handler initialization.
         // we set this upfront to reliably check status updates in unit tests.
         updateStatus(ThingStatus.UNKNOWN);
+        onectaClient.setClientId(thing.getConfiguration().get("clientId").toString());
+        onectaClient.setRefreshToken(thing.getConfiguration().get("refreshToken").toString());
 
         // Example for background initialization:
         scheduler.execute(() -> {
-            boolean thingReachable = true; // <background task with long running initialization here>
+            onectaClient.fetchAccessToken();
+            boolean thingReachable = onectaClient.isConnected(); // <background task with long running initialization
+                                                                 // here>
             // when done do:
             if (thingReachable) {
                 updateStatus(ThingStatus.ONLINE);
@@ -92,7 +106,7 @@ public class OnectaHandler extends BaseThingHandler {
                 updateStatus(ThingStatus.OFFLINE);
             }
         });
-        pollingJob = scheduler.scheduleWithFixedDelay(this::pollingCode, 60,
+        pollingJob = scheduler.scheduleWithFixedDelay(this::pollDevices, 10,
                 Integer.parseInt(thing.getConfiguration().get("refreshInterval").toString()), TimeUnit.SECONDS);
 
         // These logging types should be primarily used by bindings
@@ -112,33 +126,48 @@ public class OnectaHandler extends BaseThingHandler {
 
     @Override
     public void dispose() {
+        logger.debug("Handler disposed.");
+        ScheduledFuture<?> pollingJob = this.pollingJob;
         if (pollingJob != null) {
             pollingJob.cancel(true);
-            pollingJob = null;
+            this.pollingJob = null;
         }
     }
 
-    private void pollingCode() {
-        int a = 1 + 1;
-        updateState(CHANNEL_AC_HOMEKITMODE, new StringType(HomekitMode.HEAT.getValue()));
-        // updateState("sample-channel", DecimalType.valueOf("-1"));
-    }
+    private void pollDevices() {
 
-    public enum HomekitMode {
-        AUTO("auto"),
-        COOL("cool"),
-        HEAT("heat"),
-        OFF("off");
+        onectaClient.fetchAccessToken();
+        onectaClient.fetchOnectaData();
 
-        private static final Logger LOGGER = LoggerFactory.getLogger(HomekitMode.class);
-        private final String value;
-
-        HomekitMode(String value) {
-            this.value = value;
+        if (onectaClient.isConnected()) {
+            if (thing.getConfiguration().get("showAvailableUnitsInLog").toString() == "true") {
+                List<Unit> units = onectaClient.getOnectaData().getUnits();
+                for (Unit unit : units) {
+                    logger.info("Available Daikin unit UID : '{}' - '{}' .", unit.getId(),
+                            unit.getManagementPoints()[1].getName().getValue());
+                }
+            }
+        } else {
+            updateStatus(ThingStatus.OFFLINE);
         }
 
-        public String getValue() {
-            return value;
+        List<Thing> things = getThing().getThings();
+
+        for (Thing t : things) {
+
+            if (!t.getThingTypeUID().equals(DEVICE_THING_TYPE)) {
+                continue;
+            }
+
+            OnectaDeviceHandler handler = (OnectaDeviceHandler) t.getHandler();
+            if (handler == null) {
+                logger.trace("no handler for thing: {}", t.getUID());
+                continue;
+            }
+            Unit unit = onectaClient.getOnectaData()
+                    .findById(handler.getThing().getConfiguration().get("unitID").toString());
+            handler.setUnit(unit);
+
         }
     }
 }

@@ -22,6 +22,12 @@
 				<description>Interval the device is polled in seconds.</description>
 				<default>60</default>
 			</parameter>
+			<parameter name="showAvailableUnitsInLog" type="boolean">
+				<label>Show Available Units</label>
+				<description>Show available units info in log</description>
+				<default>true</default>
+			</parameter>
+
 		</config-description>
 	</bridge-type>
 </thing:thing-descriptions>
