@@ -1,12 +1,24 @@
 package org.openhab.binding.onecta.internal.api.dto.units;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.gson.annotations.SerializedName;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Ing {
-    private double[] d;
-    private double[] w;
-    private double[] m;
+    @SerializedName("d")
+    private String[] day;
+    @SerializedName("w")
+    private String[] week;
+    @SerializedName("m")
+    private String[] month;
+
+    public String[] getDay() {
+        return day;
+    }
+
+    public String[] getWeek() {
+        return week;
+    }
+
+    public String[] getMonth() {
+        return month;
+    }
 }

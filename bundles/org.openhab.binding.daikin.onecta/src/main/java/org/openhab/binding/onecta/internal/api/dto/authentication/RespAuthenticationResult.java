@@ -1,16 +1,19 @@
 package org.openhab.binding.onecta.internal.api.dto.authentication;
 
+import org.eclipse.jdt.annotation.NonNullByDefault;
+
 import com.google.gson.annotations.SerializedName;
 
+@NonNullByDefault
 public class RespAuthenticationResult {
     @SerializedName("AccessToken")
-    public String accessToken;
+    private String accessToken = "";
     @SerializedName("ExpiresIn")
-    public int expiresIn;
+    private int expiresIn;
     @SerializedName("IdToken")
-    public String idToken;
+    private String idToken = "";
     @SerializedName("TokenType")
-    public String tokenType;
+    private String tokenType = "";
 
     public String getAccessToken() {
         return accessToken;

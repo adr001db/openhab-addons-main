@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class ReqAuthenticationRoot {
     @SerializedName("ClientId")
-    public String clientId;
+    private String clientId;
     @SerializedName("AuthFlow")
-    public String authFlow;
+    private String authFlow;
     @SerializedName("AuthParameters")
-    public ReqAuthParameters authParameters;
+    private ReqAuthParameters authParameters;
 
     public ReqAuthenticationRoot(String clientId, String refreshToken) {
         this.clientId = clientId;

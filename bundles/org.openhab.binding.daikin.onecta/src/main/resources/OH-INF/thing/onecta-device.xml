@@ -57,6 +57,15 @@
 				<label>Unit ID</label>
 				<description>Diakin unit</description>
 			</parameter>
+
+			<parameter name="gridCompanyGLN" type="text" required="false">
+				<label>Grid Company GLN</label>
+				<description>Global Location Number of the grid company.</description>
+				<options>
+					<option value="5790001089030">N1 A/S - 131</option>
+					<option value="5790000610877">Nord Energi Net</option>
+				</options>
+			</parameter>
 		</config-description>
 	</thing-type>
 

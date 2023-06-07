@@ -1,12 +1,24 @@
 package org.openhab.binding.onecta.internal.api.dto.units;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.gson.annotations.SerializedName;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Name {
+    @SerializedName("settable")
     private boolean settable;
-    private long maxLength;
+    @SerializedName("maxLength")
+    private Integer maxLength;
+    @SerializedName("value")
     private String value;
+
+    public boolean isSettable() {
+        return settable;
+    }
+
+    public Integer getMaxLength() {
+        return maxLength;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

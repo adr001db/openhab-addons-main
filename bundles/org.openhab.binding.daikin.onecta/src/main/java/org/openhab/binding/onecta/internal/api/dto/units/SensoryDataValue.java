@@ -1,12 +1,24 @@
 package org.openhab.binding.onecta.internal.api.dto.units;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.gson.annotations.SerializedName;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SensoryDataValue {
+    @SerializedName("roomTemperature")
     private IconID roomTemperature;
+    @SerializedName("roomHumidity")
     private IconID roomHumidity;
+    @SerializedName("outdoorTemperature")
     private IconID outdoorTemperature;
+
+    public IconID getRoomTemperature() {
+        return roomTemperature;
+    }
+
+    public IconID getRoomHumidity() {
+        return roomHumidity;
+    }
+
+    public IconID getOutdoorTemperature() {
+        return outdoorTemperature;
+    }
 }

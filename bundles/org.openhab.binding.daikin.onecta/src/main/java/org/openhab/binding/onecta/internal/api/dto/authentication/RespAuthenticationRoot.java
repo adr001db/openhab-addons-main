@@ -1,16 +1,19 @@
 package org.openhab.binding.onecta.internal.api.dto.authentication;
 
+import org.eclipse.jdt.annotation.NonNullByDefault;
+
 import com.google.gson.annotations.SerializedName;
 
+@NonNullByDefault
 public class RespAuthenticationRoot {
     @SerializedName("AuthenticationResult")
-    public RespAuthenticationResult respAuthenticationResult;
+    private RespAuthenticationResult respAuthenticationResult = new RespAuthenticationResult();
     @SerializedName("ChallengeParameters")
-    public RespChallengeParameters respChallengeParameters;
+    private RespChallengeParameters respChallengeParameters = new RespChallengeParameters();
     @SerializedName("__type")
-    public String __type;
+    private String __type = "";
     @SerializedName("message")
-    public String message;
+    private String message = "";
 
     public RespAuthenticationResult getAuthenticationResult() {
         return respAuthenticationResult;

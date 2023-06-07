@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class ReqAuthParameters {
     @SerializedName("REFRESH_TOKEN")
-    public String refreshToken;
+    private String refreshToken;
 
     public ReqAuthParameters(String refreshToken) {
         this.refreshToken = refreshToken;

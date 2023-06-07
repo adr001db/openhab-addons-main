@@ -1,19 +1,28 @@
 package org.openhab.binding.onecta.internal.api;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.HttpContentResponse;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.client.api.Request;
+import org.eclipse.jetty.client.api.Response;
 import org.eclipse.jetty.client.util.StringContentProvider;
+import org.eclipse.jetty.http.HttpHeader;
+import org.eclipse.jetty.http.HttpMethod;
 import org.openhab.binding.onecta.internal.api.dto.authentication.ReqAuthenticationRoot;
 import org.openhab.binding.onecta.internal.api.dto.authentication.RespAuthenticationRoot;
+import org.openhab.binding.onecta.internal.api.dto.units.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -30,15 +39,15 @@ public class OnectaClient {
 
     private HttpClient httpClient;
 
-    private static RespAuthenticationRoot respAuthenticationRoot;
+    private RespAuthenticationRoot respAuthenticationRoot = new RespAuthenticationRoot();
 
-    public OnectaClient(HttpClient httpClient, String clientId, String refreshToken) {
+    private List<Unit> units = new ArrayList<>();
+
+    public OnectaClient(HttpClient httpClient) {
         this.httpClient = httpClient;
-        this.clientId = clientId;
-        this.refreshToken = refreshToken;
     }
 
-    public void getAccessToken() {
+    public void fetchAccessToken() {
 
         respAuthenticationRoot = new RespAuthenticationRoot();
         ReqAuthenticationRoot reqAuthenticationRoot = new ReqAuthenticationRoot(this.clientId, this.refreshToken);
@@ -55,8 +64,8 @@ public class OnectaClient {
         try {
             response = request.send();
             JsonObject jsonResponse = JsonParser.parseString(response.getContentAsString()).getAsJsonObject();
-            respAuthenticationRoot = (RespAuthenticationRoot) new Gson().fromJson(jsonResponse.getAsJsonObject(),
-                    RespAuthenticationRoot.class);
+            respAuthenticationRoot = Objects
+                    .requireNonNull(new Gson().fromJson(jsonResponse.getAsJsonObject(), RespAuthenticationRoot.class));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (TimeoutException e) {
@@ -64,8 +73,44 @@ public class OnectaClient {
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
+        if (!isConnected()) {
+            logger.warn("Not connected to Daikin Onecta: Type '{}' - Message '{}' .",
+                    respAuthenticationRoot.get__type(), respAuthenticationRoot.getMessage());
+        }
+    }
 
-        logger.info(respAuthenticationRoot.getAuthenticationResult().getAccessToken());
+    public List<Unit> fetchOnectaData() {
+
+        Response response;
+        try {
+            response = httpClient.newRequest("https://api.prod.unicloud.edc.dknadmin.be/v1/gateway-devices")
+                    .method(HttpMethod.GET)
+                    .header(HttpHeader.AUTHORIZATION,
+                            String.format("%s %s", respAuthenticationRoot.getAuthenticationResult().getTokenType(),
+                                    respAuthenticationRoot.getAuthenticationResult().getAccessToken()))
+                    .header(HttpHeader.USER_AGENT, "Daikin/1.6.1.4681 CFNetwork/1209 Darwin/20.2.0")
+                    .header("x-api-key", "xw6gvOtBHq5b1pyceadRp6rujSNSZdjx2AqT03iC").send();
+
+            JsonArray jsonArray = JsonParser.parseString(((HttpContentResponse) response).getContentAsString())
+                    .getAsJsonArray();
+            JsonObject jsonResponse2 = jsonArray.get(0).getAsJsonObject();
+
+            for (int i = 0; i < jsonArray.size(); i++) {
+                units.add(Objects.requireNonNull(new Gson().fromJson(jsonArray.get(i).getAsJsonObject(), Unit.class)));
+            }
+
+            // onectaDataRoot.units = Objects
+            // .requireNonNull(new Gson().fromJson(jsonArray.getAsJsonArray(), Unit.class));
+
+            logger.warn("log ...");
+            return units;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void setClientId(String clientId) {
@@ -74,5 +119,13 @@ public class OnectaClient {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public Boolean isConnected() {
+        return !respAuthenticationRoot.getAuthenticationResult().getAccessToken().isBlank();
+    }
+
+    public List<Unit> getUnits() {
+        return units;
     }
 }

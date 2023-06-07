@@ -22,6 +22,7 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jetty.client.HttpClient;
 import org.openhab.binding.onecta.internal.api.OnectaClient;
+import org.openhab.binding.onecta.internal.api.dto.units.Unit;
 import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
@@ -51,10 +52,7 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
 
     public OnectaBridgeHandler(Bridge bridge, HttpClient httpClient) {
         super(bridge);
-        this.onectaClient = new OnectaClient(httpClient, thing.getConfiguration().get("clientId").toString(),
-                thing.getConfiguration().get("refreshToken").toString());
-        // onectaClient.setClientId(thing.getConfiguration().get("clientId").toString());
-        // onectaClient.setRefreshToken(thing.getConfiguration().get("refreshToken").toString());
+        this.onectaClient = new OnectaClient(httpClient);
     }
 
     @Override
@@ -90,10 +88,14 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
         // the framework is then able to reuse the resources from the thing handler initialization.
         // we set this upfront to reliably check status updates in unit tests.
         updateStatus(ThingStatus.UNKNOWN);
+        onectaClient.setClientId(thing.getConfiguration().get("clientId").toString());
+        onectaClient.setRefreshToken(thing.getConfiguration().get("refreshToken").toString());
 
         // Example for background initialization:
         scheduler.execute(() -> {
-            boolean thingReachable = true; // <background task with long running initialization here>
+            onectaClient.fetchAccessToken();
+            boolean thingReachable = onectaClient.isConnected(); // <background task with long running initialization
+                                                                 // here>
             // when done do:
             if (thingReachable) {
                 updateStatus(ThingStatus.ONLINE);
@@ -131,7 +133,19 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
 
     private void pollDevices() {
 
-        onectaClient.getAccessToken();
+        onectaClient.fetchAccessToken();
+        onectaClient.fetchOnectaData();
+
+        if (onectaClient.isConnected()) {
+            List<Unit> units = onectaClient.getUnits();
+            for (int i = 0; i < units.size(); i++) {
+                logger.info("Available unit UID : '{}' - '{}' .", units.get(i).getId(),
+                        units.get(i).getManagementPoints()[1].getName().getValue());
+            }
+        } else {
+            updateStatus(ThingStatus.OFFLINE);
+        }
+
         List<Thing> things = getThing().getThings();
 
         for (Thing t : things) {

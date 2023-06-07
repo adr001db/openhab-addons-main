@@ -1,12 +1,24 @@
 package org.openhab.binding.onecta.internal.api.dto.units;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.gson.annotations.SerializedName;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Electrical {
+    @SerializedName("unit")
     private String unit;
+    @SerializedName("heating")
     private Ing heating;
+    @SerializedName("cooling")
     private Ing cooling;
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public Ing getHeating() {
+        return heating;
+    }
+
+    public Ing getCooling() {
+        return cooling;
+    }
 }

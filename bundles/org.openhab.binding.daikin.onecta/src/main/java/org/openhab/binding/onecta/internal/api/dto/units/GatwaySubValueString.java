@@ -2,23 +2,23 @@ package org.openhab.binding.onecta.internal.api.dto.units;
 
 import com.google.gson.annotations.SerializedName;
 
-public class SensoryData {
-    @SerializedName("ref")
-    private String ref;
+public class GatwaySubValueString {
     @SerializedName("settable")
     private boolean settable;
     @SerializedName("value")
-    private SensoryDataValue value;
-
-    public String getRef() {
-        return ref;
-    }
+    private String value;
+    @SerializedName("values")
+    private String[] values;
 
     public boolean isSettable() {
         return settable;
     }
 
-    public SensoryDataValue getValue() {
+    public String getValue() {
         return value;
+    }
+
+    public String[] getValues() {
+        return values;
     }
 }
