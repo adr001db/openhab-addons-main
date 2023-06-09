@@ -16,7 +16,7 @@ public class RespAuthenticationResult {
     private String tokenType = "";
 
     public String getAccessToken() {
-        return accessToken;
+        return !accessToken.isEmpty() ? accessToken : "Something";
     }
 
     public int getExpiresIn() {

@@ -42,5 +42,9 @@ public class OnectaBindingConstants {
 
     // List of all Channel ids
     public static final String CHANNEL_1 = "channel1";
-    public static final String HOMEKITMODE = "homekitmode";
+    public static final String CHANNEL_AC_TEMP = "settemp";
+    public static final String CHANNEL_INDOOR_TEMP = "indoortemp";
+    public static final String CHANNEL_OUTDOOR_TEMP = "outdoortemp";
+    public static final String CHANNEL_AC_POWER = "power";
+    public static final String CHANNEL_AC_OPERATIONMODE = "operationmode";
 }

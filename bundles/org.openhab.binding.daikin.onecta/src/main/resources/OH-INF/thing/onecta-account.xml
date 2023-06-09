@@ -10,20 +10,20 @@
 
 		<config-description>
 			<parameter name="clientId" type="text" required="true">
-				<label>Client Id</label>
+				<label>Client Id.</label>
 				<description>Client Id from the user profile page. .... </description>
 			</parameter>
 			<parameter name="refreshToken" type="text" required="true">
-				<label>Refresh token</label>
+				<label>Refresh token.</label>
 				<description>Refresh token from the user profile page. .... </description>
 			</parameter>
-			<parameter name="refreshInterval" type="integer" unit="s" min="10">
-				<label>Refresh Interval</label>
+			<parameter name="refreshInterval" type="integer" unit="s" min="5">
+				<label>Refresh Interval.</label>
 				<description>Interval the device is polled in seconds.</description>
 				<default>60</default>
 			</parameter>
 			<parameter name="showAvailableUnitsInLog" type="boolean">
-				<label>Show Available Units</label>
+				<label>Show Available Units.</label>
 				<description>Show available units info in log</description>
 				<default>true</default>
 			</parameter>

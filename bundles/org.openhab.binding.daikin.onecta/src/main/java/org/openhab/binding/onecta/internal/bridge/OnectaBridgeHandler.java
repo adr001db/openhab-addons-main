@@ -25,7 +25,9 @@ import org.eclipse.jetty.client.HttpClient;
 import org.openhab.binding.onecta.internal.OnectaConfiguration;
 import org.openhab.binding.onecta.internal.api.OnectaClient;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
+import org.openhab.binding.onecta.internal.api.dto.units.Units;
 import org.openhab.binding.onecta.internal.device.OnectaDeviceHandler;
+import org.openhab.binding.onecta.internal.excetion.DaikinCommunicationException;
 import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
@@ -52,6 +54,26 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
     private @Nullable ScheduledFuture<?> pollingJob;
 
     private OnectaClient onectaClient;
+
+    private Units units = new Units();
+
+    public Units getUnits() {
+        return units;
+    }
+
+    private @Nullable DeviceDiscoveryService deviceDiscoveryService;
+
+    /**
+     * Defines a runnable for a discovery
+     */
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (deviceDiscoveryService != null) {
+                deviceDiscoveryService.discoverDevices();
+            }
+        }
+    };
 
     public OnectaBridgeHandler(Bridge bridge, HttpClient httpClient) {
         super(bridge);
@@ -95,19 +117,20 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
         onectaClient.setRefreshToken(thing.getConfiguration().get("refreshToken").toString());
 
         // Example for background initialization:
-        scheduler.execute(() -> {
-            onectaClient.fetchAccessToken();
-            boolean thingReachable = onectaClient.isConnected(); // <background task with long running initialization
-                                                                 // here>
-            // when done do:
-            if (thingReachable) {
-                updateStatus(ThingStatus.ONLINE);
-            } else {
-                updateStatus(ThingStatus.OFFLINE);
-            }
-        });
+        // scheduler.execute(() -> {
+        try {
+            units = onectaClient.getUnits();
+            updateStatus(ThingStatus.ONLINE);
+        } catch (DaikinCommunicationException e) {
+            updateStatus(ThingStatus.OFFLINE);
+        }
+        //
+        // });
         pollingJob = scheduler.scheduleWithFixedDelay(this::pollDevices, 10,
                 Integer.parseInt(thing.getConfiguration().get("refreshInterval").toString()), TimeUnit.SECONDS);
+
+        // Trigger discovery of Devices
+        scheduler.submit(runnable);
 
         // These logging types should be primarily used by bindings
         // logger.trace("Example trace message");
@@ -136,18 +159,16 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
 
     private void pollDevices() {
 
-        onectaClient.fetchAccessToken();
-        onectaClient.fetchOnectaData();
-
-        if (onectaClient.isConnected()) {
+        try {
+            units = onectaClient.getUnits();
             if (thing.getConfiguration().get("showAvailableUnitsInLog").toString() == "true") {
-                List<Unit> units = onectaClient.getOnectaData().getUnits();
-                for (Unit unit : units) {
+
+                for (Unit unit : units.getAll()) {
                     logger.info("Available Daikin unit UID : '{}' - '{}' .", unit.getId(),
-                            unit.getManagementPoints()[1].getName().getValue());
+                            unit.findManagementPointsById("climateControl").getName().getValue());
                 }
             }
-        } else {
+        } catch (DaikinCommunicationException e) {
             updateStatus(ThingStatus.OFFLINE);
         }
 
@@ -169,5 +190,9 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
             handler.setUnit(unit);
 
         }
+    }
+
+    public void setDiscovery(DeviceDiscoveryService deviceDiscoveryService) {
+        this.deviceDiscoveryService = deviceDiscoveryService;
     }
 }

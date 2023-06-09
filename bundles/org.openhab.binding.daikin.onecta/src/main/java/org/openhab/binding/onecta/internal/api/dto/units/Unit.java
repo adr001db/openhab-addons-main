@@ -1,5 +1,6 @@
 package org.openhab.binding.onecta.internal.api.dto.units;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.google.gson.annotations.SerializedName;
@@ -16,7 +17,7 @@ public class Unit {
     @SerializedName("isCloudConnectionUp")
     private GatwaySubValueBoolean IsCloudConnectionUp;
     @SerializedName("managementPoints")
-    private ManagementPoint[] managementPoints;
+    private List<ManagementPoint> managementPoints;
     @SerializedName("embeddedId")
     private String embeddedID;
     @SerializedName("timestamp")
@@ -42,7 +43,7 @@ public class Unit {
         return IsCloudConnectionUp;
     }
 
-    public ManagementPoint[] getManagementPoints() {
+    public List<ManagementPoint> getManagementPoints() {
         return managementPoints;
     }
 
@@ -52,5 +53,11 @@ public class Unit {
 
     public String getTimestamp() {
         return timestamp;
+    }
+
+    public ManagementPoint findManagementPointsById(String key) {
+        return managementPoints.stream()
+                .filter(managementPoint -> key.equals(managementPoint.getEmbeddedId().toString())).findFirst()
+                .orElse(null);
     }
 }

@@ -12,7 +12,7 @@
  */
 package org.openhab.binding.onecta.internal.device;
 
-import static org.openhab.binding.onecta.internal.OnectaBindingConstants.CHANNEL_1;
+import static org.openhab.binding.onecta.internal.OnectaBindingConstants.*;
 
 import java.util.Objects;
 import java.util.concurrent.ScheduledFuture;
@@ -20,7 +20,10 @@ import java.util.concurrent.ScheduledFuture;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.onecta.internal.OnectaConfiguration;
+import org.openhab.binding.onecta.internal.api.Enums.*;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
+import org.openhab.core.library.types.OnOffType;
+import org.openhab.core.library.types.StringType;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingStatus;
@@ -38,7 +41,7 @@ import org.slf4j.LoggerFactory;
  */
 @NonNullByDefault
 public class OnectaDeviceHandler extends BaseThingHandler {
-    public static final String CHANNEL_AC_HOMEKITMODE = "homekitmode";
+
     private final Logger logger = LoggerFactory.getLogger(OnectaDeviceHandler.class);
 
     private @Nullable OnectaConfiguration config;
@@ -113,9 +116,14 @@ public class OnectaDeviceHandler extends BaseThingHandler {
 
     public void setUnit(Unit unit) {
         if (!Objects.isNull(unit)) {
-            getThing().setLabel(
-                    String.format("Daikin Onecta Unit (%s)", unit.getManagementPoints()[1].getName().getValue()));
-            getThing().setProperty("name", unit.getManagementPoints()[1].getName().getValue());
+
+            getThing().setLabel(String.format("Daikin Onecta Unit (%s)",
+                    unit.findManagementPointsById("climateControl").getName().getValue()));
+            getThing().setProperty("name", unit.findManagementPointsById("climateControl").getName().getValue());
+            updateState(CHANNEL_AC_POWER,
+                    OnOffType.from(unit.findManagementPointsById("climateControl").getOnOffMode().getValue()));
+            updateState(CHANNEL_AC_OPERATIONMODE, new StringType(OperationMode
+                    .fromValue(unit.findManagementPointsById("climateControl").getOperationMode().getValue()).name()));
         } else {
             getThing().setProperty("name", "Unit not available at Onecta, unitID does not exists.");
         }

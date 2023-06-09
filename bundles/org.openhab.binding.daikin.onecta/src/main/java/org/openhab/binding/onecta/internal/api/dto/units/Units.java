@@ -10,8 +10,12 @@ public class Units {
         this.units = new ArrayList<>();
     }
 
-    public List<Unit> getUnits() {
+    public List<Unit> getAll() {
         return this.units;
+    }
+
+    public Unit get(int index) {
+        return this.units.get(index);
     }
 
     public Unit findById(String key) {
