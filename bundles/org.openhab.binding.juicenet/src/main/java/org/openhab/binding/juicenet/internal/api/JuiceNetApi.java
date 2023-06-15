@@ -55,7 +55,6 @@ public class JuiceNetApi {
     private static final String API_ACCOUNT = API_HOST + "box_pin";
     private static final String API_DEVICE = API_HOST + "box_api_secure";
 
-
     private String apiToken = "";
     private HttpClient httpClient;
     private ThingUID bridgeUID;
