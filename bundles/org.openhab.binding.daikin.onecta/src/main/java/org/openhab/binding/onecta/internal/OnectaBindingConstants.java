@@ -44,7 +44,14 @@ public class OnectaBindingConstants {
     public static final String CHANNEL_1 = "channel1";
     public static final String CHANNEL_AC_TEMP = "settemp";
     public static final String CHANNEL_INDOOR_TEMP = "indoortemp";
+    public static final String CHANNEL_INDOOR_HUMIDITY = "humidity";
+
     public static final String CHANNEL_OUTDOOR_TEMP = "outdoortemp";
     public static final String CHANNEL_AC_POWER = "power";
     public static final String CHANNEL_AC_OPERATIONMODE = "operationmode";
+    public static final String CHANNEL_AC_NAME = "name";
+    public static final String CHANNEL_AC_FANSPEED = "fanspeed";
+    public static final String CHANNEL_AC_FANMOVEMENT_HOR = "fandirhor";
+    public static final String CHANNEL_AC_FANMOVEMENT_VER = "fandirver";
+    public static final String CHANNEL_AC_FANMOVEMENT = "fandir";
 }

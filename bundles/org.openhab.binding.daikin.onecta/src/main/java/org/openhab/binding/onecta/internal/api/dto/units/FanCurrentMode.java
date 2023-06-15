@@ -2,23 +2,23 @@ package org.openhab.binding.onecta.internal.api.dto.units;
 
 import com.google.gson.annotations.SerializedName;
 
-public class TemperatureControl {
-    @SerializedName("ref")
-    private String ref;
+public class FanCurrentMode {
+    @SerializedName("value")
+    private String value;
     @SerializedName("settable")
     private boolean settable;
-    @SerializedName("value")
-    private TemperatureControlValue value;
+    @SerializedName("values")
+    private String[] values;
 
     public boolean isSettable() {
         return settable;
     }
 
-    public String getRef() {
-        return ref;
+    public String[] getValues() {
+        return values;
     }
 
-    public TemperatureControlValue getValue() {
+    public String getValue() {
         return value;
     }
 }

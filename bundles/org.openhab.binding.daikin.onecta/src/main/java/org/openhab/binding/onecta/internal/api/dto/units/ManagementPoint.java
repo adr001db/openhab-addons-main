@@ -50,8 +50,8 @@ public class ManagementPoint {
     // @SerializedName("_id")
     // private DryKeepSetting econoMode;
     //
-    // @SerializedName("_id")
-    // private FanControl fanControl;
+    @SerializedName("fanControl")
+    private FanControl fanControl;
     //
     // @SerializedName("_id")
     // private HolidayMode holidayMode;
@@ -103,10 +103,10 @@ public class ManagementPoint {
 
     @SerializedName("streamerMode")
     private GatwaySubValueString streamerMode;
-    //
-    // @SerializedName("_id")
-    // private TemperatureControl temperatureControl;
-    //
+
+    @SerializedName("temperatureControl")
+    private TemperatureControl temperatureControl;
+
     // @SerializedName("_id")
     // private GatwaySubValueString softwareVersion;
     //
@@ -230,5 +230,13 @@ public class ManagementPoint {
 
     public GatwaySubValueString getStreamerMode() {
         return streamerMode;
+    }
+
+    public TemperatureControl getTemperatureControl() {
+        return temperatureControl;
+    }
+
+    public FanControl getFanControl() {
+        return fanControl;
     }
 }

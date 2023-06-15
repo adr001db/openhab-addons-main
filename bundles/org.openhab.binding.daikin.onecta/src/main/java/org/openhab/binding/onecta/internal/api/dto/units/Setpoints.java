@@ -7,4 +7,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Setpoints {
     private IconID roomTemperature;
+
+    public IconID getRoomTemperature() {
+        return roomTemperature;
+    }
 }

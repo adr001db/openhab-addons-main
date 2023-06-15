@@ -6,6 +6,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OperationModesDry {
-    private FanSpeed fanSpeed;
+    private FanMovement fanMovement;
     private FanDirection fanDirection;
 }

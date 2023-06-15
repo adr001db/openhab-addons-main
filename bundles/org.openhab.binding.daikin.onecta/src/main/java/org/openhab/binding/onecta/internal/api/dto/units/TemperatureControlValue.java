@@ -1,10 +1,12 @@
 package org.openhab.binding.onecta.internal.api.dto.units;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.gson.annotations.SerializedName;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class TemperatureControlValue {
-    private FluffyOperationModes operationModes;
+    @SerializedName("operationModes")
+    private OperationModes operationModes;
+
+    public OperationModes getOperationModes() {
+        return operationModes;
+    }
 }
