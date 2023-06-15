@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Any {
-    private DryKeepSetting currentSchedule;
+    private FanCurrentMode currentSchedule;
     private DtoIsCloudConnectionUp enabled;
     private AnyMeta meta;
     private Schedules schedules;

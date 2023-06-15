@@ -58,14 +58,47 @@ public class Enums {
         }
     }
 
+    public enum ManagementPoint {
+        GATEWAY("gateway"),
+        CLIMATECONTROL("climateControl"),
+        INDOORUNIT("indoorUnit"),
+        OUTDOORUNIT("outdoorUnit");
+
+        private final String value;
+
+        ManagementPoint(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public enum SensorData {
+        ROOMTEMP("roomTemperature"),
+        ROOMHUMINITY("roomHumidity"),
+        OUTDOORTEMP("outdoorTemperature");
+
+        private final String value;
+
+        SensorData(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
     public enum FanSpeed {
-        AUTO("A"),
-        SILENCE("B"),
-        LEVEL_1("3"),
-        LEVEL_2("4"),
-        LEVEL_3("5"),
-        LEVEL_4("6"),
-        LEVEL_5("7");
+        AUTO("auto"),
+        SILENCE("quiet"),
+        LEVEL_1("fixed_1"),
+        LEVEL_2("fixed_2"),
+        LEVEL_3("fixed_3"),
+        LEVEL_4("fixed_4"),
+        LEVEL_5("fixed_5");
 
         private static final Logger LOGGER = LoggerFactory.getLogger(FanSpeed.class);
         private final String value;
@@ -91,12 +124,103 @@ public class Enums {
         }
     }
 
+    public enum FanSpeedMode {
+        AUTO("auto"),
+        SILENCE("quiet"),
+        FIXED("fixed");
+
+        private static final Logger LOGGER = LoggerFactory.getLogger(FanSpeedMode.class);
+        private final String value;
+
+        FanSpeedMode(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static FanSpeedMode fromValue(String value) {
+            for (FanSpeedMode m : FanSpeedMode.values()) {
+                if (m.getValue().equals(value)) {
+                    return m;
+                }
+            }
+            LOGGER.debug("Unexpected FanSpeedMode value of \"{}\"", value);
+
+            // Default to auto
+            return AUTO;
+        }
+    }
+
+    public enum FanMovementHor {
+        STOPPED("stop"),
+        SWING("swing"),
+        NOTAVAILABLE("notavailable");
+
+        private static final Logger LOGGER = LoggerFactory.getLogger(FanMovementHor.class);
+        private final String value;
+
+        FanMovementHor(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static FanMovementHor fromValue(String value) {
+            for (FanMovementHor m : FanMovementHor.values()) {
+                if (m.getValue().equals(value)) {
+                    return m;
+                }
+            }
+            LOGGER.debug("Unexpected FanMovementHor value of \"{}\"", value);
+
+            // Default to stopped
+            return NOTAVAILABLE;
+        }
+    }
+
+    public enum FanMovementVer {
+        STOPPED("stop"),
+        SWING("swing"),
+        WINDNICE("windnice"),
+
+        NOTAVAILABLE("notavailable");
+
+        private static final Logger LOGGER = LoggerFactory.getLogger(FanMovementVer.class);
+        private final String value;
+
+        FanMovementVer(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static FanMovementVer fromValue(String value) {
+            for (FanMovementVer m : FanMovementVer.values()) {
+                if (m.getValue().equals(value.toLowerCase())) {
+                    return m;
+                }
+            }
+            LOGGER.debug("Unexpected FanMovementHor value of \"{}\"", value);
+
+            // Default to stopped
+            return NOTAVAILABLE;
+        }
+    }
+
     public enum FanMovement {
         UNKNOWN(-1),
         STOPPED(0),
         VERTICAL(1),
+        VERTICAL_EXTRA(4),
         HORIZONTAL(2),
-        VERTICAL_AND_HORIZONTAL(3);
+        VERTICAL_AND_HORIZONTAL(3),
+        VERTICAL_AND_HORIZONTAL_EXTRA(5);
 
         private static final Logger LOGGER = LoggerFactory.getLogger(FanMovement.class);
         private final int value;

@@ -21,9 +21,9 @@ import java.util.Set;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.openhab.binding.onecta.internal.bridge.DeviceDiscoveryService;
-import org.openhab.binding.onecta.internal.bridge.OnectaBridgeHandler;
-import org.openhab.binding.onecta.internal.device.OnectaDeviceHandler;
+import org.openhab.binding.onecta.internal.handler.OnectaBridgeHandler;
+import org.openhab.binding.onecta.internal.handler.OnectaDeviceHandler;
+import org.openhab.binding.onecta.internal.service.DeviceDiscoveryService;
 import org.openhab.core.config.discovery.DiscoveryService;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.io.net.http.HttpClientFactory;

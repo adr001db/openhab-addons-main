@@ -6,13 +6,13 @@ public class IconID {
     @SerializedName("settable")
     private boolean settable;
     @SerializedName("value")
-    private Double value;
+    private Integer value;
     @SerializedName("maxValue")
-    private Double maxValue;
+    private Integer maxValue;
     @SerializedName("minValue")
-    private Double minValue;
+    private Integer minValue;
     @SerializedName("stepValue")
-    private Double stepValue;
+    private Integer stepValue;
     @SerializedName("unit")
     private String unit;
 
@@ -20,19 +20,19 @@ public class IconID {
         return settable;
     }
 
-    public Double getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public Double getMaxValue() {
+    public Integer getMaxValue() {
         return maxValue;
     }
 
-    public Double getMinValue() {
+    public Integer getMinValue() {
         return minValue;
     }
 
-    public Double getStepValue() {
+    public Integer getStepValue() {
         return stepValue;
     }
 

@@ -10,18 +10,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.onecta.internal.device;
+package org.openhab.binding.onecta.internal.handler;
 
 import static org.openhab.binding.onecta.internal.OnectaBindingConstants.*;
 
-import java.util.Objects;
 import java.util.concurrent.ScheduledFuture;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.onecta.internal.OnectaConfiguration;
-import org.openhab.binding.onecta.internal.api.Enums.*;
-import org.openhab.binding.onecta.internal.api.dto.units.Unit;
+import org.openhab.binding.onecta.internal.api.Enums;
+import org.openhab.binding.onecta.internal.service.DataTransportService;
+import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.OnOffType;
 import org.openhab.core.library.types.StringType;
 import org.openhab.core.thing.ChannelUID;
@@ -30,6 +30,7 @@ import org.openhab.core.thing.ThingStatus;
 import org.openhab.core.thing.binding.BaseThingHandler;
 import org.openhab.core.types.Command;
 import org.openhab.core.types.RefreshType;
+import org.openhab.core.types.UnDefType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,7 +98,7 @@ public class OnectaDeviceHandler extends BaseThingHandler {
             }
         });
 
-        thing.setProperty("name", "");
+        thing.setProperty(CHANNEL_AC_NAME, "");
 
         // These logging types should be primarily used by bindings
         // logger.trace("Example trace message");
@@ -114,18 +115,32 @@ public class OnectaDeviceHandler extends BaseThingHandler {
         // "Can not access device as username and/or password are invalid");
     }
 
-    public void setUnit(Unit unit) {
-        if (!Objects.isNull(unit)) {
+    public void setUnit(DataTransportService data) {
+        if (data.isAvailable()) {
 
-            getThing().setLabel(String.format("Daikin Onecta Unit (%s)",
-                    unit.findManagementPointsById("climateControl").getName().getValue()));
-            getThing().setProperty("name", unit.findManagementPointsById("climateControl").getName().getValue());
-            updateState(CHANNEL_AC_POWER,
-                    OnOffType.from(unit.findManagementPointsById("climateControl").getOnOffMode().getValue()));
-            updateState(CHANNEL_AC_OPERATIONMODE, new StringType(OperationMode
-                    .fromValue(unit.findManagementPointsById("climateControl").getOperationMode().getValue()).name()));
+            getThing().setLabel(String.format("Daikin Onecta Unit (%s)", data.getUnitName()));
+            getThing().setProperty(CHANNEL_AC_NAME, data.getUnitName());
+            updateState(CHANNEL_AC_POWER, OnOffType.from(data.getPowerOnOff()));
+            updateState(CHANNEL_AC_OPERATIONMODE, new StringType(data.getcurrentOperationMode().toString()));
+            updateState(CHANNEL_AC_TEMP, (data.getCurrentTemperatureSet() == null ? UnDefType.UNDEF
+                    : new DecimalType(data.getCurrentTemperatureSet())));
+            updateState(CHANNEL_INDOOR_TEMP, (data.getIndoorTemperature() == null ? UnDefType.UNDEF
+                    : new DecimalType(data.getIndoorTemperature())));
+            updateState(CHANNEL_OUTDOOR_TEMP, (data.getOutdoorTemperature() == null ? UnDefType.UNDEF
+                    : new DecimalType(data.getOutdoorTemperature())));
+            updateState(CHANNEL_INDOOR_HUMIDITY,
+                    (data.getIndoorHumidity() == null ? UnDefType.UNDEF : new DecimalType(data.getIndoorHumidity())));
+            updateState(CHANNEL_AC_FANSPEED, new StringType(data.getCurrentFanspeed().toString()));
+            updateState(CHANNEL_AC_FANMOVEMENT_HOR,
+                    (data.getCurrentFanDirectionHor() == Enums.FanMovementHor.NOTAVAILABLE ? UnDefType.UNDEF
+                            : new StringType(data.getCurrentFanDirectionHor().toString())));
+            updateState(CHANNEL_AC_FANMOVEMENT_VER,
+                    (data.getCurrentFanDirectionVer() == Enums.FanMovementVer.NOTAVAILABLE ? UnDefType.UNDEF
+                            : new StringType(data.getCurrentFanDirectionVer().toString())));
+            updateState(CHANNEL_AC_FANMOVEMENT, new StringType(data.getCurrentFanDirection().toString()));
+
         } else {
-            getThing().setProperty("name", "Unit not available at Onecta, unitID does not exists.");
+            getThing().setProperty(CHANNEL_AC_NAME, "Unit not registered at Onecta, unitID does not exists.");
         }
     }
 }

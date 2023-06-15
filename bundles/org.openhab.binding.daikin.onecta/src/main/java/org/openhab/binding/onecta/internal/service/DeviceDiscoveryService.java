@@ -1,4 +1,4 @@
-package org.openhab.binding.onecta.internal.bridge;
+package org.openhab.binding.onecta.internal.service;
 
 import static org.openhab.binding.onecta.internal.OnectaBindingConstants.DEVICE_THING_TYPE;
 
@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
+import org.openhab.binding.onecta.internal.handler.OnectaBridgeHandler;
 import org.openhab.core.config.discovery.AbstractDiscoveryService;
 import org.openhab.core.config.discovery.DiscoveryResult;
 import org.openhab.core.config.discovery.DiscoveryResultBuilder;

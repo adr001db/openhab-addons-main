@@ -21,6 +21,8 @@
 			<channel id="operationmode" typeId="acunit-operationmode"/>
 			<channel id="homekitmode" typeId="acunit-homekitmode"/>
 			<channel id="fanspeed" typeId="acunit-fan"/>
+			<channel id="fandirhor" typeId="acunit-fandirhor"/>
+			<channel id="fandirver" typeId="acunit-fandirver"/>
 			<channel id="fandir" typeId="acunit-fandir"/>
 		</channels>
 
@@ -124,6 +126,31 @@
 		</state>
 	</channel-type>
 
+	<channel-type id="acunit-fandirhor">
+		<item-type>String</item-type>
+		<label>Fan Swing</label>
+		<description>Current fan horizontal swing setting of the AC unit</description>
+		<state>
+			<options>
+				<option value="STOPPED">stopped</option>
+				<option value="SWING">swing</option>
+			</options>
+		</state>
+	</channel-type>
+
+	<channel-type id="acunit-fandirver">
+		<item-type>String</item-type>
+		<label>Fan Swing</label>
+		<description>Current fan vertical swing setting of the AC unit</description>
+		<state>
+			<options>
+				<option value="STOPPED">stopped</option>
+				<option value="SWING">swing</option>
+				<option value="WINDNICE">windnice</option>
+			</options>
+		</state>
+	</channel-type>
+
 	<channel-type id="acunit-fandir">
 		<item-type>String</item-type>
 		<label>Fan Swing</label>
@@ -132,12 +159,13 @@
 			<options>
 				<option value="STOPPED">stopped</option>
 				<option value="VERTICAL">vertical</option>
+				<option value="VERTICAL_EXTRA">vertical (Scanner)</option>
 				<option value="HORIZONTAL">horizontal</option>
 				<option value="VERTICAL_AND_HORIZONTAL">vertical and horizontal</option>
+				<option value="VERTICAL_AND_HORIZONTAL_EXTRA">vertical and horizontal (Scanner)</option>
 			</options>
 		</state>
 	</channel-type>
-
 
 
 </thing:thing-descriptions>

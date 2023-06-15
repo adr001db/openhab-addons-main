@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ScheduleValue {
-    private DryKeepSetting currentMode;
+    private FanCurrentMode currentMode;
     private NextAction nextAction;
     private FluffyModes modes;
 }

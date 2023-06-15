@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.onecta.internal.bridge;
+package org.openhab.binding.onecta.internal.handler;
 
 import static org.openhab.binding.onecta.internal.OnectaBindingConstants.CHANNEL_1;
 import static org.openhab.binding.onecta.internal.OnectaBindingConstants.DEVICE_THING_TYPE;
@@ -23,11 +23,13 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jetty.client.HttpClient;
 import org.openhab.binding.onecta.internal.OnectaConfiguration;
+import org.openhab.binding.onecta.internal.api.Enums.*;
 import org.openhab.binding.onecta.internal.api.OnectaClient;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
 import org.openhab.binding.onecta.internal.api.dto.units.Units;
-import org.openhab.binding.onecta.internal.device.OnectaDeviceHandler;
 import org.openhab.binding.onecta.internal.excetion.DaikinCommunicationException;
+import org.openhab.binding.onecta.internal.service.DataTransportService;
+import org.openhab.binding.onecta.internal.service.DeviceDiscoveryService;
 import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
@@ -164,8 +166,8 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
             if (thing.getConfiguration().get("showAvailableUnitsInLog").toString() == "true") {
 
                 for (Unit unit : units.getAll()) {
-                    logger.info("Available Daikin unit UID : '{}' - '{}' .", unit.getId(),
-                            unit.findManagementPointsById("climateControl").getName().getValue());
+                    logger.info("Available Daikin unit UID : '{}' - '{}' .", unit.getId(), unit
+                            .findManagementPointsById(ManagementPoint.CLIMATECONTROL.getValue()).getName().getValue());
                 }
             }
         } catch (DaikinCommunicationException e) {
@@ -187,7 +189,7 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
             }
             Unit unit = onectaClient.getOnectaData()
                     .findById(handler.getThing().getConfiguration().get("unitID").toString());
-            handler.setUnit(unit);
+            handler.setUnit(new DataTransportService(unit));
 
         }
     }
