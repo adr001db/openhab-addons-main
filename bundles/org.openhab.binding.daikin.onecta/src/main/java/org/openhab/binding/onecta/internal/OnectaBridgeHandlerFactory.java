@@ -74,7 +74,7 @@ public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
         if (thingTypeUID.equals((BRIDGE_THING_TYPE))) {
-            bridgeHandler = new OnectaBridgeHandler((Bridge) thing, httpClientFactory.getCommonHttpClient());
+            bridgeHandler = new OnectaBridgeHandler((Bridge) thing, httpClientFactory);
 
             DeviceDiscoveryService deviceDiscoveryService = new DeviceDiscoveryService(bridgeHandler);
             bridgeHandler.setDiscovery(deviceDiscoveryService);

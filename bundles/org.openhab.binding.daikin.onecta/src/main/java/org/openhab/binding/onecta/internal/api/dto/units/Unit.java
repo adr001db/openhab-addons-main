@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Unit {
     @SerializedName("_id")
-    private UUID id;
+    private String id;
     @SerializedName("id")
     private UUID initID;
     @SerializedName("type")
@@ -23,7 +23,7 @@ public class Unit {
     @SerializedName("timestamp")
     private String timestamp;
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 

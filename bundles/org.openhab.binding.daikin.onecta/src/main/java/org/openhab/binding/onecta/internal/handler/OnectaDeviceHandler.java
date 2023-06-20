@@ -120,6 +120,9 @@ public class OnectaDeviceHandler extends BaseThingHandler {
 
             getThing().setLabel(String.format("Daikin Onecta Unit (%s)", data.getUnitName()));
             getThing().setProperty(CHANNEL_AC_NAME, data.getUnitName());
+
+            updateState(CHANNEL_AC_RAWDATA, new StringType(data.getRawData().toString()));
+
             updateState(CHANNEL_AC_POWER, OnOffType.from(data.getPowerOnOff()));
             updateState(CHANNEL_AC_OPERATIONMODE, new StringType(data.getcurrentOperationMode().toString()));
             updateState(CHANNEL_AC_TEMP, (data.getCurrentTemperatureSet() == null ? UnDefType.UNDEF

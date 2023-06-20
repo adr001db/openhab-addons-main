@@ -24,6 +24,8 @@
 			<channel id="fandirhor" typeId="acunit-fandirhor"/>
 			<channel id="fandirver" typeId="acunit-fandirver"/>
 			<channel id="fandir" typeId="acunit-fandir"/>
+			<channel id="rawdata" typeId="acunit-rawdata"/>
+
 		</channels>
 
 		<properties>
@@ -124,6 +126,14 @@
 				<option value="LEVEL_5">level 5</option>
 			</options>
 		</state>
+	</channel-type>
+
+	<channel-type id="acunit-rawdata" advanced="true">
+		<item-type>String</item-type>
+		<label>Raw Json data</label>
+		<description>Unit data as collected from Daikin Onecta</description>
+		<category>Text</category>
+		<state readOnly="true"/>
 	</channel-type>
 
 	<channel-type id="acunit-fandirhor">

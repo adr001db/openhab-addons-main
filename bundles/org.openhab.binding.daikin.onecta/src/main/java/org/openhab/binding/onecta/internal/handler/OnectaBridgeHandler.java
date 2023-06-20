@@ -21,15 +21,15 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.eclipse.jetty.client.HttpClient;
 import org.openhab.binding.onecta.internal.OnectaConfiguration;
 import org.openhab.binding.onecta.internal.api.Enums.*;
 import org.openhab.binding.onecta.internal.api.OnectaClient;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
 import org.openhab.binding.onecta.internal.api.dto.units.Units;
-import org.openhab.binding.onecta.internal.excetion.DaikinCommunicationException;
+import org.openhab.binding.onecta.internal.exception.DaikinCommunicationException;
 import org.openhab.binding.onecta.internal.service.DataTransportService;
 import org.openhab.binding.onecta.internal.service.DeviceDiscoveryService;
+import org.openhab.core.io.net.http.HttpClientFactory;
 import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
@@ -77,9 +77,9 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
         }
     };
 
-    public OnectaBridgeHandler(Bridge bridge, HttpClient httpClient) {
+    public OnectaBridgeHandler(Bridge bridge, HttpClientFactory httpClientFactory) {
         super(bridge);
-        this.onectaClient = new OnectaClient(httpClient);
+        this.onectaClient = new OnectaClient(httpClientFactory);
     }
 
     @Override
@@ -115,9 +115,9 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
         // the framework is then able to reuse the resources from the thing handler initialization.
         // we set this upfront to reliably check status updates in unit tests.
         updateStatus(ThingStatus.UNKNOWN);
-        onectaClient.setClientId(thing.getConfiguration().get("clientId").toString());
-        onectaClient.setRefreshToken(thing.getConfiguration().get("refreshToken").toString());
-
+        onectaClient.setUserId(thing.getConfiguration().get("userId").toString());
+        onectaClient.setPassword(thing.getConfiguration().get("password").toString());
+        onectaClient.setRefreshTokenToEmpty();
         // Example for background initialization:
         // scheduler.execute(() -> {
         try {
@@ -163,13 +163,13 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
 
         try {
             units = onectaClient.getUnits();
-            if (thing.getConfiguration().get("showAvailableUnitsInLog").toString() == "true") {
-
-                for (Unit unit : units.getAll()) {
-                    logger.info("Available Daikin unit UID : '{}' - '{}' .", unit.getId(), unit
-                            .findManagementPointsById(ManagementPoint.CLIMATECONTROL.getValue()).getName().getValue());
-                }
-            }
+            // if (thing.getConfiguration().get("showAvailableUnitsInLog").toString() == "true") {
+            //
+            // for (Unit unit : units.getAll()) {
+            // logger.info("Available Daikin unit UID : '{}' - '{}' .", unit.getId(), unit
+            // .findManagementPointsById(ManagementPoint.CLIMATECONTROL.getValue()).getName().getValue());
+            // }
+            // }
         } catch (DaikinCommunicationException e) {
             updateStatus(ThingStatus.OFFLINE);
         }
@@ -189,7 +189,7 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
             }
             Unit unit = onectaClient.getOnectaData()
                     .findById(handler.getThing().getConfiguration().get("unitID").toString());
-            handler.setUnit(new DataTransportService(unit));
+            handler.setUnit(new DataTransportService(unit, onectaClient.getRawData(unit.getId())));
 
         }
     }

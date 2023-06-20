@@ -10,31 +10,30 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.onecta.internal.excetion;
-
-import java.io.IOException;
+package org.openhab.binding.onecta.internal.exception;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 
 /**
- * Exception for when an unexpected response is received from the Daikin controller.
+ * Exception for when a 403 Forbidden error is received from the Daikin controller.
  *
- * @author Tim Waterhouse <tim@timwaterhouse.com> - Initial contribution
+ * @author Jimmy Tanagra - Initial contribution
  *
  */
 @NonNullByDefault
-public class DaikinCommunicationException extends IOException {
-    private static final long serialVersionUID = 529232811860854017L;
+public class DaikinCommunicationForbiddenException extends DaikinCommunicationException {
 
-    public DaikinCommunicationException(String message) {
+    private static final long serialVersionUID = 1L;
+
+    public DaikinCommunicationForbiddenException(String message) {
         super(message);
     }
 
-    public DaikinCommunicationException(Throwable ex) {
+    public DaikinCommunicationForbiddenException(Throwable ex) {
         super(ex);
     }
 
-    public DaikinCommunicationException(String message, Throwable cause) {
+    public DaikinCommunicationForbiddenException(String message, Throwable cause) {
         super(message, cause);
     }
 }

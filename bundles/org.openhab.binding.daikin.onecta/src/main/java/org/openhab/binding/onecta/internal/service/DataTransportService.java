@@ -4,12 +4,20 @@ import org.openhab.binding.onecta.internal.api.Enums;
 import org.openhab.binding.onecta.internal.api.dto.units.ManagementPoint;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
 
+import com.google.gson.JsonObject;
+
 public class DataTransportService {
 
     private Unit unit;
+    private JsonObject rawData;
 
-    public DataTransportService(Unit unit) {
+    public DataTransportService(Unit unit, JsonObject rawData) {
         this.unit = unit;
+        this.rawData = rawData;
+    }
+
+    public JsonObject getRawData() {
+        return rawData;
     }
 
     public Boolean isAvailable() {
