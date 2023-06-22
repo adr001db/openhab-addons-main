@@ -12,7 +12,7 @@
  */
 package org.openhab.binding.onecta.internal.handler;
 
-import static org.openhab.binding.onecta.internal.OnectaBindingConstants.*;
+import static org.openhab.binding.onecta.internal.OnectaDeviceConstants.*;
 
 import java.util.concurrent.ScheduledFuture;
 
@@ -55,7 +55,7 @@ public class OnectaDeviceHandler extends BaseThingHandler {
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
-        if (CHANNEL_1.equals(channelUID.getId())) {
+        if (CHANNEL_AC_POWER.equals(channelUID.getId())) {
             if (command instanceof RefreshType) {
                 // TODO: handle data refresh
             }
@@ -72,7 +72,7 @@ public class OnectaDeviceHandler extends BaseThingHandler {
     @Override
     public void initialize() {
         config = getConfigAs(OnectaConfiguration.class);
-
+        DataTransportService dataTransService = new DataTransportService();
         // TODO: Initialize the handler.
         // The framework requires you to return from this method quickly, i.e. any network access must be done in
         // the background initialization below.
@@ -115,32 +115,34 @@ public class OnectaDeviceHandler extends BaseThingHandler {
         // "Can not access device as username and/or password are invalid");
     }
 
-    public void setUnit(DataTransportService data) {
-        if (data.isAvailable()) {
+    public void setUnit(DataTransportService dataTransService) {
+        dataTransService.setData();
+        if (dataTransService.isAvailable()) {
 
-            getThing().setLabel(String.format("Daikin Onecta Unit (%s)", data.getUnitName()));
-            getThing().setProperty(CHANNEL_AC_NAME, data.getUnitName());
+            getThing().setLabel(String.format("Daikin Onecta Unit (%s)", dataTransService.getUnitName()));
+            getThing().setProperty(CHANNEL_AC_NAME, dataTransService.getUnitName());
 
-            updateState(CHANNEL_AC_RAWDATA, new StringType(data.getRawData().toString()));
+            updateState(CHANNEL_AC_RAWDATA, new StringType(dataTransService.getRawData().toString()));
 
-            updateState(CHANNEL_AC_POWER, OnOffType.from(data.getPowerOnOff()));
-            updateState(CHANNEL_AC_OPERATIONMODE, new StringType(data.getcurrentOperationMode().toString()));
-            updateState(CHANNEL_AC_TEMP, (data.getCurrentTemperatureSet() == null ? UnDefType.UNDEF
-                    : new DecimalType(data.getCurrentTemperatureSet())));
-            updateState(CHANNEL_INDOOR_TEMP, (data.getIndoorTemperature() == null ? UnDefType.UNDEF
-                    : new DecimalType(data.getIndoorTemperature())));
-            updateState(CHANNEL_OUTDOOR_TEMP, (data.getOutdoorTemperature() == null ? UnDefType.UNDEF
-                    : new DecimalType(data.getOutdoorTemperature())));
-            updateState(CHANNEL_INDOOR_HUMIDITY,
-                    (data.getIndoorHumidity() == null ? UnDefType.UNDEF : new DecimalType(data.getIndoorHumidity())));
-            updateState(CHANNEL_AC_FANSPEED, new StringType(data.getCurrentFanspeed().toString()));
+            updateState(CHANNEL_AC_POWER, OnOffType.from(dataTransService.getPowerOnOff()));
+            updateState(CHANNEL_AC_OPERATIONMODE,
+                    new StringType(dataTransService.getcurrentOperationMode().toString()));
+            updateState(CHANNEL_AC_TEMP, (dataTransService.getCurrentTemperatureSet() == null ? UnDefType.UNDEF
+                    : new DecimalType(dataTransService.getCurrentTemperatureSet())));
+            updateState(CHANNEL_INDOOR_TEMP, (dataTransService.getIndoorTemperature() == null ? UnDefType.UNDEF
+                    : new DecimalType(dataTransService.getIndoorTemperature())));
+            updateState(CHANNEL_OUTDOOR_TEMP, (dataTransService.getOutdoorTemperature() == null ? UnDefType.UNDEF
+                    : new DecimalType(dataTransService.getOutdoorTemperature())));
+            updateState(CHANNEL_INDOOR_HUMIDITY, (dataTransService.getIndoorHumidity() == null ? UnDefType.UNDEF
+                    : new DecimalType(dataTransService.getIndoorHumidity())));
+            updateState(CHANNEL_AC_FANSPEED, new StringType(dataTransService.getCurrentFanspeed().toString()));
             updateState(CHANNEL_AC_FANMOVEMENT_HOR,
-                    (data.getCurrentFanDirectionHor() == Enums.FanMovementHor.NOTAVAILABLE ? UnDefType.UNDEF
-                            : new StringType(data.getCurrentFanDirectionHor().toString())));
+                    (dataTransService.getCurrentFanDirectionHor() == Enums.FanMovementHor.NOTAVAILABLE ? UnDefType.UNDEF
+                            : new StringType(dataTransService.getCurrentFanDirectionHor().toString())));
             updateState(CHANNEL_AC_FANMOVEMENT_VER,
-                    (data.getCurrentFanDirectionVer() == Enums.FanMovementVer.NOTAVAILABLE ? UnDefType.UNDEF
-                            : new StringType(data.getCurrentFanDirectionVer().toString())));
-            updateState(CHANNEL_AC_FANMOVEMENT, new StringType(data.getCurrentFanDirection().toString()));
+                    (dataTransService.getCurrentFanDirectionVer() == Enums.FanMovementVer.NOTAVAILABLE ? UnDefType.UNDEF
+                            : new StringType(dataTransService.getCurrentFanDirectionVer().toString())));
+            updateState(CHANNEL_AC_FANMOVEMENT, new StringType(dataTransService.getCurrentFanDirection().toString()));
 
         } else {
             getThing().setProperty(CHANNEL_AC_NAME, "Unit not registered at Onecta, unitID does not exists.");

@@ -1,6 +1,6 @@
 package org.openhab.binding.onecta.internal.service;
 
-import static org.openhab.binding.onecta.internal.OnectaBindingConstants.DEVICE_THING_TYPE;
+import static org.openhab.binding.onecta.internal.OnectaBridgeConstants.DEVICE_THING_TYPE;
 
 import java.util.LinkedHashMap;
 import java.util.List;

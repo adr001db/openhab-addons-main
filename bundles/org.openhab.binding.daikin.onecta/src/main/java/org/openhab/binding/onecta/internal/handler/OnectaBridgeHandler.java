@@ -12,8 +12,7 @@
  */
 package org.openhab.binding.onecta.internal.handler;
 
-import static org.openhab.binding.onecta.internal.OnectaBindingConstants.CHANNEL_1;
-import static org.openhab.binding.onecta.internal.OnectaBindingConstants.DEVICE_THING_TYPE;
+import static org.openhab.binding.onecta.internal.OnectaBridgeConstants.*;
 
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
@@ -22,8 +21,7 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.onecta.internal.OnectaConfiguration;
-import org.openhab.binding.onecta.internal.api.Enums.*;
-import org.openhab.binding.onecta.internal.api.OnectaClient;
+import org.openhab.binding.onecta.internal.api.OnactaConnectionClient;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
 import org.openhab.binding.onecta.internal.api.dto.units.Units;
 import org.openhab.binding.onecta.internal.exception.DaikinCommunicationException;
@@ -36,7 +34,6 @@ import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingStatus;
 import org.openhab.core.thing.binding.BaseBridgeHandler;
 import org.openhab.core.types.Command;
-import org.openhab.core.types.RefreshType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +52,7 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
 
     private @Nullable ScheduledFuture<?> pollingJob;
 
-    private OnectaClient onectaClient;
+    private OnactaConnectionClient onactaConnectionClient;
 
     private Units units = new Units();
 
@@ -79,23 +76,23 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
 
     public OnectaBridgeHandler(Bridge bridge, HttpClientFactory httpClientFactory) {
         super(bridge);
-        this.onectaClient = new OnectaClient(httpClientFactory);
+        this.onactaConnectionClient = new OnactaConnectionClient(httpClientFactory);
     }
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
-        if (CHANNEL_1.equals(channelUID.getId())) {
-            if (command instanceof RefreshType) {
-                // TODO: handle data refresh
-            }
-
-            // TODO: handle command
-
-            // Note: if communication with thing fails for some reason,
-            // indicate that by setting the status with detail information:
-            // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
-            // "Could not control device at IP address x.x.x.x");
-        }
+        // if (CHANNEL_1.equals(channelUID.getId())) {
+        // if (command instanceof RefreshType) {
+        // // TODO: handle data refresh
+        // }
+        //
+        // // TODO: handle command
+        //
+        // // Note: if communication with thing fails for some reason,
+        // // indicate that by setting the status with detail information:
+        // // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
+        // // "Could not control device at IP address x.x.x.x");
+        // }
     }
 
     @Override
@@ -115,17 +112,22 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
         // the framework is then able to reuse the resources from the thing handler initialization.
         // we set this upfront to reliably check status updates in unit tests.
         updateStatus(ThingStatus.UNKNOWN);
-        onectaClient.setUserId(thing.getConfiguration().get("userId").toString());
-        onectaClient.setPassword(thing.getConfiguration().get("password").toString());
-        onectaClient.setRefreshTokenToEmpty();
+        onactaConnectionClient.startConnecton(thing.getConfiguration().get("userId").toString(),
+                thing.getConfiguration().get("password").toString());
+
         // Example for background initialization:
         // scheduler.execute(() -> {
-        try {
-            units = onectaClient.getUnits();
+        if (onactaConnectionClient.isOnline()) {
             updateStatus(ThingStatus.ONLINE);
-        } catch (DaikinCommunicationException e) {
+        } else {
             updateStatus(ThingStatus.OFFLINE);
         }
+        // try {
+        // //units = onactaConnectionClient.getUnits();
+        // updateStatus(ThingStatus.ONLINE);
+        // } catch (DaikinCommunicationException e) {
+        // updateStatus(ThingStatus.OFFLINE);
+        // }
         //
         // });
         pollingJob = scheduler.scheduleWithFixedDelay(this::pollDevices, 10,
@@ -162,7 +164,7 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
     private void pollDevices() {
 
         try {
-            units = onectaClient.getUnits();
+            units = onactaConnectionClient.getUnits();
             // if (thing.getConfiguration().get("showAvailableUnitsInLog").toString() == "true") {
             //
             // for (Unit unit : units.getAll()) {
@@ -187,9 +189,10 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
                 logger.trace("no handler for thing: {}", t.getUID());
                 continue;
             }
-            Unit unit = onectaClient.getOnectaData()
-                    .findById(handler.getThing().getConfiguration().get("unitID").toString());
-            handler.setUnit(new DataTransportService(unit, onectaClient.getRawData(unit.getId())));
+
+            Unit unit = onactaConnectionClient.getUnit(handler.getThing().getConfiguration().get("unitID").toString());
+
+            handler.setUnit(new DataTransportService(unit, onactaConnectionClient.getRawData(unit.getId())));
 
         }
     }

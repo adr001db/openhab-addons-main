@@ -12,7 +12,7 @@
  */
 package org.openhab.binding.onecta.internal;
 
-import static org.openhab.binding.onecta.internal.OnectaBindingConstants.*;
+import static org.openhab.binding.onecta.internal.OnectaBridgeConstants.*;
 
 import java.util.HashMap;
 import java.util.Hashtable;

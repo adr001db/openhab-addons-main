@@ -16,13 +16,13 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.core.thing.ThingTypeUID;
 
 /**
- * The {@link OnectaBindingConstants} class defines common constants, which are
+ * The {@link OnectaDeviceConstants} class defines common constants, which are
  * used across the whole binding.
  *
  * @author Alexander Drent - Initial contribution
  */
 @NonNullByDefault
-public class OnectaBindingConstants {
+public class OnectaDeviceConstants {
 
     private static final String BINDING_ID = "onecta";
     public static final String BRIDGE = "account";

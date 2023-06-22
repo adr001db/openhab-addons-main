@@ -11,7 +11,7 @@ public class DataTransportService {
     private Unit unit;
     private JsonObject rawData;
 
-    public DataTransportService(Unit unit, JsonObject rawData) {
+    public void setData(Unit unit, JsonObject rawData) {
         this.unit = unit;
         this.rawData = rawData;
     }
@@ -105,6 +105,9 @@ public class DataTransportService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public void setPowerOnOff(String value) {
     }
 
     public String getUnitName() {
