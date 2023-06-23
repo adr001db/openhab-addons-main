@@ -7,9 +7,11 @@ import java.util.concurrent.TimeoutException;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpContentResponse;
 import org.eclipse.jetty.client.api.Response;
+import org.eclipse.jetty.client.util.StringContentProvider;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpStatus;
+import org.openhab.binding.onecta.internal.api.dto.commands.CommandOnOf;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
 import org.openhab.binding.onecta.internal.api.dto.units.Units;
 import org.openhab.binding.onecta.internal.exception.DaikinCommunicationException;
@@ -21,14 +23,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public class OnactaConnectionClient {
+public class OnectaConnectionClient {
     private JsonArray rawData = new JsonArray();
     private Units onectaData = new Units();
     private HttpClient httpClient;
 
     private OnectaSignInClient onectaSignInClient;
 
-    public OnactaConnectionClient(HttpClientFactory httpClientFactory) {
+    public OnectaConnectionClient(HttpClientFactory httpClientFactory) {
         this.httpClient = httpClientFactory.getCommonHttpClient();
         this.onectaSignInClient = new OnectaSignInClient(httpClientFactory);
     }
@@ -41,22 +43,21 @@ public class OnactaConnectionClient {
         return onectaSignInClient.isOnline();
     }
 
-    private Response doBearerRequest(HttpMethod httpMethod, Boolean refreshed) {
+    private Response doBearerRequestGet(Boolean refreshed) {
         Response response;
         try {
             if (!onectaSignInClient.isOnline()) {
                 onectaSignInClient.signIn();
             }
-
-            response = httpClient.newRequest("https://api.prod.unicloud.edc.dknadmin.be/v1/gateway-devices")
-                    .method(httpMethod)
+            String urlTot = "https://api.prod.unicloud.edc.dknadmin.be/v1/gateway-devices";
+            response = httpClient.newRequest(urlTot).method(HttpMethod.GET)
                     .header(HttpHeader.AUTHORIZATION, String.format("Bearer %s", onectaSignInClient.getToken()))
                     .header(HttpHeader.USER_AGENT, "Daikin/1.6.1.4681 CFNetwork/1209 Darwin/20.2.0")
                     .header("x-api-key", "xw6gvOtBHq5b1pyceadRp6rujSNSZdjx2AqT03iC").send();
 
             if (response.getStatus() == HttpStatus.UNAUTHORIZED_401 && !refreshed) {
                 onectaSignInClient.fetchAccessToken();
-                doBearerRequest(httpMethod, true);
+                doBearerRequestGet(true);
             }
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
@@ -70,10 +71,39 @@ public class OnactaConnectionClient {
         return response;
     }
 
-    public Units getUnits() throws DaikinCommunicationException {
+    private Response doBearerRequestPatch(String url, Object body, Boolean refreshed) {
+        Response response;
+        try {
+            if (!onectaSignInClient.isOnline()) {
+                onectaSignInClient.signIn();
+            }
+            String urlTot = String.format("https://api.prod.unicloud.edc.dknadmin.be/v1/gateway-devices%s", url);
+            response = httpClient.newRequest(urlTot).method(HttpMethod.PATCH)
+                    .content(new StringContentProvider(new Gson().toJson(body)), "application/json")
+                    .header(HttpHeader.AUTHORIZATION, String.format("Bearer %s", onectaSignInClient.getToken()))
+                    .header(HttpHeader.USER_AGENT, "Daikin/1.6.1.4681 CFNetwork/1209 Darwin/20.2.0")
+                    .header("x-api-key", "xw6gvOtBHq5b1pyceadRp6rujSNSZdjx2AqT03iC").send();
+
+            if (response.getStatus() == HttpStatus.UNAUTHORIZED_401 && !refreshed) {
+                onectaSignInClient.fetchAccessToken();
+                doBearerRequestPatch(url, body, true);
+            }
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        } catch (DaikinCommunicationException e) {
+            throw new RuntimeException(e);
+        }
+        return response;
+    }
+
+    public void refreshUnitsData() throws DaikinCommunicationException {
         Response response;
 
-        response = doBearerRequest(HttpMethod.GET, false);
+        response = doBearerRequestGet(false);
         String jsonString = JsonParser.parseString(((HttpContentResponse) response).getContentAsString()).toString();
         if (response.getStatus() == HttpStatus.OK_200) {
             rawData = JsonParser.parseString(jsonString).getAsJsonArray();
@@ -86,8 +116,6 @@ public class OnactaConnectionClient {
             throw new DaikinCommunicationForbiddenException(
                     String.format("GetToken resonse (%s) : (%s)", response.getStatus(), jsonString));
         }
-
-        return onectaData;
     }
 
     public Unit getUnit(String unitId) {
@@ -101,12 +129,15 @@ public class OnactaConnectionClient {
             if (jsonObject.get("id").getAsString().equals(unitId)) {
                 return jsonObject;
             }
-            ;
         }
 
         return new JsonObject();
     }
 
     public void setPowerOnOff(String unitId, String value) {
+        CommandOnOf commandOnOf = new CommandOnOf(value);
+        String url = "/" + unitId + "/management-points/climateControl/characteristics/onOffMode";
+
+        doBearerRequestPatch(url, commandOnOf, false);
     }
 }

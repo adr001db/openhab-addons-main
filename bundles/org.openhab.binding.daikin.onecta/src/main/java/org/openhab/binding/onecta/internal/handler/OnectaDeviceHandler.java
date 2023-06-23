@@ -20,6 +20,7 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.onecta.internal.OnectaConfiguration;
 import org.openhab.binding.onecta.internal.api.Enums;
+import org.openhab.binding.onecta.internal.api.OnectaConnectionClient;
 import org.openhab.binding.onecta.internal.service.DataTransportService;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.OnOffType;
@@ -29,7 +30,6 @@ import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingStatus;
 import org.openhab.core.thing.binding.BaseThingHandler;
 import org.openhab.core.types.Command;
-import org.openhab.core.types.RefreshType;
 import org.openhab.core.types.UnDefType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,15 +49,19 @@ public class OnectaDeviceHandler extends BaseThingHandler {
 
     private @Nullable ScheduledFuture<?> pollingJob;
 
-    public OnectaDeviceHandler(Thing thing) {
+    private DataTransportService dataTransService;
+
+    public OnectaDeviceHandler(Thing thing, OnectaConnectionClient onectaConnectionClient) {
         super(thing);
+        this.dataTransService = new DataTransportService(onectaConnectionClient,
+                thing.getConfiguration().get("unitID").toString());
     }
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
         if (CHANNEL_AC_POWER.equals(channelUID.getId())) {
-            if (command instanceof RefreshType) {
-                // TODO: handle data refresh
+            if (command instanceof OnOffType) {
+                dataTransService.setPowerOnOff(command.toString());
             }
 
             // TODO: handle command
@@ -72,7 +76,7 @@ public class OnectaDeviceHandler extends BaseThingHandler {
     @Override
     public void initialize() {
         config = getConfigAs(OnectaConfiguration.class);
-        DataTransportService dataTransService = new DataTransportService();
+        // DataTransportService dataTransService = new DataTransportService();
         // TODO: Initialize the handler.
         // The framework requires you to return from this method quickly, i.e. any network access must be done in
         // the background initialization below.
@@ -115,8 +119,9 @@ public class OnectaDeviceHandler extends BaseThingHandler {
         // "Can not access device as username and/or password are invalid");
     }
 
-    public void setUnit(DataTransportService dataTransService) {
-        dataTransService.setData();
+    public void refreshDevice() {
+        dataTransService.refreshUnit();
+
         if (dataTransService.isAvailable()) {
 
             getThing().setLabel(String.format("Daikin Onecta Unit (%s)", dataTransService.getUnitName()));

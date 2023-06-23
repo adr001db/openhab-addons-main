@@ -21,18 +21,16 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.onecta.internal.OnectaConfiguration;
-import org.openhab.binding.onecta.internal.api.OnactaConnectionClient;
-import org.openhab.binding.onecta.internal.api.dto.units.Unit;
+import org.openhab.binding.onecta.internal.api.OnectaConnectionClient;
 import org.openhab.binding.onecta.internal.api.dto.units.Units;
 import org.openhab.binding.onecta.internal.exception.DaikinCommunicationException;
-import org.openhab.binding.onecta.internal.service.DataTransportService;
 import org.openhab.binding.onecta.internal.service.DeviceDiscoveryService;
-import org.openhab.core.io.net.http.HttpClientFactory;
 import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingStatus;
 import org.openhab.core.thing.binding.BaseBridgeHandler;
+import org.openhab.core.thing.binding.ThingHandler;
 import org.openhab.core.types.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +50,7 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
 
     private @Nullable ScheduledFuture<?> pollingJob;
 
-    private OnactaConnectionClient onactaConnectionClient;
+    private OnectaConnectionClient onectaConnectionClient;
 
     private Units units = new Units();
 
@@ -74,9 +72,9 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
         }
     };
 
-    public OnectaBridgeHandler(Bridge bridge, HttpClientFactory httpClientFactory) {
+    public OnectaBridgeHandler(Bridge bridge, OnectaConnectionClient onectaConnectionClient) {
         super(bridge);
-        this.onactaConnectionClient = new OnactaConnectionClient(httpClientFactory);
+        this.onectaConnectionClient = onectaConnectionClient;
     }
 
     @Override
@@ -112,12 +110,12 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
         // the framework is then able to reuse the resources from the thing handler initialization.
         // we set this upfront to reliably check status updates in unit tests.
         updateStatus(ThingStatus.UNKNOWN);
-        onactaConnectionClient.startConnecton(thing.getConfiguration().get("userId").toString(),
+        onectaConnectionClient.startConnecton(thing.getConfiguration().get("userId").toString(),
                 thing.getConfiguration().get("password").toString());
 
         // Example for background initialization:
         // scheduler.execute(() -> {
-        if (onactaConnectionClient.isOnline()) {
+        if (onectaConnectionClient.isOnline()) {
             updateStatus(ThingStatus.ONLINE);
         } else {
             updateStatus(ThingStatus.OFFLINE);
@@ -161,10 +159,15 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
         }
     }
 
+    @Override
+    public void childHandlerInitialized(ThingHandler childHandler, Thing childThing) {
+        logger.info("asasasasasasas");
+    }
+
     private void pollDevices() {
 
         try {
-            units = onactaConnectionClient.getUnits();
+            onectaConnectionClient.refreshUnitsData();
             // if (thing.getConfiguration().get("showAvailableUnitsInLog").toString() == "true") {
             //
             // for (Unit unit : units.getAll()) {
@@ -190,9 +193,7 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
                 continue;
             }
 
-            Unit unit = onactaConnectionClient.getUnit(handler.getThing().getConfiguration().get("unitID").toString());
-
-            handler.setUnit(new DataTransportService(unit, onactaConnectionClient.getRawData(unit.getId())));
+            handler.refreshDevice();
 
         }
     }

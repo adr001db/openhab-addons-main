@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.openhab.binding.onecta.internal.api.OnectaConnectionClient;
 import org.openhab.binding.onecta.internal.handler.OnectaBridgeHandler;
 import org.openhab.binding.onecta.internal.handler.OnectaDeviceHandler;
 import org.openhab.binding.onecta.internal.service.DeviceDiscoveryService;
@@ -51,6 +52,7 @@ public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
 
     private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Set.of(BRIDGE_THING_TYPE, DEVICE_THING_TYPE);
     private final HttpClientFactory httpClientFactory;
+    private OnectaConnectionClient onectaConnectionClient;
     private final TimeZoneProvider timeZoneProvider;
 
     private @Nullable OnectaBridgeHandler bridgeHandler = null;
@@ -62,6 +64,7 @@ public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
             @Reference TimeZoneProvider timeZoneProvider) {
         this.httpClientFactory = httpClientFactory;
         this.timeZoneProvider = timeZoneProvider;
+        this.onectaConnectionClient = new OnectaConnectionClient(httpClientFactory);
     }
 
     @Override
@@ -74,7 +77,7 @@ public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
         if (thingTypeUID.equals((BRIDGE_THING_TYPE))) {
-            bridgeHandler = new OnectaBridgeHandler((Bridge) thing, httpClientFactory);
+            bridgeHandler = new OnectaBridgeHandler((Bridge) thing, onectaConnectionClient);
 
             DeviceDiscoveryService deviceDiscoveryService = new DeviceDiscoveryService(bridgeHandler);
             bridgeHandler.setDiscovery(deviceDiscoveryService);
@@ -85,7 +88,7 @@ public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
             return bridgeHandler;
 
         } else if (thingTypeUID.equals((DEVICE_THING_TYPE))) {
-            return new OnectaDeviceHandler(thing);
+            return new OnectaDeviceHandler(thing, onectaConnectionClient);
         }
         return null;
     }

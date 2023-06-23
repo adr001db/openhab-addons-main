@@ -1,6 +1,7 @@
 package org.openhab.binding.onecta.internal.service;
 
 import org.openhab.binding.onecta.internal.api.Enums;
+import org.openhab.binding.onecta.internal.api.OnectaConnectionClient;
 import org.openhab.binding.onecta.internal.api.dto.units.ManagementPoint;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
 
@@ -8,12 +9,20 @@ import com.google.gson.JsonObject;
 
 public class DataTransportService {
 
+    private String unitId;
     private Unit unit;
     private JsonObject rawData;
 
-    public void setData(Unit unit, JsonObject rawData) {
-        this.unit = unit;
-        this.rawData = rawData;
+    private OnectaConnectionClient onectaConnectionClient;
+
+    public DataTransportService(OnectaConnectionClient onectaConnectionClient, String unitId) {
+        this.onectaConnectionClient = onectaConnectionClient;
+        this.unitId = unitId;
+    }
+
+    public void refreshUnit() {
+        this.unit = onectaConnectionClient.getUnit(unitId);
+        this.rawData = onectaConnectionClient.getRawData(unitId);
     }
 
     public JsonObject getRawData() {
@@ -108,6 +117,7 @@ public class DataTransportService {
     }
 
     public void setPowerOnOff(String value) {
+        onectaConnectionClient.setPowerOnOff(unitId, value);
     }
 
     public String getUnitName() {
