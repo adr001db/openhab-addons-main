@@ -162,4 +162,11 @@ public class OnectaConnectionClient {
 
         doBearerRequestPatch(url, commandNumber, false);
     }
+    public void setFanSpeed(String unitId, float value) {
+        String url = "/" + unitId + "/management-points/climateControl/characteristics/temperatureControl";
+        CommandNumber commandNumber = new CommandNumber(value, "/operationModes/cooling/setpoints/roomTemperature");
+
+        doBearerRequestPatch(url, commandNumber, false);
+    }
+
 }

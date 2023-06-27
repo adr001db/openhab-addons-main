@@ -52,8 +52,7 @@ public class OnectaDeviceHandler extends BaseThingHandler {
     private @Nullable ScheduledFuture<?> pollingJob;
 
     private DataTransportService dataTransService;
-    private ChannelsRefreshDelay channelsRefreshDelay = new ChannelsRefreshDelay(
-            Long.parseLong(thing.getConfiguration().get("refreshDelay").toString()));
+    private @Nullable ChannelsRefreshDelay channelsRefreshDelay;
 
     public OnectaDeviceHandler(Thing thing, OnectaConnectionClient onectaConnectionClient) {
         super(thing);
@@ -77,6 +76,11 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                         dataTransService.setCurrentTemperatureSet(((QuantityType) command).floatValue());
                     }
                     break;
+                case CHANNEL_AC_FANSPEED:
+                    if (command instanceof QuantityType) {
+                        dataTransService.setFanSpeed(((QuantityType) command).floatValue());
+                    }
+                    break;
             }
             updateStatus(ThingStatus.ONLINE);
         } catch (Exception ex) {
@@ -88,6 +92,8 @@ public class OnectaDeviceHandler extends BaseThingHandler {
     @Override
     public void initialize() {
         config = getConfigAs(OnectaConfiguration.class);
+        channelsRefreshDelay = new ChannelsRefreshDelay(
+                Long.parseLong(thing.getConfiguration().get("refreshDelay").toString()) * 1000);
         // DataTransportService dataTransService = new DataTransportService();
         // TODO: Initialize the handler.
         // The framework requires you to return from this method quickly, i.e. any network access must be done in

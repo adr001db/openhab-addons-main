@@ -55,6 +55,10 @@ public class DataTransportService {
         return Enums.FanSpeed.fromValue(fanMode);
     }
 
+    public void setFanSpeed (Enums.FanSpeed value) {
+        onectaConnectionClient.setFanSpeed(unitId, value);
+    }
+
     public Enums.FanMovementHor getCurrentFanDirectionHor() {
         try {
             String fanMode = getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getFanControl().getValue()
