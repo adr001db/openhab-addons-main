@@ -138,6 +138,10 @@ public class DataTransportService {
         }
     }
 
+    public void setCurrentTemperatureSet(float value) {
+        onectaConnectionClient.setCurrentTemperatureSet(unitId, value);
+    }
+
     public Number getIndoorTemperature() {
         try {
             return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getSensoryData().getValue()

@@ -50,6 +50,10 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
 
     private @Nullable ScheduledFuture<?> pollingJob;
 
+    public OnectaConnectionClient getOnectaConnectionClient() {
+        return onectaConnectionClient;
+    }
+
     private OnectaConnectionClient onectaConnectionClient;
 
     private Units units = new Units();
@@ -165,7 +169,11 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
     }
 
     private void pollDevices() {
-
+        if (onectaConnectionClient.isOnline()) {
+            updateStatus(ThingStatus.ONLINE);
+        } else {
+            updateStatus(ThingStatus.OFFLINE);
+        }
         try {
             onectaConnectionClient.refreshUnitsData();
             // if (thing.getConfiguration().get("showAvailableUnitsInLog").toString() == "true") {

@@ -33,6 +33,7 @@ public class DeviceDiscoveryService extends AbstractDiscoveryService {
 
     @Override
     protected void startScan() throws IllegalArgumentException {
+
         if (bridgeHandler == null) {
             return;
         }
@@ -46,7 +47,8 @@ public class DeviceDiscoveryService extends AbstractDiscoveryService {
             Map<String, Object> properties;
             String unitId;
             String unitName;
-            List<Unit> units = bridgeHandler.getUnits().getAll();
+            bridgeHandler.getOnectaConnectionClient().refreshUnitsData();
+            List<Unit> units = bridgeHandler.getOnectaConnectionClient().getUnits().getAll();
             for (int i = 0; i < units.size(); i++) {
                 unitId = units.get(i).getId().toString();
                 unitName = units.get(i).findManagementPointsById("climateControl").getName().getValue();

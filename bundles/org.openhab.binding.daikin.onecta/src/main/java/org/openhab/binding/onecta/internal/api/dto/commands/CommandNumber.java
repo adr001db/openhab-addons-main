@@ -2,19 +2,19 @@ package org.openhab.binding.onecta.internal.api.dto.commands;
 
 import com.google.gson.annotations.SerializedName;
 
-public class CommandOnOf {
+public class CommandNumber {
     @SerializedName("value")
-    public String value;
+    public float value;
 
     @SerializedName("path")
     public String path;
 
-    public CommandOnOf(String value) {
-        this.value = value.toLowerCase();
+    public CommandNumber(float value) {
+        this.value = value;
     }
 
-    public CommandOnOf(String value, String path) {
-        this.value = value.toLowerCase();
+    public CommandNumber(float value, String path) {
+        this.value = value;
         this.path = path;
     }
 }

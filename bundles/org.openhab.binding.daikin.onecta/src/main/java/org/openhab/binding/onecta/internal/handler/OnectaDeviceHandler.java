@@ -24,10 +24,12 @@ import org.openhab.binding.onecta.internal.api.OnectaConnectionClient;
 import org.openhab.binding.onecta.internal.service.DataTransportService;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.OnOffType;
+import org.openhab.core.library.types.QuantityType;
 import org.openhab.core.library.types.StringType;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingStatus;
+import org.openhab.core.thing.ThingStatusDetail;
 import org.openhab.core.thing.binding.BaseThingHandler;
 import org.openhab.core.types.Command;
 import org.openhab.core.types.UnDefType;
@@ -50,6 +52,8 @@ public class OnectaDeviceHandler extends BaseThingHandler {
     private @Nullable ScheduledFuture<?> pollingJob;
 
     private DataTransportService dataTransService;
+    private ChannelsRefreshDelay channelsRefreshDelay = new ChannelsRefreshDelay(
+            Long.parseLong(thing.getConfiguration().get("refreshDelay").toString()));
 
     public OnectaDeviceHandler(Thing thing, OnectaConnectionClient onectaConnectionClient) {
         super(thing);
@@ -59,17 +63,25 @@ public class OnectaDeviceHandler extends BaseThingHandler {
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
-        if (CHANNEL_AC_POWER.equals(channelUID.getId())) {
-            if (command instanceof OnOffType) {
-                dataTransService.setPowerOnOff(command.toString());
+
+        try {
+            channelsRefreshDelay.add(channelUID.getId());
+            switch (channelUID.getId()) {
+                case CHANNEL_AC_POWER:
+                    if (command instanceof OnOffType) {
+                        dataTransService.setPowerOnOff(command.toString());
+                    }
+                    break;
+                case CHANNEL_AC_TEMP:
+                    if (command instanceof QuantityType) {
+                        dataTransService.setCurrentTemperatureSet(((QuantityType) command).floatValue());
+                    }
+                    break;
             }
-
-            // TODO: handle command
-
-            // Note: if communication with thing fails for some reason,
-            // indicate that by setting the status with detail information:
-            // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
-            // "Could not control device at IP address x.x.x.x");
+            updateStatus(ThingStatus.ONLINE);
+        } catch (Exception ex) {
+            // catch exceptions and handle it in your binding
+            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, ex.getMessage());
         }
     }
 
@@ -129,11 +141,13 @@ public class OnectaDeviceHandler extends BaseThingHandler {
 
             updateState(CHANNEL_AC_RAWDATA, new StringType(dataTransService.getRawData().toString()));
 
-            updateState(CHANNEL_AC_POWER, OnOffType.from(dataTransService.getPowerOnOff()));
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_POWER))
+                updateState(CHANNEL_AC_POWER, OnOffType.from(dataTransService.getPowerOnOff()));
             updateState(CHANNEL_AC_OPERATIONMODE,
                     new StringType(dataTransService.getcurrentOperationMode().toString()));
-            updateState(CHANNEL_AC_TEMP, (dataTransService.getCurrentTemperatureSet() == null ? UnDefType.UNDEF
-                    : new DecimalType(dataTransService.getCurrentTemperatureSet())));
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMP))
+                updateState(CHANNEL_AC_TEMP, (dataTransService.getCurrentTemperatureSet() == null ? UnDefType.UNDEF
+                        : new DecimalType(dataTransService.getCurrentTemperatureSet())));
             updateState(CHANNEL_INDOOR_TEMP, (dataTransService.getIndoorTemperature() == null ? UnDefType.UNDEF
                     : new DecimalType(dataTransService.getIndoorTemperature())));
             updateState(CHANNEL_OUTDOOR_TEMP, (dataTransService.getOutdoorTemperature() == null ? UnDefType.UNDEF

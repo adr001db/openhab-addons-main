@@ -236,6 +236,7 @@ public class OnectaSignInClient {
                 "application/json");
 
         ContentResponse response = null;
+        respAuthenticationRoot.getAuthenticationResult().setAccessToken("");
         try {
             response = request.send();
             JsonObject jsonResponse = JsonParser.parseString(response.getContentAsString()).getAsJsonObject();
@@ -257,6 +258,7 @@ public class OnectaSignInClient {
     }
 
     public Boolean isOnline() {
-        return !this.refreshToken.isEmpty();
+        return !this.refreshToken.isEmpty()
+                && !this.respAuthenticationRoot.getAuthenticationResult().getAccessToken().isEmpty();
     }
 }

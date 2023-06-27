@@ -11,12 +11,15 @@ import org.eclipse.jetty.client.util.StringContentProvider;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpStatus;
+import org.openhab.binding.onecta.internal.api.dto.commands.CommandNumber;
 import org.openhab.binding.onecta.internal.api.dto.commands.CommandOnOf;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
 import org.openhab.binding.onecta.internal.api.dto.units.Units;
 import org.openhab.binding.onecta.internal.exception.DaikinCommunicationException;
 import org.openhab.binding.onecta.internal.exception.DaikinCommunicationForbiddenException;
 import org.openhab.core.io.net.http.HttpClientFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -24,8 +27,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class OnectaConnectionClient {
+    private final Logger logger = LoggerFactory.getLogger(OnectaSignInClient.class);
     private JsonArray rawData = new JsonArray();
     private Units onectaData = new Units();
+
+    public Units getUnits() {
+        return onectaData;
+    }
+
     private HttpClient httpClient;
 
     private OnectaSignInClient onectaSignInClient;
@@ -44,7 +53,8 @@ public class OnectaConnectionClient {
     }
 
     private Response doBearerRequestGet(Boolean refreshed) {
-        Response response;
+        Response response = null;
+        logger.info(String.format("doBearerRequestGet : refershed %s", refreshed.toString()));
         try {
             if (!onectaSignInClient.isOnline()) {
                 onectaSignInClient.signIn();
@@ -56,18 +66,23 @@ public class OnectaConnectionClient {
                     .header("x-api-key", "xw6gvOtBHq5b1pyceadRp6rujSNSZdjx2AqT03iC").send();
 
             if (response.getStatus() == HttpStatus.UNAUTHORIZED_401 && !refreshed) {
+                logger.info(String.format("doBearerRequestGet : status %s", response.getStatus()));
                 onectaSignInClient.fetchAccessToken();
-                doBearerRequestGet(true);
+                response = doBearerRequestGet(true);
             }
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
-            throw new RuntimeException(e);
-        } catch (DaikinCommunicationException e) {
-            throw new RuntimeException(e);
+
+        } catch (Exception e) {
+            if (!refreshed) {
+                try {
+                    logger.info(String.format("doBearerRequestGet : Exception status %s", e.getMessage()));
+                    onectaSignInClient.fetchAccessToken();
+                    response = doBearerRequestGet(true);
+                } catch (DaikinCommunicationException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
         }
+
         return response;
     }
 
@@ -139,5 +154,12 @@ public class OnectaConnectionClient {
         String url = "/" + unitId + "/management-points/climateControl/characteristics/onOffMode";
 
         doBearerRequestPatch(url, commandOnOf, false);
+    }
+
+    public void setCurrentTemperatureSet(String unitId, float value) {
+        String url = "/" + unitId + "/management-points/climateControl/characteristics/temperatureControl";
+        CommandNumber commandNumber = new CommandNumber(value, "/operationModes/cooling/setpoints/roomTemperature");
+
+        doBearerRequestPatch(url, commandNumber, false);
     }
 }

@@ -15,8 +15,12 @@ public class RespAuthenticationResult {
     @SerializedName("TokenType")
     private String tokenType = "";
 
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
     public String getAccessToken() {
-        return !accessToken.isEmpty() ? accessToken : "Something";
+        return !accessToken.isEmpty() ? accessToken : "";
     }
 
     public int getExpiresIn() {
