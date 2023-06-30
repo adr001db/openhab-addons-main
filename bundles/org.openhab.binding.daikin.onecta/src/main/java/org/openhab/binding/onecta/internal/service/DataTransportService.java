@@ -37,32 +37,36 @@ public class DataTransportService {
         return unit.findManagementPointsById(managementPoint.getValue());
     }
 
-    public Enums.OperationMode getcurrentOperationMode() {
+    public Enums.OperationMode getCurrentOperationMode() {
         return Enums.OperationMode
                 .fromValue(getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getOperationMode().getValue());
     }
 
+    public void setCurrentOperationMode(Enums.OperationMode value) {
+        onectaConnectionClient.setCurrentOperationMode(unitId, value);
+    }
+
     public Enums.FanSpeed getCurrentFanspeed() {
         String fanMode = getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getFanControl().getValue()
-                .getOperationModes().getFanOperationMode(getcurrentOperationMode()).getFanSpeed().getCurrentMode()
+                .getOperationModes().getFanOperationMode(getCurrentOperationMode()).getFanSpeed().getCurrentMode()
                 .getValue();
         if (Enums.FanSpeedMode.FIXED.getValue().equals(fanMode)) {
             Integer fanSpeed = getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getFanControl().getValue()
-                    .getOperationModes().getFanOperationMode(getcurrentOperationMode()).getFanSpeed().getModes()
+                    .getOperationModes().getFanOperationMode(getCurrentOperationMode()).getFanSpeed().getModes()
                     .getFixed().getValue();
             return Enums.FanSpeed.fromValue(String.format("%s_%s", fanMode, fanSpeed.toString()));
         }
         return Enums.FanSpeed.fromValue(fanMode);
     }
 
-    public void setFanSpeed (Enums.FanSpeed value) {
-        onectaConnectionClient.setFanSpeed(unitId, value);
+    public void setFanSpeed(Enums.FanSpeed value) {
+        onectaConnectionClient.setFanSpeed(unitId, getCurrentOperationMode(), value);
     }
 
     public Enums.FanMovementHor getCurrentFanDirectionHor() {
         try {
             String fanMode = getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getFanControl().getValue()
-                    .getOperationModes().getFanOperationMode(getcurrentOperationMode()).getFanDirection()
+                    .getOperationModes().getFanOperationMode(getCurrentOperationMode()).getFanDirection()
                     .getHorizontal().getCurrentMode().getValue();
             return Enums.FanMovementHor.fromValue(fanMode);
         } catch (Exception e) {
@@ -73,7 +77,7 @@ public class DataTransportService {
     public Enums.FanMovementVer getCurrentFanDirectionVer() {
         try {
             String fanMode = getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getFanControl().getValue()
-                    .getOperationModes().getFanOperationMode(getcurrentOperationMode()).getFanDirection().getVertical()
+                    .getOperationModes().getFanOperationMode(getCurrentOperationMode()).getFanDirection().getVertical()
                     .getCurrentMode().getValue();
             return Enums.FanMovementVer.fromValue(fanMode);
         } catch (Exception e) {
@@ -112,6 +116,10 @@ public class DataTransportService {
         }
     }
 
+    public void setCurrentFanDirection(Enums.FanMovement value) {
+        onectaConnectionClient.setCurrentFanDirection(unitId, getCurrentOperationMode(), value);
+    }
+
     public String getPowerOnOff() {
         try {
             return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getOnOffMode().getValue();
@@ -135,7 +143,7 @@ public class DataTransportService {
     public Number getCurrentTemperatureSet() {
         try {
             return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getTemperatureControl().getValue()
-                    .getOperationModes().getOperationMode(getcurrentOperationMode()).getSetpoints().getRoomTemperature()
+                    .getOperationModes().getOperationMode(getCurrentOperationMode()).getSetpoints().getRoomTemperature()
                     .getValue();
         } catch (Exception e) {
             return null;
@@ -143,7 +151,7 @@ public class DataTransportService {
     }
 
     public void setCurrentTemperatureSet(float value) {
-        onectaConnectionClient.setCurrentTemperatureSet(unitId, value);
+        onectaConnectionClient.setCurrentTemperatureSet(unitId, getCurrentOperationMode(), value);
     }
 
     public Number getIndoorTemperature() {

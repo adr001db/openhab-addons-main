@@ -71,16 +71,27 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                         dataTransService.setPowerOnOff(command.toString());
                     }
                     break;
+                case CHANNEL_AC_OPERATIONMODE:
+                    if (command instanceof StringType) {
+                        dataTransService.setCurrentOperationMode(Enums.OperationMode.valueOf(command.toString()));
+                    }
+                    break;
                 case CHANNEL_AC_TEMP:
                     if (command instanceof QuantityType) {
-                        dataTransService.setCurrentTemperatureSet(((QuantityType) command).floatValue());
+                        dataTransService.setCurrentTemperatureSet(((QuantityType<?>) command).floatValue());
                     }
                     break;
                 case CHANNEL_AC_FANSPEED:
-                    if (command instanceof QuantityType) {
-                        dataTransService.setFanSpeed(((QuantityType) command).floatValue());
+                    if (command instanceof StringType) {
+                        dataTransService.setFanSpeed(Enums.FanSpeed.valueOf(command.toString()));
                     }
                     break;
+                case CHANNEL_AC_FANMOVEMENT:
+                    if (command instanceof StringType) {
+                        dataTransService.setCurrentFanDirection(Enums.FanMovement.valueOf(command.toString()));
+                    }
+                    break;
+
             }
             updateStatus(ThingStatus.ONLINE);
         } catch (Exception ex) {
@@ -149,8 +160,9 @@ public class OnectaDeviceHandler extends BaseThingHandler {
 
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_POWER))
                 updateState(CHANNEL_AC_POWER, OnOffType.from(dataTransService.getPowerOnOff()));
-            updateState(CHANNEL_AC_OPERATIONMODE,
-                    new StringType(dataTransService.getcurrentOperationMode().toString()));
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_OPERATIONMODE))
+                updateState(CHANNEL_AC_OPERATIONMODE,
+                        new StringType(dataTransService.getCurrentOperationMode().toString()));
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMP))
                 updateState(CHANNEL_AC_TEMP, (dataTransService.getCurrentTemperatureSet() == null ? UnDefType.UNDEF
                         : new DecimalType(dataTransService.getCurrentTemperatureSet())));
@@ -160,7 +172,8 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                     : new DecimalType(dataTransService.getOutdoorTemperature())));
             updateState(CHANNEL_INDOOR_HUMIDITY, (dataTransService.getIndoorHumidity() == null ? UnDefType.UNDEF
                     : new DecimalType(dataTransService.getIndoorHumidity())));
-            updateState(CHANNEL_AC_FANSPEED, new StringType(dataTransService.getCurrentFanspeed().toString()));
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_FANSPEED))
+                updateState(CHANNEL_AC_FANSPEED, new StringType(dataTransService.getCurrentFanspeed().toString()));
             updateState(CHANNEL_AC_FANMOVEMENT_HOR,
                     (dataTransService.getCurrentFanDirectionHor() == Enums.FanMovementHor.NOTAVAILABLE ? UnDefType.UNDEF
                             : new StringType(dataTransService.getCurrentFanDirectionHor().toString())));

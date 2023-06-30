@@ -102,13 +102,28 @@ public class Enums {
 
         private static final Logger LOGGER = LoggerFactory.getLogger(FanSpeed.class);
         private final String value;
+        private final String mode;
+        private final Integer speed;
 
         FanSpeed(String value) {
             this.value = value;
+            this.mode = value.split("_")[0];
+            if (value.contains("_"))
+                this.speed = Integer.parseInt(value.split("_")[1]);
+            else
+                this.speed = 0;
         }
 
         public String getValue() {
             return value;
+        }
+
+        public Integer getValueSpeed() {
+            return speed;
+        }
+
+        public String getValueMode() {
+            return mode;
         }
 
         public static FanSpeed fromValue(String value) {

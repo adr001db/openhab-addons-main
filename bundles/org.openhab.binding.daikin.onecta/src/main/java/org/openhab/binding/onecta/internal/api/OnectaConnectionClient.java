@@ -11,8 +11,10 @@ import org.eclipse.jetty.client.util.StringContentProvider;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpStatus;
-import org.openhab.binding.onecta.internal.api.dto.commands.CommandNumber;
+import org.openhab.binding.onecta.internal.api.dto.commands.CommandFloat;
+import org.openhab.binding.onecta.internal.api.dto.commands.CommandInteger;
 import org.openhab.binding.onecta.internal.api.dto.commands.CommandOnOf;
+import org.openhab.binding.onecta.internal.api.dto.commands.CommandString;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
 import org.openhab.binding.onecta.internal.api.dto.units.Units;
 import org.openhab.binding.onecta.internal.exception.DaikinCommunicationException;
@@ -103,6 +105,7 @@ public class OnectaConnectionClient {
                 onectaSignInClient.fetchAccessToken();
                 doBearerRequestPatch(url, body, true);
             }
+
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
@@ -156,17 +159,77 @@ public class OnectaConnectionClient {
         doBearerRequestPatch(url, commandOnOf, false);
     }
 
-    public void setCurrentTemperatureSet(String unitId, float value) {
-        String url = "/" + unitId + "/management-points/climateControl/characteristics/temperatureControl";
-        CommandNumber commandNumber = new CommandNumber(value, "/operationModes/cooling/setpoints/roomTemperature");
+    public void setCurrentOperationMode(String unitId, Enums.OperationMode operationMode) {
+        String url = "/" + unitId + "/management-points/climateControl/characteristics/operationMode";
+        CommandString commandString = new CommandString(operationMode.getValue());
 
-        doBearerRequestPatch(url, commandNumber, false);
-    }
-    public void setFanSpeed(String unitId, float value) {
-        String url = "/" + unitId + "/management-points/climateControl/characteristics/temperatureControl";
-        CommandNumber commandNumber = new CommandNumber(value, "/operationModes/cooling/setpoints/roomTemperature");
-
-        doBearerRequestPatch(url, commandNumber, false);
+        doBearerRequestPatch(url, commandString, false);
     }
 
+    public void setCurrentTemperatureSet(String unitId, Enums.OperationMode currentMode, float value) {
+        String url = "/" + unitId + "/management-points/climateControl/characteristics/temperatureControl";
+        CommandFloat commandFloat = new CommandFloat(value,
+                String.format("/operationModes/%s/setpoints/roomTemperature", currentMode.getValue()));
+
+        doBearerRequestPatch(url, commandFloat, false);
+    }
+
+    public void setFanSpeed(String unitId, Enums.OperationMode currentMode, Enums.FanSpeed fanspeed) {
+        String url = "/" + unitId + "/management-points/climateControl/characteristics/fanControl";
+        CommandString commandString = new CommandString(fanspeed.getValueMode(),
+                String.format("/operationModes/%s/fanSpeed/currentMode", currentMode.getValue()));
+        doBearerRequestPatch(url, commandString, false);
+
+        if (fanspeed.getValueMode().equals(Enums.FanSpeedMode.FIXED.getValue())) {
+            url = "/" + unitId + "/management-points/climateControl/characteristics/fanControl";
+            CommandInteger commandInteger = new CommandInteger(fanspeed.getValueSpeed(),
+                    String.format("/operationModes/%s/fanSpeed/modes/fixed", currentMode.getValue()));
+            doBearerRequestPatch(url, commandInteger, false);
+        }
+    }
+
+    public void setCurrentFanDirection(String unitId, Enums.OperationMode currentMode, Enums.FanMovement fanMovement) {
+        String url = "/" + unitId + "/management-points/climateControl/characteristics/fanControl";
+        CommandString commandString;
+        switch (fanMovement) {
+            case STOPPED:
+                commandString = new CommandString(Enums.FanMovementHor.STOPPED.getValue(), String
+                        .format("/operationModes/%s/fanDirection/horizontal/currentMode", currentMode.getValue()));
+                doBearerRequestPatch(url, commandString, false);
+
+                commandString = new CommandString(Enums.FanMovementVer.STOPPED.getValue(),
+                        String.format("/operationModes/%s/fanDirection/vertical/currentMode", currentMode.getValue()));
+                doBearerRequestPatch(url, commandString, false);
+                break;
+            case VERTICAL:
+                commandString = new CommandString(Enums.FanMovementHor.STOPPED.getValue(), String
+                        .format("/operationModes/%s/fanDirection/horizontal/currentMode", currentMode.getValue()));
+                doBearerRequestPatch(url, commandString, false);
+
+                commandString = new CommandString(Enums.FanMovementVer.SWING.getValue(),
+                        String.format("/operationModes/%s/fanDirection/vertical/currentMode", currentMode.getValue()));
+                doBearerRequestPatch(url, commandString, false);
+                break;
+            case HORIZONTAL:
+                commandString = new CommandString(Enums.FanMovementHor.SWING.getValue(), String
+                        .format("/operationModes/%s/fanDirection/horizontal/currentMode", currentMode.getValue()));
+                doBearerRequestPatch(url, commandString, false);
+
+                commandString = new CommandString(Enums.FanMovementVer.STOPPED.getValue(),
+                        String.format("/operationModes/%s/fanDirection/vertical/currentMode", currentMode.getValue()));
+                doBearerRequestPatch(url, commandString, false);
+                break;
+            case VERTICAL_AND_HORIZONTAL:
+                commandString = new CommandString(Enums.FanMovementHor.SWING.getValue(), String
+                        .format("/operationModes/cooling/fanDirection/horizontal/currentMode", currentMode.getValue()));
+                doBearerRequestPatch(url, commandString, false);
+
+                commandString = new CommandString(Enums.FanMovementVer.SWING.getValue(), String
+                        .format("/operationModes/cooling/fanDirection/vertical/currentMode", currentMode.getValue()));
+                doBearerRequestPatch(url, commandString, false);
+                break;
+            default:
+                break;
+        }
+    }
 }
