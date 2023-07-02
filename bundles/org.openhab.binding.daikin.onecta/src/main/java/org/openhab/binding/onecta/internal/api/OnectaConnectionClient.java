@@ -56,7 +56,7 @@ public class OnectaConnectionClient {
 
     private Response doBearerRequestGet(Boolean refreshed) {
         Response response = null;
-        logger.info(String.format("doBearerRequestGet : refershed %s", refreshed.toString()));
+        // logger.info(String.format("doBearerRequestGet : refershed %s", refreshed.toString()));
         try {
             if (!onectaSignInClient.isOnline()) {
                 onectaSignInClient.signIn();

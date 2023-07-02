@@ -41,7 +41,6 @@ public class OnectaDeviceConstants {
     public static final ThingTypeUID DEVICE_THING_TYPE = new ThingTypeUID(BINDING_ID, DEVICE);
 
     // List of all Channel ids
-    public static final String CHANNEL_1 = "channel1";
     public static final String CHANNEL_AC_TEMP = "settemp";
     public static final String CHANNEL_INDOOR_TEMP = "indoortemp";
     public static final String CHANNEL_INDOOR_HUMIDITY = "humidity";

@@ -30,7 +30,6 @@ import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingStatus;
 import org.openhab.core.thing.binding.BaseBridgeHandler;
-import org.openhab.core.thing.binding.ThingHandler;
 import org.openhab.core.types.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -161,11 +160,6 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
             pollingJob.cancel(true);
             this.pollingJob = null;
         }
-    }
-
-    @Override
-    public void childHandlerInitialized(ThingHandler childHandler, Thing childThing) {
-        logger.info("asasasasasasas");
     }
 
     private void pollDevices() {

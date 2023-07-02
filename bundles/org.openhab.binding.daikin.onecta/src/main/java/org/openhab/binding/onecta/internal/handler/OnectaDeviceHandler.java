@@ -166,21 +166,24 @@ public class OnectaDeviceHandler extends BaseThingHandler {
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMP))
                 updateState(CHANNEL_AC_TEMP, (dataTransService.getCurrentTemperatureSet() == null ? UnDefType.UNDEF
                         : new DecimalType(dataTransService.getCurrentTemperatureSet())));
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_FANMOVEMENT))
+                updateState(CHANNEL_AC_FANMOVEMENT,
+                        new StringType(dataTransService.getCurrentFanDirection().toString()));
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_FANSPEED))
+                updateState(CHANNEL_AC_FANSPEED, new StringType(dataTransService.getCurrentFanspeed().toString()));
+
             updateState(CHANNEL_INDOOR_TEMP, (dataTransService.getIndoorTemperature() == null ? UnDefType.UNDEF
                     : new DecimalType(dataTransService.getIndoorTemperature())));
             updateState(CHANNEL_OUTDOOR_TEMP, (dataTransService.getOutdoorTemperature() == null ? UnDefType.UNDEF
                     : new DecimalType(dataTransService.getOutdoorTemperature())));
             updateState(CHANNEL_INDOOR_HUMIDITY, (dataTransService.getIndoorHumidity() == null ? UnDefType.UNDEF
                     : new DecimalType(dataTransService.getIndoorHumidity())));
-            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_FANSPEED))
-                updateState(CHANNEL_AC_FANSPEED, new StringType(dataTransService.getCurrentFanspeed().toString()));
             updateState(CHANNEL_AC_FANMOVEMENT_HOR,
                     (dataTransService.getCurrentFanDirectionHor() == Enums.FanMovementHor.NOTAVAILABLE ? UnDefType.UNDEF
                             : new StringType(dataTransService.getCurrentFanDirectionHor().toString())));
             updateState(CHANNEL_AC_FANMOVEMENT_VER,
                     (dataTransService.getCurrentFanDirectionVer() == Enums.FanMovementVer.NOTAVAILABLE ? UnDefType.UNDEF
                             : new StringType(dataTransService.getCurrentFanDirectionVer().toString())));
-            updateState(CHANNEL_AC_FANMOVEMENT, new StringType(dataTransService.getCurrentFanDirection().toString()));
 
         } else {
             getThing().setProperty(CHANNEL_AC_NAME, "Unit not registered at Onecta, unitID does not exists.");
