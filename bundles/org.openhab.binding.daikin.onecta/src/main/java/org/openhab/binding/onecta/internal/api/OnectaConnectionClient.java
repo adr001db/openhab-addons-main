@@ -1,8 +1,6 @@
 package org.openhab.binding.onecta.internal.api;
 
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpContentResponse;
@@ -68,7 +66,6 @@ public class OnectaConnectionClient {
                     .header("x-api-key", "xw6gvOtBHq5b1pyceadRp6rujSNSZdjx2AqT03iC").send();
 
             if (response.getStatus() == HttpStatus.UNAUTHORIZED_401 && !refreshed) {
-                logger.info(String.format("doBearerRequestGet : status %s", response.getStatus()));
                 onectaSignInClient.fetchAccessToken();
                 response = doBearerRequestGet(true);
             }
@@ -76,7 +73,7 @@ public class OnectaConnectionClient {
         } catch (Exception e) {
             if (!refreshed) {
                 try {
-                    logger.info(String.format("doBearerRequestGet : Exception status %s", e.getMessage()));
+                    logger.info(String.format("Get new token"));
                     onectaSignInClient.fetchAccessToken();
                     response = doBearerRequestGet(true);
                 } catch (DaikinCommunicationException ex) {
@@ -89,7 +86,7 @@ public class OnectaConnectionClient {
     }
 
     private Response doBearerRequestPatch(String url, Object body, Boolean refreshed) {
-        Response response;
+        Response response = null;
         try {
             if (!onectaSignInClient.isOnline()) {
                 onectaSignInClient.signIn();
@@ -105,15 +102,17 @@ public class OnectaConnectionClient {
                 onectaSignInClient.fetchAccessToken();
                 doBearerRequestPatch(url, body, true);
             }
-
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
-            throw new RuntimeException(e);
-        } catch (DaikinCommunicationException e) {
-            throw new RuntimeException(e);
+            return response;
+        } catch (Exception e) {
+            if (!refreshed) {
+                try {
+                    logger.info(String.format("Get new token"));
+                    onectaSignInClient.fetchAccessToken();
+                    response = doBearerRequestGet(true);
+                } catch (DaikinCommunicationException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
         }
         return response;
     }
@@ -221,11 +220,11 @@ public class OnectaConnectionClient {
                 break;
             case VERTICAL_AND_HORIZONTAL:
                 commandString = new CommandString(Enums.FanMovementHor.SWING.getValue(), String
-                        .format("/operationModes/cooling/fanDirection/horizontal/currentMode", currentMode.getValue()));
+                        .format("/operationModes/%s/fanDirection/horizontal/currentMode", currentMode.getValue()));
                 doBearerRequestPatch(url, commandString, false);
 
-                commandString = new CommandString(Enums.FanMovementVer.SWING.getValue(), String
-                        .format("/operationModes/cooling/fanDirection/vertical/currentMode", currentMode.getValue()));
+                commandString = new CommandString(Enums.FanMovementVer.SWING.getValue(),
+                        String.format("/operationModes/%s/fanDirection/vertical/currentMode", currentMode.getValue()));
                 doBearerRequestPatch(url, commandString, false);
                 break;
             default:
