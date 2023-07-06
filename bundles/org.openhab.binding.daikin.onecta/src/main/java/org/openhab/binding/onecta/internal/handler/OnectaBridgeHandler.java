@@ -163,6 +163,7 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
     }
 
     private void pollDevices() {
+        logger.debug("pollDevices.");
         if (onectaConnectionClient.isOnline()) {
             updateStatus(ThingStatus.ONLINE);
         } else {
@@ -178,6 +179,7 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
             // }
             // }
         } catch (DaikinCommunicationException e) {
+            logger.error("DaikinCommunicationException: " + e.getMessage());
             updateStatus(ThingStatus.OFFLINE);
         }
 

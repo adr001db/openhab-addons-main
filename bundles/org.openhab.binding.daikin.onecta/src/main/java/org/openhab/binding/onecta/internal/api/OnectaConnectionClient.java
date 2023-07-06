@@ -27,6 +27,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class OnectaConnectionClient {
+
     private final Logger logger = LoggerFactory.getLogger(OnectaSignInClient.class);
     private JsonArray rawData = new JsonArray();
     private Units onectaData = new Units();
@@ -73,7 +74,7 @@ public class OnectaConnectionClient {
         } catch (Exception e) {
             if (!refreshed) {
                 try {
-                    logger.info(String.format("Get new token"));
+                    logger.debug(String.format("Get new token"));
                     onectaSignInClient.fetchAccessToken();
                     response = doBearerRequestGet(true);
                 } catch (DaikinCommunicationException ex) {
@@ -106,7 +107,7 @@ public class OnectaConnectionClient {
         } catch (Exception e) {
             if (!refreshed) {
                 try {
-                    logger.info(String.format("Get new token"));
+                    logger.debug(String.format("Get new token"));
                     onectaSignInClient.fetchAccessToken();
                     response = doBearerRequestGet(true);
                 } catch (DaikinCommunicationException ex) {
@@ -152,10 +153,9 @@ public class OnectaConnectionClient {
     }
 
     public void setPowerOnOff(String unitId, String value) {
+        logger.debug(String.format("setPowerOnOff : %s, %s", unitId, value));
         CommandOnOf commandOnOf = new CommandOnOf(value);
-        String url = "/" + unitId + "/management-points/climateControl/characteristics/onOffMode";
-
-        doBearerRequestPatch(url, commandOnOf, false);
+        doBearerRequestPatch(OnectaProperties.getUrlOnOff(unitId), commandOnOf, false);
     }
 
     public void setCurrentOperationMode(String unitId, Enums.OperationMode operationMode) {

@@ -62,7 +62,7 @@ public class DeviceDiscoveryService extends AbstractDiscoveryService {
 
                 thingDiscovered(discoveryResult);
 
-                logger.debug("Discovered a camera thing with ID '{}'", unitId);
+                logger.debug("Discovered a onecta unit thing with ID '{}'", unitId);
             }
         } catch (Exception e) {
             logger.error("Error in DiscoveryService", e);

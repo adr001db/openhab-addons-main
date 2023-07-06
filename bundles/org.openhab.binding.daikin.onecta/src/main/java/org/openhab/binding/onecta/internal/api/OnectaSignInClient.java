@@ -72,7 +72,7 @@ public class OnectaSignInClient {
         this.userId = userId;
         this.password = password;
         try {
-            logger.info("Start logon");
+            logger.info("Start logon to Daikin : " + userId);
             httpClient.setFollowRedirects(false);
             httpClient.getCookieStore().removeAll();
             // Step 1
@@ -88,13 +88,14 @@ public class OnectaSignInClient {
                     "/saml2/idpresponse");
 
             // Step 2 create client Secret
-            logger.info("Create client Secret");
+            logger.debug("Create client Secret");
             int length = 32;
             boolean useLetters = true;
             boolean useNumbers = true;
             String createdClientSecret = RandomStringUtils.random(length, useLetters, useNumbers);
 
             // Step 3 create initial url
+            logger.debug("Create initial url");
             final String redirectUri = "daikinunified%3A%2F%2Flogin";
             String url = authEndpoint
                     + String.format("?response_type=code&state=%s&client_id=%s&scope=openid&redirect_uri=%s",
@@ -103,7 +104,7 @@ public class OnectaSignInClient {
             String redirectUrl = response.getHeaders().get(HttpHeader.LOCATION);
 
             // Get csrf-cookies
-            logger.info("Get csrf-cookies");
+            logger.debug("Get csrf-cookies");
             String cookieString = "";
             for (HttpCookie cookie : httpClient.getCookieStore().getCookies()) {
                 if (cookie.getName().equalsIgnoreCase("xsrf-token") || cookie.getName().equals("csrf-state")
@@ -113,12 +114,12 @@ public class OnectaSignInClient {
             }
 
             // Step 4 Call the forward-url -> extract samlContext from request
-            logger.info("Call forward-url");
+            logger.debug("Call forward-url");
             response = httpClient.GET(redirectUrl);
             String samlContext = getSamlContext(response.getHeaders().get(HttpHeader.LOCATION).split("[?]")[1]);
 
             // Step 5 prepare request to get Api-Version
-            logger.info("Prepare request to get Api-Version");
+            logger.debug("Prepare request to get Api-Version");
             httpClient.setFollowRedirects(true);
             url = "https://cdns.gigya.com/js/gigya.js?apiKey=" + APIKEY;
             response = httpClient.GET(url);
@@ -129,7 +130,7 @@ public class OnectaSignInClient {
             String apiVersion = matcher.group();
 
             // Step 6 prepare request to get single-sign-on cookie
-            logger.info("Prepare request to get single-sign-on cookie");
+            logger.debug("Prepare request to get single-sign-on cookie");
             url = String.format("https://cdc.daikin.eu/accounts.webSdkBootstrap?apiKey=%s&sdk=js_latest&format=json",
                     APIKEY);
             response = httpClient.GET(url);
@@ -146,7 +147,7 @@ public class OnectaSignInClient {
             ssoCookieString += String.format("gig_canary_ver_%s=%s; ", APIKEY_2, apiVersion);
             ssoCookieString += String.format("apiDomain_%s==cdc.daikin.eu; ", APIKEY_2);
 
-            logger.info("User logon to Daikin");
+            logger.debug("User logon to Daikin");
             response = httpClient.newRequest("https://cdc.daikin.eu/accounts.login").method(HttpMethod.POST)
                     .header("content-type", "application/x-www-form-urlencoded").header("cookie", ssoCookieString)
                     .param("loginID", userId).param("password", password).param("sessionExpiration", "31536000")
@@ -158,14 +159,14 @@ public class OnectaSignInClient {
                     .param("sdkBuild", "12208").param("format", "json").send();
 
             // step 7 extract login-token
-            logger.info("Extract login-token");
+            logger.debug("Extract login-token");
             jsonResponse = JsonParser.parseString(response.getContentAsString()).getAsJsonObject();
             RespStep7 respStep7 = Objects
                     .requireNonNull(new Gson().fromJson(jsonResponse.getAsJsonObject(), RespStep7.class));
             String loginToken = respStep7.getSessionInfo().getLogin_token();
 
             // step 8 expand single-sign-on cookies with login-token
-            logger.info("Expand single-sign-on cookies with login-token");
+            logger.debug("Expand single-sign-on cookies with login-token");
             String tijd = String.valueOf(new Date().getTime() + 3600000);
             ssoCookieString += String.format("glt_%s=%s; ", APIKEY, loginToken);
             ssoCookieString += String.format("gig_loginToken_%s=%s; ", APIKEY_2, loginToken);
@@ -187,7 +188,7 @@ public class OnectaSignInClient {
             String relayState = matcher.group().split("value=\"")[1];
 
             // Step 9 Get DaikinUnified
-            logger.info("Get DaikinUnified");
+            logger.debug("Get DaikinUnified");
             httpClient.setFollowRedirects(false);
             httpClient.setRequestBufferSize(20000);
             response = httpClient.newRequest(saml2Endpoint).method(HttpMethod.POST)
@@ -198,7 +199,7 @@ public class OnectaSignInClient {
             httpClient.setFollowRedirects(true);
 
             // Step 10 get the Tokens
-            logger.info("Get Tokens to perform datatransfer");
+            logger.debug("Get Tokens to perform datatransfer");
             url = tokenEndpoint + "?grant_type=authorization_code&code=" + daikinUnified + "&state="
                     + createdClientSecret + "&client_id=" + OPENID_CLIENT_ID
                     + "&redirect_uri=daikinunified%3A%2F%2Flogin";
@@ -223,7 +224,7 @@ public class OnectaSignInClient {
     }
 
     public void fetchAccessToken() throws DaikinCommunicationException {
-        logger.info("Refresh token.");
+        logger.debug("Refresh token.");
         respAuthenticationRoot = new RespAuthenticationRoot();
         ReqAuthenticationRoot reqAuthenticationRoot = new ReqAuthenticationRoot(OPENID_CLIENT_ID, this.refreshToken);
 
