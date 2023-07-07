@@ -19,12 +19,12 @@
 			<channel id="outdoortemp" typeId="acunit-outdoortemp"/>
 			<channel id="humidity" typeId="acunit-humidity"/>
 			<channel id="operationmode" typeId="acunit-operationmode"/>
-			<channel id="homekitmode" typeId="acunit-homekitmode"/>
 			<channel id="fanspeed" typeId="acunit-fan"/>
 			<channel id="fandirhor" typeId="acunit-fandirhor"/>
 			<channel id="fandirver" typeId="acunit-fandirver"/>
 			<channel id="fandir" typeId="acunit-fandir"/>
 			<channel id="rawdata" typeId="acunit-rawdata"/>
+			<channel id="economode" typeId="acunit-economode"/>
 
 		</channels>
 
@@ -53,6 +53,14 @@
 		<description>Power for the AC unit</description>
 		<category>Switch</category>
 	</channel-type>
+
+	<channel-type id="acunit-economode">
+		<item-type>Switch</item-type>
+		<label>Ecomode</label>
+		<description>Set the unit to ecomode</description>
+		<category>Switch</category>
+	</channel-type>
+
 
 	<channel-type id="acunit-settemp">
 		<item-type>Number:Temperature</item-type>
@@ -97,20 +105,6 @@
 				<option value="COLD">Cooling</option>
 				<option value="HEAT">Heating</option>
 				<option value="FAN">Fan only</option>
-			</options>
-		</state>
-	</channel-type>
-
-	<channel-type id="acunit-homekitmode">
-		<item-type>String</item-type>
-		<label>Homekit Mode</label>
-		<description>Current Homekit mode of the AC unit</description>
-		<state>
-			<options>
-				<option value="auto">Auto</option>
-				<option value="heat">Heating On</option>
-				<option value="cool">Cooling On</option>
-				<option value="off">Off</option>
 			</options>
 		</state>
 	</channel-type>

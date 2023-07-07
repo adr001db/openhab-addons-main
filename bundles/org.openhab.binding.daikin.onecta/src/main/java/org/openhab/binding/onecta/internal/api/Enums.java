@@ -261,24 +261,6 @@ public class Enums {
         }
     }
 
-    public enum HomekitMode {
-        AUTO("auto"),
-        COOL("cool"),
-        HEAT("heat"),
-        OFF("off");
-
-        private static final Logger LOGGER = LoggerFactory.getLogger(HomekitMode.class);
-        private final String value;
-
-        HomekitMode(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
-
     public enum AdvancedMode {
         STREAMER("13"),
         ECO("12"),

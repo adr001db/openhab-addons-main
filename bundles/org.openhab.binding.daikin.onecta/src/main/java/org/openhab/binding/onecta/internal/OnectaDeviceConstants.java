@@ -54,4 +54,5 @@ public class OnectaDeviceConstants {
     public static final String CHANNEL_AC_FANMOVEMENT_HOR = "fandirhor";
     public static final String CHANNEL_AC_FANMOVEMENT_VER = "fandirver";
     public static final String CHANNEL_AC_FANMOVEMENT = "fandir";
+    public static final String CHANNEL_AC_ECONOMODE = "economode";
 }

@@ -47,9 +47,9 @@ public class ManagementPoint {
     @SerializedName("demandControl")
     private DemandControl demandControl;
 
-    // @SerializedName("_id")
-    // private DryKeepSetting econoMode;
-    //
+    @SerializedName("econoMode")
+    private GatwaySubValueString econoMode;
+
     @SerializedName("fanControl")
     private FanControl fanControl;
     //
@@ -238,5 +238,9 @@ public class ManagementPoint {
 
     public FanControl getFanControl() {
         return fanControl;
+    }
+
+    public GatwaySubValueString getEconoMode() {
+        return econoMode;
     }
 }

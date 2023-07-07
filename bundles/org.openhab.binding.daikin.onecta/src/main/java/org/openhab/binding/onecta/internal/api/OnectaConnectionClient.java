@@ -1,5 +1,7 @@
 package org.openhab.binding.onecta.internal.api;
 
+import static org.openhab.binding.onecta.internal.api.OnectaProperties.*;
+
 import java.util.Objects;
 
 import org.eclipse.jetty.client.HttpClient;
@@ -9,8 +11,6 @@ import org.eclipse.jetty.client.util.StringContentProvider;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpStatus;
-import org.openhab.binding.onecta.internal.api.dto.commands.CommandFloat;
-import org.openhab.binding.onecta.internal.api.dto.commands.CommandInteger;
 import org.openhab.binding.onecta.internal.api.dto.commands.CommandOnOf;
 import org.openhab.binding.onecta.internal.api.dto.commands.CommandString;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
@@ -55,13 +55,12 @@ public class OnectaConnectionClient {
 
     private Response doBearerRequestGet(Boolean refreshed) {
         Response response = null;
-        // logger.info(String.format("doBearerRequestGet : refershed %s", refreshed.toString()));
+        logger.debug(String.format("doBearerRequestGet : refershed %s", refreshed.toString()));
         try {
             if (!onectaSignInClient.isOnline()) {
                 onectaSignInClient.signIn();
             }
-            String urlTot = "https://api.prod.unicloud.edc.dknadmin.be/v1/gateway-devices";
-            response = httpClient.newRequest(urlTot).method(HttpMethod.GET)
+            response = httpClient.newRequest(OnectaProperties.getBaseUrl("")).method(HttpMethod.GET)
                     .header(HttpHeader.AUTHORIZATION, String.format("Bearer %s", onectaSignInClient.getToken()))
                     .header(HttpHeader.USER_AGENT, "Daikin/1.6.1.4681 CFNetwork/1209 Darwin/20.2.0")
                     .header("x-api-key", "xw6gvOtBHq5b1pyceadRp6rujSNSZdjx2AqT03iC").send();
@@ -86,14 +85,17 @@ public class OnectaConnectionClient {
         return response;
     }
 
+    private Response doBearerRequestPatch(String url, Object body) {
+        return doBearerRequestPatch(url, body, false);
+    }
+
     private Response doBearerRequestPatch(String url, Object body, Boolean refreshed) {
         Response response = null;
         try {
             if (!onectaSignInClient.isOnline()) {
                 onectaSignInClient.signIn();
             }
-            String urlTot = String.format("https://api.prod.unicloud.edc.dknadmin.be/v1/gateway-devices%s", url);
-            response = httpClient.newRequest(urlTot).method(HttpMethod.PATCH)
+            response = httpClient.newRequest(url).method(HttpMethod.PATCH)
                     .content(new StringContentProvider(new Gson().toJson(body)), "application/json")
                     .header(HttpHeader.AUTHORIZATION, String.format("Bearer %s", onectaSignInClient.getToken()))
                     .header(HttpHeader.USER_AGENT, "Daikin/1.6.1.4681 CFNetwork/1209 Darwin/20.2.0")
@@ -155,77 +157,65 @@ public class OnectaConnectionClient {
     public void setPowerOnOff(String unitId, String value) {
         logger.debug(String.format("setPowerOnOff : %s, %s", unitId, value));
         CommandOnOf commandOnOf = new CommandOnOf(value);
-        doBearerRequestPatch(OnectaProperties.getUrlOnOff(unitId), commandOnOf, false);
+        doBearerRequestPatch(getUrlOnOff(unitId), commandOnOf, false);
+    }
+
+    public void setEconoMode(String unitId, String value) {
+        logger.debug(String.format("setEconoMode: %s, %s", unitId, value));
+        CommandOnOf commandOnOf = new CommandOnOf(value);
+        doBearerRequestPatch(getEconoMode(unitId), commandOnOf, false);
     }
 
     public void setCurrentOperationMode(String unitId, Enums.OperationMode operationMode) {
-        String url = "/" + unitId + "/management-points/climateControl/characteristics/operationMode";
-        CommandString commandString = new CommandString(operationMode.getValue());
-
-        doBearerRequestPatch(url, commandString, false);
+        doBearerRequestPatch(OnectaProperties.getOperationModeUrl(unitId),
+                OnectaProperties.getOperationModeCommand(operationMode));
     }
 
     public void setCurrentTemperatureSet(String unitId, Enums.OperationMode currentMode, float value) {
-        String url = "/" + unitId + "/management-points/climateControl/characteristics/temperatureControl";
-        CommandFloat commandFloat = new CommandFloat(value,
-                String.format("/operationModes/%s/setpoints/roomTemperature", currentMode.getValue()));
-
-        doBearerRequestPatch(url, commandFloat, false);
+        doBearerRequestPatch(OnectaProperties.getTemperatureControlUrl(unitId),
+                OnectaProperties.getTemperatureControlCommand(value, currentMode));
     }
 
     public void setFanSpeed(String unitId, Enums.OperationMode currentMode, Enums.FanSpeed fanspeed) {
-        String url = "/" + unitId + "/management-points/climateControl/characteristics/fanControl";
-        CommandString commandString = new CommandString(fanspeed.getValueMode(),
-                String.format("/operationModes/%s/fanSpeed/currentMode", currentMode.getValue()));
-        doBearerRequestPatch(url, commandString, false);
-
+        doBearerRequestPatch(OnectaProperties.getTFanControlUrl(unitId),
+                getTFanSpeedCurrentCommand(currentMode, fanspeed));
         if (fanspeed.getValueMode().equals(Enums.FanSpeedMode.FIXED.getValue())) {
-            url = "/" + unitId + "/management-points/climateControl/characteristics/fanControl";
-            CommandInteger commandInteger = new CommandInteger(fanspeed.getValueSpeed(),
-                    String.format("/operationModes/%s/fanSpeed/modes/fixed", currentMode.getValue()));
-            doBearerRequestPatch(url, commandInteger, false);
+            doBearerRequestPatch(OnectaProperties.getTFanControlUrl(unitId),
+                    OnectaProperties.getTFanSpeedFixedCommand(currentMode, fanspeed));
         }
     }
 
     public void setCurrentFanDirection(String unitId, Enums.OperationMode currentMode, Enums.FanMovement fanMovement) {
-        String url = "/" + unitId + "/management-points/climateControl/characteristics/fanControl";
+        String url = getTFanControlUrl(unitId);
         CommandString commandString;
         switch (fanMovement) {
             case STOPPED:
-                commandString = new CommandString(Enums.FanMovementHor.STOPPED.getValue(), String
-                        .format("/operationModes/%s/fanDirection/horizontal/currentMode", currentMode.getValue()));
-                doBearerRequestPatch(url, commandString, false);
+                doBearerRequestPatch(url,
+                        OnectaProperties.getTFanDirectionHorCommand(currentMode, Enums.FanMovementHor.STOPPED));
 
-                commandString = new CommandString(Enums.FanMovementVer.STOPPED.getValue(),
-                        String.format("/operationModes/%s/fanDirection/vertical/currentMode", currentMode.getValue()));
-                doBearerRequestPatch(url, commandString, false);
+                doBearerRequestPatch(url,
+                        OnectaProperties.getTFanDirectionVerCommand(currentMode, Enums.FanMovementVer.STOPPED));
                 break;
             case VERTICAL:
-                commandString = new CommandString(Enums.FanMovementHor.STOPPED.getValue(), String
-                        .format("/operationModes/%s/fanDirection/horizontal/currentMode", currentMode.getValue()));
-                doBearerRequestPatch(url, commandString, false);
+                doBearerRequestPatch(url,
+                        OnectaProperties.getTFanDirectionHorCommand(currentMode, Enums.FanMovementHor.STOPPED));
 
-                commandString = new CommandString(Enums.FanMovementVer.SWING.getValue(),
-                        String.format("/operationModes/%s/fanDirection/vertical/currentMode", currentMode.getValue()));
-                doBearerRequestPatch(url, commandString, false);
+                doBearerRequestPatch(url,
+                        OnectaProperties.getTFanDirectionVerCommand(currentMode, Enums.FanMovementVer.SWING));
                 break;
             case HORIZONTAL:
-                commandString = new CommandString(Enums.FanMovementHor.SWING.getValue(), String
-                        .format("/operationModes/%s/fanDirection/horizontal/currentMode", currentMode.getValue()));
-                doBearerRequestPatch(url, commandString, false);
+                doBearerRequestPatch(url,
+                        OnectaProperties.getTFanDirectionHorCommand(currentMode, Enums.FanMovementHor.SWING));
 
-                commandString = new CommandString(Enums.FanMovementVer.STOPPED.getValue(),
-                        String.format("/operationModes/%s/fanDirection/vertical/currentMode", currentMode.getValue()));
-                doBearerRequestPatch(url, commandString, false);
+                doBearerRequestPatch(url,
+                        OnectaProperties.getTFanDirectionVerCommand(currentMode, Enums.FanMovementVer.STOPPED));
                 break;
             case VERTICAL_AND_HORIZONTAL:
-                commandString = new CommandString(Enums.FanMovementHor.SWING.getValue(), String
-                        .format("/operationModes/%s/fanDirection/horizontal/currentMode", currentMode.getValue()));
-                doBearerRequestPatch(url, commandString, false);
+                doBearerRequestPatch(url,
+                        OnectaProperties.getTFanDirectionHorCommand(currentMode, Enums.FanMovementHor.SWING));
 
-                commandString = new CommandString(Enums.FanMovementVer.SWING.getValue(),
-                        String.format("/operationModes/%s/fanDirection/vertical/currentMode", currentMode.getValue()));
-                doBearerRequestPatch(url, commandString, false);
+                doBearerRequestPatch(url,
+                        OnectaProperties.getTFanDirectionVerCommand(currentMode, Enums.FanMovementVer.SWING));
                 break;
             default:
                 break;

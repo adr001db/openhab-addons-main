@@ -132,6 +132,18 @@ public class DataTransportService {
         onectaConnectionClient.setPowerOnOff(unitId, value);
     }
 
+    public String getEconoMode() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getEconoMode().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void setEconoMode(String value) {
+        onectaConnectionClient.setEconoMode(unitId, value);
+    }
+
     public String getUnitName() {
         try {
             return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getName().getValue();

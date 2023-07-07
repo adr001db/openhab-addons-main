@@ -42,7 +42,6 @@ import org.slf4j.LoggerFactory;
  */
 @NonNullByDefault
 public class OnectaBridgeHandler extends BaseBridgeHandler {
-    public static final String CHANNEL_AC_HOMEKITMODE = "homekitmode";
     private final Logger logger = LoggerFactory.getLogger(OnectaBridgeHandler.class);
 
     private @Nullable OnectaConfiguration config;

@@ -91,6 +91,11 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                         dataTransService.setCurrentFanDirection(Enums.FanMovement.valueOf(command.toString()));
                     }
                     break;
+                case CHANNEL_AC_ECONOMODE:
+                    if (command instanceof StringType) {
+                        dataTransService.setEconoMode(command.toString());
+                    }
+                    break;
 
             }
             updateStatus(ThingStatus.ONLINE);
@@ -185,6 +190,8 @@ public class OnectaDeviceHandler extends BaseThingHandler {
             updateState(CHANNEL_AC_FANMOVEMENT_VER,
                     (dataTransService.getCurrentFanDirectionVer() == Enums.FanMovementVer.NOTAVAILABLE ? UnDefType.UNDEF
                             : new StringType(dataTransService.getCurrentFanDirectionVer().toString())));
+
+            updateState(CHANNEL_AC_ECONOMODE, OnOffType.from(dataTransService.getEconoMode()));
 
         } else {
             getThing().setProperty(CHANNEL_AC_NAME, "Unit not registered at Onecta, unitID does not exists.");
