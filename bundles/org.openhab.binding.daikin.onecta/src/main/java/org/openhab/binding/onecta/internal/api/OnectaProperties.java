@@ -32,12 +32,16 @@ public class OnectaProperties {
     private static final String COMMAND_ECONOMODE = "econoMode";
     private static final String COMMAND_OPERATIONMODE = "operationMode";
     private static final String COMMAND_TEMPERATURECONTROL = "temperatureControl";
+    private static final String COMMAND_STREAMERMODE = "streamerMode";
+    private static final String COMMAND_HOLIDAYMODE = "holidayMode";
     private static final String COMMAND_SUBPATH_TEMPERATURECONTROL = "/operationModes/%s/setpoints/roomTemperature";
     private static final String COMMAND_FANSPEED_CONTROL = "fanControl";
+    private static final String COMMAND_DEMAND_CONTROL = "demandControl";
     private static final String COMMAND_SUBPATH_FANSPEED = "/operationModes/%s/fanSpeed/currentMode";
     private static final String COMMAND_SUBPATH_FANSPEED_FIXED = "/operationModes/%s/fanSpeed/modes/fixed";
     private static final String COMMAND_SUBPATH_FANDITECTION_HOR = "/operationModes/%s/fanDirection/horizontal/currentMode";
     private static final String COMMAND_SUBPATH_FANDITECTION_VER = "/operationModes/%s/fanDirection/vertical/currentMode";
+    private static final String COMMAND_SUBPATH_DEMAND_CONTROL = "/currentMode";
 
     public static String getBaseUrl(String unitId) {
         return String.format(BASE_URL, unitId);
@@ -91,5 +95,21 @@ public class OnectaProperties {
             Enums.FanMovementVer fanMovement) {
         return new CommandString(fanMovement.getValue(),
                 String.format(COMMAND_SUBPATH_FANDITECTION_VER, currentMode.getValue()));
+    }
+
+    public static String getStreamerMode(String unitId) {
+        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, COMMAND_STREAMERMODE);
+    }
+
+    public static String getHolidayMode(String unitId) {
+        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, COMMAND_HOLIDAYMODE);
+    }
+
+    public static String getTDemandControlUrl(String unitId) {
+        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, COMMAND_DEMAND_CONTROL);
+    }
+
+    public static CommandString getTDemandControlCommand(Enums.DemandControl value) {
+        return new CommandString(value.getValue(), String.format(COMMAND_SUBPATH_DEMAND_CONTROL, value.getValue()));
     }
 }

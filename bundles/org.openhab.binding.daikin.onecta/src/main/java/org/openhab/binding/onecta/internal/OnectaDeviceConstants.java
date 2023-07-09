@@ -41,18 +41,25 @@ public class OnectaDeviceConstants {
     public static final ThingTypeUID DEVICE_THING_TYPE = new ThingTypeUID(BINDING_ID, DEVICE);
 
     // List of all Channel ids
-    public static final String CHANNEL_AC_TEMP = "settemp";
-    public static final String CHANNEL_INDOOR_TEMP = "indoortemp";
-    public static final String CHANNEL_INDOOR_HUMIDITY = "humidity";
+    public static final String CHANNEL_AC_TEMP = "basic#settemp";
+    public static final String CHANNEL_INDOOR_TEMP = "basic#indoortemp";
+    public static final String CHANNEL_INDOOR_HUMIDITY = "basic#humidity";
 
-    public static final String CHANNEL_OUTDOOR_TEMP = "outdoortemp";
-    public static final String CHANNEL_AC_POWER = "power";
-    public static final String CHANNEL_AC_RAWDATA = "rawdata";
-    public static final String CHANNEL_AC_OPERATIONMODE = "operationmode";
-    public static final String CHANNEL_AC_NAME = "name";
-    public static final String CHANNEL_AC_FANSPEED = "fanspeed";
-    public static final String CHANNEL_AC_FANMOVEMENT_HOR = "fandirhor";
-    public static final String CHANNEL_AC_FANMOVEMENT_VER = "fandirver";
-    public static final String CHANNEL_AC_FANMOVEMENT = "fandir";
-    public static final String CHANNEL_AC_ECONOMODE = "economode";
+    public static final String CHANNEL_OUTDOOR_TEMP = "basic#outdoortemp";
+    public static final String CHANNEL_AC_POWER = "basic#power";
+    public static final String CHANNEL_AC_RAWDATA = "extra#rawdata";
+    public static final String CHANNEL_AC_OPERATIONMODE = "basic#operationmode";
+    public static final String CHANNEL_AC_NAME = "basic#name";
+    public static final String CHANNEL_AC_FANSPEED = "basic#fanspeed";
+    public static final String CHANNEL_AC_FANMOVEMENT_HOR = "fbasic#andirhor";
+    public static final String CHANNEL_AC_FANMOVEMENT_VER = "basic#fandirver";
+    public static final String CHANNEL_AC_FANMOVEMENT = "basic#fandir";
+    public static final String CHANNEL_AC_ECONOMODE = "basic#economode";
+    public static final String CHANNEL_AC_STREAMER = "basic#streamer";
+    public static final String CHANNEL_AC_HOLIDAYMODE = "basic#holidaymode";
+    public static final String CHANNEL_AC_DEMANDCONTROL = "demandcontrol#demandcontrol";
+    public static final String CHANNEL_AC_DEMANDCONTROLFIXEDVALUE = "demandcontrol#demandcontrolfixedvalue";
+    public static final String CHANNEL_AC_DEMANDCONTROLFIXEDSTEPVALUE = "demandcontrol#demandcontrolfixedstepvalue";
+    public static final String CHANNEL_AC_DEMANDCONTROLFIXEDMINVALUE = "demandcontrol#demandcontrolfixedminvalue";
+    public static final String CHANNEL_AC_DEMANDCONTROLFIXEDMAXVALUE = "demandcontrol#demandcontrolfixedmaxvalue";
 }

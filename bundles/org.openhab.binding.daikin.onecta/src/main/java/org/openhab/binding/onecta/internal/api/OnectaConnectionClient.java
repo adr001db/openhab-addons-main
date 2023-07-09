@@ -13,6 +13,7 @@ import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpStatus;
 import org.openhab.binding.onecta.internal.api.dto.commands.CommandOnOf;
 import org.openhab.binding.onecta.internal.api.dto.commands.CommandString;
+import org.openhab.binding.onecta.internal.api.dto.commands.CommandTrueFalse;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
 import org.openhab.binding.onecta.internal.api.dto.units.Units;
 import org.openhab.binding.onecta.internal.exception.DaikinCommunicationException;
@@ -154,16 +155,16 @@ public class OnectaConnectionClient {
         return new JsonObject();
     }
 
-    public void setPowerOnOff(String unitId, String value) {
+    public void setPowerOnOff(String unitId, Enums.OnOff value) {
         logger.debug(String.format("setPowerOnOff : %s, %s", unitId, value));
         CommandOnOf commandOnOf = new CommandOnOf(value);
-        doBearerRequestPatch(getUrlOnOff(unitId), commandOnOf, false);
+        doBearerRequestPatch(getUrlOnOff(unitId), commandOnOf);
     }
 
-    public void setEconoMode(String unitId, String value) {
+    public void setEconoMode(String unitId, Enums.OnOff value) {
         logger.debug(String.format("setEconoMode: %s, %s", unitId, value));
         CommandOnOf commandOnOf = new CommandOnOf(value);
-        doBearerRequestPatch(getEconoMode(unitId), commandOnOf, false);
+        doBearerRequestPatch(getEconoMode(unitId), commandOnOf);
     }
 
     public void setCurrentOperationMode(String unitId, Enums.OperationMode operationMode) {
@@ -220,5 +221,22 @@ public class OnectaConnectionClient {
             default:
                 break;
         }
+    }
+
+    public void setStreamerMode(String unitId, Enums.OnOff value) {
+        logger.debug(String.format("setStreamerMode: %s, %s", unitId, value));
+        CommandOnOf commandOnOf = new CommandOnOf(value);
+        doBearerRequestPatch(getStreamerMode(unitId), commandOnOf);
+    }
+
+    public void setHolidayMode(String unitId, Enums.OnOff value) {
+        logger.debug(String.format("setHolidayMode: %s, %s", unitId, value));
+        CommandTrueFalse commandTrueFalse = new CommandTrueFalse(value);
+        doBearerRequestPatch(getHolidayMode(unitId), commandTrueFalse);
+    }
+
+    public void setDemandControl(String unitId, Enums.DemandControl value) {
+        logger.debug(String.format("setDemandControl: %s, %s", unitId, value));
+        doBearerRequestPatch(getTDemandControlUrl(unitId), OnectaProperties.getTDemandControlCommand(value));
     }
 }

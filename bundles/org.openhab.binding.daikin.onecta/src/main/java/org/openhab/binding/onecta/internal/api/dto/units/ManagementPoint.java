@@ -52,10 +52,10 @@ public class ManagementPoint {
 
     @SerializedName("fanControl")
     private FanControl fanControl;
-    //
-    // @SerializedName("_id")
-    // private HolidayMode holidayMode;
-    //
+
+    @SerializedName("holidayMode")
+    private HolidayMode holidayMode;
+
     // @SerializedName("_id")
     // private IconID iconID;
     //
@@ -198,6 +198,10 @@ public class ManagementPoint {
 
     public DemandControl getDemandControl() {
         return demandControl;
+    }
+
+    public HolidayMode getHolidayMode() {
+        return holidayMode;
     }
 
     public Name getName() {

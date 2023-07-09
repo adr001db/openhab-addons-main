@@ -128,7 +128,7 @@ public class DataTransportService {
         }
     }
 
-    public void setPowerOnOff(String value) {
+    public void setPowerOnOff(Enums.OnOff value) {
         onectaConnectionClient.setPowerOnOff(unitId, value);
     }
 
@@ -140,7 +140,7 @@ public class DataTransportService {
         }
     }
 
-    public void setEconoMode(String value) {
+    public void setEconoMode(Enums.OnOff value) {
         onectaConnectionClient.setEconoMode(unitId, value);
     }
 
@@ -175,7 +175,7 @@ public class DataTransportService {
         }
     }
 
-    public Number getIndoorHumidity() {
+    public Integer getIndoorHumidity() {
         try {
             return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getSensoryData().getValue()
                     .getRoomHumidity().getValue();
@@ -193,7 +193,76 @@ public class DataTransportService {
         }
     }
 
-    public Double getActiveTemperatureSetting() {
-        return null;
+    public String getStreamerMode() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getStreamerMode().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void setStreamerMode(Enums.OnOff value) {
+        onectaConnectionClient.setStreamerMode(unitId, value);
+    }
+
+    public String getHolidayMode() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getHolidayMode().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void setHolidayMode(Enums.OnOff value) {
+        onectaConnectionClient.setHolidayMode(unitId, value);
+    }
+
+    public Enums.DemandControl getDemandControl() {
+        try {
+            return Enums.DemandControl.fromValue(getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL)
+                    .getDemandControl().getValue().getCurrentMode().getValue());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void setDemandControl(Enums.DemandControl value) {
+        onectaConnectionClient.setDemandControl(unitId, value);
+    }
+
+    public Integer getDemandControlFixedValue() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getDemandControl().getValue().getModes()
+                    .getFixedValues().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Integer getDemandControlFixedStepValue() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getDemandControl().getValue().getModes()
+                    .getFixedValues().getStepValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Integer getDemandControlFixedMinValue() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getDemandControl().getValue().getModes()
+                    .getFixedValues().getMinValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Integer getDemandControlFixedMaxValue() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getDemandControl().getValue().getModes()
+                    .getFixedValues().getMaxValue();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

@@ -68,7 +68,7 @@ public class OnectaDeviceHandler extends BaseThingHandler {
             switch (channelUID.getId()) {
                 case CHANNEL_AC_POWER:
                     if (command instanceof OnOffType) {
-                        dataTransService.setPowerOnOff(command.toString());
+                        dataTransService.setPowerOnOff(Enums.OnOff.valueOf(command.toString()));
                     }
                     break;
                 case CHANNEL_AC_OPERATIONMODE:
@@ -92,11 +92,30 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                     }
                     break;
                 case CHANNEL_AC_ECONOMODE:
-                    if (command instanceof StringType) {
-                        dataTransService.setEconoMode(command.toString());
+                    if (command instanceof OnOffType) {
+                        dataTransService.setEconoMode(Enums.OnOff.valueOf(command.toString()));
                     }
                     break;
-
+                case CHANNEL_AC_STREAMER:
+                    if (command instanceof OnOffType) {
+                        dataTransService.setStreamerMode(Enums.OnOff.valueOf(command.toString()));
+                    }
+                    break;
+                case CHANNEL_AC_HOLIDAYMODE:
+                    if (command instanceof OnOffType) {
+                        dataTransService.setHolidayMode(Enums.OnOff.valueOf(command.toString()));
+                    }
+                    break;
+                case CHANNEL_AC_DEMANDCONTROL:
+                    if (command instanceof StringType) {
+                        dataTransService.setDemandControl(Enums.DemandControl.valueOf(command.toString()));
+                    }
+                    break;
+                case CHANNEL_AC_DEMANDCONTROLFIXEDVALUE:
+                    if (command instanceof StringType) {
+                        dataTransService.setDemandControlFixedValue(Enums.DemandControl.valueOf(command.toString()));
+                    }
+                    break;
             }
             updateStatus(ThingStatus.ONLINE);
         } catch (Exception ex) {
@@ -177,6 +196,12 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                         new StringType(dataTransService.getCurrentFanDirection().toString()));
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_FANSPEED))
                 updateState(CHANNEL_AC_FANSPEED, new StringType(dataTransService.getCurrentFanspeed().toString()));
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_ECONOMODE))
+                updateState(CHANNEL_AC_ECONOMODE, dataTransService.getEconoMode() == null ? UnDefType.UNDEF
+                        : OnOffType.from(dataTransService.getEconoMode()));
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_STREAMER))
+                updateState(CHANNEL_AC_STREAMER, dataTransService.getStreamerMode() == null ? UnDefType.UNDEF
+                        : OnOffType.from(dataTransService.getStreamerMode()));
 
             updateState(CHANNEL_INDOOR_TEMP, (dataTransService.getIndoorTemperature() == null ? UnDefType.UNDEF
                     : new DecimalType(dataTransService.getIndoorTemperature())));
@@ -184,6 +209,7 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                     : new DecimalType(dataTransService.getOutdoorTemperature())));
             updateState(CHANNEL_INDOOR_HUMIDITY, (dataTransService.getIndoorHumidity() == null ? UnDefType.UNDEF
                     : new DecimalType(dataTransService.getIndoorHumidity())));
+
             updateState(CHANNEL_AC_FANMOVEMENT_HOR,
                     (dataTransService.getCurrentFanDirectionHor() == Enums.FanMovementHor.NOTAVAILABLE ? UnDefType.UNDEF
                             : new StringType(dataTransService.getCurrentFanDirectionHor().toString())));
@@ -191,7 +217,25 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                     (dataTransService.getCurrentFanDirectionVer() == Enums.FanMovementVer.NOTAVAILABLE ? UnDefType.UNDEF
                             : new StringType(dataTransService.getCurrentFanDirectionVer().toString())));
 
-            updateState(CHANNEL_AC_ECONOMODE, OnOffType.from(dataTransService.getEconoMode()));
+            updateState(CHANNEL_AC_HOLIDAYMODE, dataTransService.getHolidayMode() == null ? UnDefType.UNDEF
+                    : OnOffType.from(dataTransService.getHolidayMode()));
+            updateState(CHANNEL_AC_DEMANDCONTROL, dataTransService.getDemandControl() == null ? UnDefType.UNDEF
+                    : new StringType(dataTransService.getDemandControl().toString()));
+
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_DEMANDCONTROLFIXEDVALUE))
+                updateState(CHANNEL_AC_DEMANDCONTROLFIXEDVALUE,
+                        dataTransService.getDemandControl() == null ? UnDefType.UNDEF
+                                : new DecimalType(dataTransService.getDemandControlFixedValue()));
+
+            updateState(CHANNEL_AC_DEMANDCONTROLFIXEDSTEPVALUE,
+                    dataTransService.getDemandControl() == null ? UnDefType.UNDEF
+                            : new DecimalType(dataTransService.getDemandControlFixedStepValue()));
+            updateState(CHANNEL_AC_DEMANDCONTROLFIXEDMINVALUE,
+                    dataTransService.getDemandControl() == null ? UnDefType.UNDEF
+                            : new DecimalType(dataTransService.getDemandControlFixedMinValue()));
+            updateState(CHANNEL_AC_DEMANDCONTROLFIXEDMAXVALUE,
+                    dataTransService.getDemandControl() == null ? UnDefType.UNDEF
+                            : new DecimalType(dataTransService.getDemandControlFixedMaxValue()));
 
         } else {
             getThing().setProperty(CHANNEL_AC_NAME, "Unit not registered at Onecta, unitID does not exists.");

@@ -25,6 +25,35 @@ import org.slf4j.LoggerFactory;
  */
 @NonNullByDefault
 public class Enums {
+    public enum OnOff {
+        ON("on"),
+        OFF("off");
+
+        private static final Logger LOGGER = LoggerFactory.getLogger(OnOff.class);
+        private final String value;
+
+        OnOff(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static OnOff fromValue(String value) {
+            for (OnOff m : OnOff.values()) {
+                if (m.getValue().equals(value)) {
+                    return m;
+                }
+            }
+
+            LOGGER.debug("Unexpected OnOff value of \"{}\"", value);
+
+            // Default to auto
+            return OFF;
+        }
+    }
+
     public enum OperationMode {
         UNKNOWN(""),
         AUTO("auto"),
@@ -258,6 +287,37 @@ public class Enums {
 
             // Default to stopped
             return STOPPED;
+        }
+    }
+
+    public enum DemandControl {
+
+        OFF("off"),
+        AUTO("auto"),
+        FIXED("fixed"),
+        SCHEDULED("scheduled");
+
+        private static final Logger LOGGER = LoggerFactory.getLogger(FanMovement.class);
+        private final String value;
+
+        DemandControl(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static DemandControl fromValue(String value) {
+            for (DemandControl m : DemandControl.values()) {
+                if (m.getValue().equals(value)) {
+                    return m;
+                }
+            }
+            LOGGER.debug("Unexpected DemandControl value of \"{}\"", value);
+
+            // Default to stopped
+            return OFF;
         }
     }
 
