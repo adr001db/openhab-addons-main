@@ -265,4 +265,8 @@ public class DataTransportService {
             return null;
         }
     }
+
+    public void setDemandControlFixedValue(Integer value) {
+        onectaConnectionClient.setDemandControlFixedValue(unitId, value);
+    }
 }

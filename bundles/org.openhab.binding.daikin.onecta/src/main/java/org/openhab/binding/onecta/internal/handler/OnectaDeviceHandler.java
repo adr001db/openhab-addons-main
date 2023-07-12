@@ -112,8 +112,8 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                     }
                     break;
                 case CHANNEL_AC_DEMANDCONTROLFIXEDVALUE:
-                    if (command instanceof StringType) {
-                        dataTransService.setDemandControlFixedValue(Enums.DemandControl.valueOf(command.toString()));
+                    if (command instanceof QuantityType) {
+                        dataTransService.setDemandControlFixedValue(((QuantityType<?>) command).intValue());
                     }
                     break;
             }

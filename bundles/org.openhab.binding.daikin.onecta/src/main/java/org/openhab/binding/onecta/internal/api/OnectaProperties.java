@@ -42,6 +42,7 @@ public class OnectaProperties {
     private static final String COMMAND_SUBPATH_FANDITECTION_HOR = "/operationModes/%s/fanDirection/horizontal/currentMode";
     private static final String COMMAND_SUBPATH_FANDITECTION_VER = "/operationModes/%s/fanDirection/vertical/currentMode";
     private static final String COMMAND_SUBPATH_DEMAND_CONTROL = "/currentMode";
+    private static final String COMMAND_SUBPATH_DEMAND_CONTROL_FIXED_VALUE = "/modes/fixed";
 
     public static String getBaseUrl(String unitId) {
         return String.format(BASE_URL, unitId);
@@ -111,5 +112,9 @@ public class OnectaProperties {
 
     public static CommandString getTDemandControlCommand(Enums.DemandControl value) {
         return new CommandString(value.getValue(), String.format(COMMAND_SUBPATH_DEMAND_CONTROL, value.getValue()));
+    }
+
+    public static CommandInteger getTDemandControlFixedValueCommand(Integer value) {
+        return new CommandInteger(value, COMMAND_SUBPATH_DEMAND_CONTROL_FIXED_VALUE);
     }
 }

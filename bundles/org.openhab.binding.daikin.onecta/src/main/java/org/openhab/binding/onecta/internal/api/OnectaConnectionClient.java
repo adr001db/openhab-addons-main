@@ -239,4 +239,10 @@ public class OnectaConnectionClient {
         logger.debug(String.format("setDemandControl: %s, %s", unitId, value));
         doBearerRequestPatch(getTDemandControlUrl(unitId), OnectaProperties.getTDemandControlCommand(value));
     }
+
+    public void setDemandControlFixedValue(String unitId, Integer value) {
+        logger.debug(String.format("setDemandControlFixedValue: %s, %s", unitId, value));
+
+        doBearerRequestPatch(getTDemandControlUrl(unitId), OnectaProperties.getTDemandControlFixedValueCommand(value));
+    }
 }

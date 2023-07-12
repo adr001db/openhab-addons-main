@@ -103,7 +103,7 @@
 	<channel-type id="acunit-indoortemp">
 		<item-type>Number:Temperature</item-type>
 		<label>Indoor Temperature</label>
-		<description>The indoor temperature</description>
+		<description>The indoor temperature (readonly)</description>
 		<category>Temperature</category>
 		<state readOnly="true" pattern="%.1f %unit%" step="0.5"/>
 	</channel-type>
@@ -111,7 +111,7 @@
 	<channel-type id="acunit-outdoortemp">
 		<item-type>Number:Temperature</item-type>
 		<label>Outdoor Temperature</label>
-		<description>The outdoor temperature</description>
+		<description>The outdoor temperature (readonly)</description>
 		<category>Temperature</category>
 		<state readOnly="true" pattern="%.1f %unit%" step="0.5"/>
 	</channel-type>
@@ -119,7 +119,7 @@
 	<channel-type id="acunit-humidity">
 		<item-type>Number:Dimensionless</item-type>
 		<label>Indoor Humidity</label>
-		<description>The indoor humidity as measured by the A/C unit</description>
+		<description>The indoor humidity as measured by the A/C unit (readonly)</description>
 		<category>Humidity</category>
 		<state readOnly="true" pattern="%d "/>
 	</channel-type>
@@ -159,7 +159,7 @@
 	<channel-type id="acunit-rawdata" advanced="true">
 		<item-type>String</item-type>
 		<label>Raw Json data</label>
-		<description>Unit data as collected from Daikin Onecta</description>
+		<description>Unit data as collected from Daikin Onecta (readonly)</description>
 		<category>Text</category>
 		<state readOnly="true"/>
 	</channel-type>
@@ -235,26 +235,26 @@
 		<label>Demand Control fixed Value (%)</label>
 		<description>Value of fixed demand control</description>
 		<category>Demand Control</category>
-		<state pattern="%d %%"/>
+		<state pattern="%d "/>
 	</channel-type>
 	<channel-type id="acunit-demandcontrolfixedstepvalue">
 		<item-type>Number:Dimensionless</item-type>
 		<label>Demand Control fixed StepValue</label>
-		<description>Step value of fixed demand control</description>
+		<description>Step value of fixed demand control (readonly)</description>
 		<category>Demand Control</category>
 		<state readOnly="true" pattern="%d "/>
 	</channel-type>
 	<channel-type id="acunit-demandcontrolfixedminvalue">
 		<item-type>Number:Dimensionless</item-type>
 		<label>Demand Control fixed minValue</label>
-		<description>Min value of fixed demand control</description>
+		<description>Min value of fixed demand control (readonly)</description>
 		<category>Demand Control</category>
 		<state readOnly="true" pattern="%d "/>
 	</channel-type>
 	<channel-type id="acunit-demandcontrolfixedmaxvalue">
 		<item-type>Number:Dimensionless</item-type>
 		<label>Demand Control fixed maxValue</label>
-		<description>Max value of fixed demand control</description>
+		<description>Max value of fixed demand control (readonly)</description>
 		<category>Demand Control</category>
 		<state readOnly="true" pattern="%d "/>
 	</channel-type>
