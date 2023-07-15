@@ -62,4 +62,10 @@ public class OnectaDeviceConstants {
     public static final String CHANNEL_AC_DEMANDCONTROLFIXEDSTEPVALUE = "demandcontrol#demandcontrolfixedstepvalue";
     public static final String CHANNEL_AC_DEMANDCONTROLFIXEDMINVALUE = "demandcontrol#demandcontrolfixedminvalue";
     public static final String CHANNEL_AC_DEMANDCONTROLFIXEDMAXVALUE = "demandcontrol#demandcontrolfixedmaxvalue";
+    public static final String CHANNEL_AC_ENERGY_COOLING_DAY = "consumptionDataCooling#energycoolingday-%s";
+    public static final String CHANNEL_AC_ENERGY_COOLING_WEEK = "consumptionDataCooling#energycoolingweek-%s";
+    public static final String CHANNEL_AC_ENERGY_COOLING_MONTH = "consumptionDataCooling#energycoolingmonth-%s";
+    public static final String CHANNEL_AC_ENERGY_HEATING_DAY = "consumptionDataHeating#energyheatingday-%s";
+    public static final String CHANNEL_AC_ENERGY_HEATING_WEEK = "consumptionDataHeating#energyheatingweek-%s";
+    public static final String CHANNEL_AC_ENERGY_HEATING_MONTH = "consumptionDataHeating#energyheatingmonth-%s";
 }

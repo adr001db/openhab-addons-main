@@ -269,4 +269,58 @@ public class DataTransportService {
     public void setDemandControlFixedValue(Integer value) {
         onectaConnectionClient.setDemandControlFixedValue(unitId, value);
     }
+
+    public Float[] getConsumptionCoolingDay() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getConsumptionData().getValue()
+                    .getElectrical().getCooling().getDay();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Float[] getConsumptionCoolingWeek() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getConsumptionData().getValue()
+                    .getElectrical().getCooling().getWeek();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Float[] getConsumptionCoolingMonth() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getConsumptionData().getValue()
+                    .getElectrical().getCooling().getMonth();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Float[] getConsumptionHeatingDay() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getConsumptionData().getValue()
+                    .getElectrical().getHeating().getDay();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Float[] getConsumptionHeatingWeek() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getConsumptionData().getValue()
+                    .getElectrical().getHeating().getWeek();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Float[] getConsumptionheatingMonth() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getConsumptionData().getValue()
+                    .getElectrical().getHeating().getMonth();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

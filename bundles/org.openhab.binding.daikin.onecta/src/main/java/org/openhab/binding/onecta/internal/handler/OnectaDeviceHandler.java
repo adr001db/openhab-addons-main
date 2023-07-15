@@ -222,11 +222,11 @@ public class OnectaDeviceHandler extends BaseThingHandler {
             updateState(CHANNEL_AC_DEMANDCONTROL, dataTransService.getDemandControl() == null ? UnDefType.UNDEF
                     : new StringType(dataTransService.getDemandControl().toString()));
 
+            // DEMANDCONTROL
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_DEMANDCONTROLFIXEDVALUE))
                 updateState(CHANNEL_AC_DEMANDCONTROLFIXEDVALUE,
                         dataTransService.getDemandControl() == null ? UnDefType.UNDEF
                                 : new DecimalType(dataTransService.getDemandControlFixedValue()));
-
             updateState(CHANNEL_AC_DEMANDCONTROLFIXEDSTEPVALUE,
                     dataTransService.getDemandControl() == null ? UnDefType.UNDEF
                             : new DecimalType(dataTransService.getDemandControlFixedStepValue()));
@@ -236,6 +236,56 @@ public class OnectaDeviceHandler extends BaseThingHandler {
             updateState(CHANNEL_AC_DEMANDCONTROLFIXEDMAXVALUE,
                     dataTransService.getDemandControl() == null ? UnDefType.UNDEF
                             : new DecimalType(dataTransService.getDemandControlFixedMaxValue()));
+
+            // Energy consumption Cooling Day
+            if (dataTransService.getConsumptionCoolingDay() != null) {
+                for (int i = 0; i < dataTransService.getConsumptionCoolingDay().length; i++) {
+                    updateState(String.format(CHANNEL_AC_ENERGY_COOLING_DAY, i),
+                            dataTransService.getConsumptionCoolingDay()[i] == null ? UnDefType.UNDEF
+                                    : new DecimalType(dataTransService.getConsumptionCoolingDay()[i]));
+                }
+            }
+            // Energy consumption Cooling Week
+            if (dataTransService.getConsumptionCoolingWeek() != null) {
+                for (int i = 0; i < dataTransService.getConsumptionCoolingWeek().length; i++) {
+                    updateState(String.format(CHANNEL_AC_ENERGY_COOLING_WEEK, i),
+                            dataTransService.getConsumptionCoolingWeek()[i] == null ? UnDefType.UNDEF
+                                    : new DecimalType(dataTransService.getConsumptionCoolingWeek()[i]));
+                }
+            }
+            // Energy consumption Cooling Month
+            if (dataTransService.getConsumptionCoolingMonth() != null) {
+                for (int i = 0; i < dataTransService.getConsumptionCoolingMonth().length; i++) {
+                    updateState(String.format(CHANNEL_AC_ENERGY_COOLING_MONTH, i),
+                            dataTransService.getConsumptionCoolingMonth()[i] == null ? UnDefType.UNDEF
+                                    : new DecimalType(dataTransService.getConsumptionCoolingMonth()[i]));
+                }
+            }
+
+            // Energy consumption Heating Day
+            if (dataTransService.getConsumptionHeatingDay() != null) {
+                for (int i = 0; i < dataTransService.getConsumptionHeatingDay().length; i++) {
+                    updateState(String.format(CHANNEL_AC_ENERGY_HEATING_DAY, i),
+                            dataTransService.getConsumptionHeatingDay()[i] == null ? UnDefType.UNDEF
+                                    : new DecimalType(dataTransService.getConsumptionHeatingDay()[i]));
+                }
+            }
+            // Energy consumption Heating Week
+            if (dataTransService.getConsumptionHeatingWeek() != null) {
+                for (int i = 0; i < dataTransService.getConsumptionHeatingWeek().length; i++) {
+                    updateState(String.format(CHANNEL_AC_ENERGY_HEATING_WEEK, i),
+                            dataTransService.getConsumptionHeatingWeek()[i] == null ? UnDefType.UNDEF
+                                    : new DecimalType(dataTransService.getConsumptionHeatingWeek()[i]));
+                }
+            }
+            // Energy consumption Heating Month
+            if (dataTransService.getConsumptionheatingMonth() != null) {
+                for (int i = 0; i < dataTransService.getConsumptionheatingMonth().length; i++) {
+                    updateState(String.format(CHANNEL_AC_ENERGY_HEATING_MONTH, i),
+                            dataTransService.getConsumptionheatingMonth()[i] == null ? UnDefType.UNDEF
+                                    : new DecimalType(dataTransService.getConsumptionheatingMonth()[i]));
+                }
+            }
 
         } else {
             getThing().setProperty(CHANNEL_AC_NAME, "Unit not registered at Onecta, unitID does not exists.");

@@ -4,21 +4,21 @@ import com.google.gson.annotations.SerializedName;
 
 public class Ing {
     @SerializedName("d")
-    private String[] day;
+    private Float[] day;
     @SerializedName("w")
-    private String[] week;
+    private Float[] week;
     @SerializedName("m")
-    private String[] month;
+    private Float[] month;
 
-    public String[] getDay() {
+    public Float[] getDay() {
         return day;
     }
 
-    public String[] getWeek() {
+    public Float[] getWeek() {
         return week;
     }
 
-    public String[] getMonth() {
+    public Float[] getMonth() {
         return month;
     }
 }
