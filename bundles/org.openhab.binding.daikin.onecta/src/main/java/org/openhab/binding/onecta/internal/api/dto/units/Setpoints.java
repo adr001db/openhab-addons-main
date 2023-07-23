@@ -7,8 +7,18 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Setpoints {
     private IconID roomTemperature;
+    private IconID leavingWaterTemperature;
+    private IconID leavingWaterOffset;
 
     public IconID getRoomTemperature() {
         return roomTemperature;
+    }
+
+    public IconID getLeavingWaterTemperature() {
+        return leavingWaterTemperature;
+    }
+
+    public IconID getLeavingWaterOffset() {
+        return leavingWaterOffset;
     }
 }

@@ -8,11 +8,6 @@
 		<label>Daikin Onecta Account</label>
 		<description>This is the account for which your device(s) are registered at Diakin Onecta.</description>
 
-
-		<properties>
-			<property name="refresfToken"></property>
-		</properties>
-
 		<config-description>
 			<parameter name="userId" type="text" required="true">
 				<label>Userid</label>
@@ -22,11 +17,26 @@
 				<label>Password</label>
 				<description>Onecta password</description>
 			</parameter>
+			<parameter name="refreshToken" type="text">
+				<label>Onecta Refresh token.</label>
+				<description>Onecta Refresh token is filled after succesfull login. This will be used instead of user/password</description>
+			</parameter>
 			<parameter name="refreshInterval" type="integer" unit="s" min="5">
 				<label>Refresh Interval.</label>
 				<description>Interval the device is polled in seconds.</description>
 				<default>60</default>
 			</parameter>
+			<parameter name="rawdataLogging" type="boolean">
+				<label>Drop Raw-data</label>
+				<description>Drop Raw json-data into info logging</description>
+				<default>false</default>
+			</parameter>
+			<parameter name="stubdataFile" type="text">
+				<label>Stub datafile</label>
+				<description>With the stub datafile conecta data input can be simulate. This is just for testing during development.</description>
+				<default></default>
+			</parameter>
 		</config-description>
+
 	</bridge-type>
 </thing:thing-descriptions>

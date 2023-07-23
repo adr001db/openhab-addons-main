@@ -1,6 +1,6 @@
 package org.openhab.binding.onecta.internal.service;
 
-import static org.openhab.binding.onecta.internal.OnectaBridgeConstants.DEVICE_THING_TYPE;
+import static org.openhab.binding.onecta.internal.OnectaBridgeConstants.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -47,11 +47,12 @@ public class DeviceDiscoveryService extends AbstractDiscoveryService {
             Map<String, Object> properties;
             String unitId;
             String unitName;
-            bridgeHandler.getOnectaConnectionClient().refreshUnitsData();
+            bridgeHandler.getOnectaConnectionClient().refreshUnitsData(bridgeHandler.getThing());
             List<Unit> units = bridgeHandler.getOnectaConnectionClient().getUnits().getAll();
             for (int i = 0; i < units.size(); i++) {
                 unitId = units.get(i).getId().toString();
-                unitName = units.get(i).findManagementPointsById("climateControl").getName().getValue();
+                unitName = units.get(i).findManagementPointsByType("climateControl").getNameValue();
+                unitName = !unitName.isEmpty() ? unitName : unitId;
                 properties = new LinkedHashMap<>();
                 properties.put("unitID", unitId);
                 ThingUID thingUID = new ThingUID(DEVICE_THING_TYPE, bridgeUID, unitId);

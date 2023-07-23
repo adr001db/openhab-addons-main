@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class ActionTypesModes {
     @SerializedName("fixed")
-    private IconID fixed;
+    private FanSpeedFixed fixed;
 
-    public IconID getFixed() {
+    public FanSpeedFixed getFixed() {
         return fixed;
     }
 }

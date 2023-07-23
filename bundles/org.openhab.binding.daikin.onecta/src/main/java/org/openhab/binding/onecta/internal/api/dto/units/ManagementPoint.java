@@ -85,6 +85,8 @@ public class ManagementPoint {
 
     @SerializedName("operationMode")
     private GatwaySubValueString operationMode;
+    @SerializedName("targetTemperature")
+    private IconID targetTemperature;
 
     @SerializedName("outdoorSilentMode")
     private GatwaySubValueString outdoorSilentMode;
@@ -208,12 +210,20 @@ public class ManagementPoint {
         return name;
     }
 
+    public String getNameValue() {
+        return name != null ? name.getValue() : "";
+    }
+
     public GatwaySubValueString getOnOffMode() {
         return onOffMode;
     }
 
     public GatwaySubValueString getOperationMode() {
         return operationMode;
+    }
+
+    public IconID getTargetTemperature() {
+        return targetTemperature;
     }
 
     public GatwaySubValueString getOutdoorSilentMode() {

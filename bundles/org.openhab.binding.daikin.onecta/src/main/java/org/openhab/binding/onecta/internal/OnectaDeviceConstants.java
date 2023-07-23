@@ -42,16 +42,23 @@ public class OnectaDeviceConstants {
 
     // List of all Channel ids
     public static final String CHANNEL_AC_TEMP = "basic#settemp";
+    public static final String CHANNEL_AC_TEMPMIN = "basic#settempmin";
+    public static final String CHANNEL_AC_TEMPMAX = "basic#settempmax";
+    public static final String CHANNEL_AC_TEMPSTEP = "basic#settempstep";
+    public static final String CHANNEL_AC_TARGETTEMP = "basic#targettemp";
+    public static final String CHANNEL_AC_TARGETTEMPMIN = "basic#targettempmin";
+    public static final String CHANNEL_AC_TARGETTEMPMAX = "basic#targettempmax";
+    public static final String CHANNEL_AC_TARGETTEMPSTEP = "basic#targettempstep";
     public static final String CHANNEL_INDOOR_TEMP = "basic#indoortemp";
-    public static final String CHANNEL_INDOOR_HUMIDITY = "basic#humidity";
-
+    public static final String CHANNEL_LEAVINGWATER_TEMP = "basic#leavingwatertemp";
     public static final String CHANNEL_OUTDOOR_TEMP = "basic#outdoortemp";
+    public static final String CHANNEL_INDOOR_HUMIDITY = "basic#humidity";
     public static final String CHANNEL_AC_POWER = "basic#power";
     public static final String CHANNEL_AC_RAWDATA = "extra#rawdata";
     public static final String CHANNEL_AC_OPERATIONMODE = "basic#operationmode";
     public static final String CHANNEL_AC_NAME = "basic#name";
     public static final String CHANNEL_AC_FANSPEED = "basic#fanspeed";
-    public static final String CHANNEL_AC_FANMOVEMENT_HOR = "fbasic#andirhor";
+    public static final String CHANNEL_AC_FANMOVEMENT_HOR = "basic#fandirhor";
     public static final String CHANNEL_AC_FANMOVEMENT_VER = "basic#fandirver";
     public static final String CHANNEL_AC_FANMOVEMENT = "basic#fandir";
     public static final String CHANNEL_AC_ECONOMODE = "basic#economode";
@@ -68,4 +75,6 @@ public class OnectaDeviceConstants {
     public static final String CHANNEL_AC_ENERGY_HEATING_DAY = "consumptionDataHeating#energyheatingday-%s";
     public static final String CHANNEL_AC_ENERGY_HEATING_WEEK = "consumptionDataHeating#energyheatingweek-%s";
     public static final String CHANNEL_AC_ENERGY_HEATING_MONTH = "consumptionDataHeating#energyheatingmonth-%s";
+
+    public static final String PROPERTY_AC_NAME = "name";
 }

@@ -107,7 +107,8 @@ public class Enums {
     public enum SensorData {
         ROOMTEMP("roomTemperature"),
         ROOMHUMINITY("roomHumidity"),
-        OUTDOORTEMP("outdoorTemperature");
+        OUTDOORTEMP("outdoorTemperature"),
+        LEAVINGWATERTEMP("leavingWaterTemperature");
 
         private final String value;
 

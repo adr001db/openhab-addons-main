@@ -17,6 +17,7 @@ import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpMethod;
 import org.openhab.binding.onecta.internal.api.dto.authentication.*;
 import org.openhab.binding.onecta.internal.exception.DaikinCommunicationException;
+import org.openhab.binding.onecta.internal.exception.DaikinCommunicationForbiddenException;
 import org.openhab.core.io.net.http.HttpClientFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,11 +65,22 @@ public class OnectaSignInClient {
         return "";
     }
 
-    protected void signIn() {
+    protected void signIn() throws DaikinCommunicationException {
         signIn(this.userId, this.password);
     }
 
-    protected void signIn(String userId, String password) {
+    protected void signIn(String userId, String password, String refreshToken) throws DaikinCommunicationException {
+        this.userId = userId;
+        this.password = password;
+        this.refreshToken = refreshToken;
+        if (refreshToken.isEmpty()) {
+            signIn(userId, password);
+        } else {
+            fetchAccessToken();
+        }
+    }
+
+    protected void signIn(String userId, String password) throws DaikinCommunicationException {
         this.userId = userId;
         this.password = password;
         try {
@@ -163,6 +175,11 @@ public class OnectaSignInClient {
             jsonResponse = JsonParser.parseString(response.getContentAsString()).getAsJsonObject();
             RespStep7 respStep7 = Objects
                     .requireNonNull(new Gson().fromJson(jsonResponse.getAsJsonObject(), RespStep7.class));
+            if (respStep7.getStatusCode() != 200) {
+                throw new DaikinCommunicationForbiddenException(String.format("Error status: %s, Reason: %s",
+                        respStep7.getStatusCode(), respStep7.getErrorMessage()));
+            }
+
             String loginToken = respStep7.getSessionInfo().getLogin_token();
 
             // step 8 expand single-sign-on cookies with login-token
@@ -215,9 +232,13 @@ public class OnectaSignInClient {
         } catch (InterruptedException e) {
             logger.warn("Login failed" + e.getMessage());
         } catch (ExecutionException e) {
-            logger.warn("Login failed" + e.getMessage());
+            logger.warn("DaikinCommunicationException" + e.getMessage());
+            throw new DaikinCommunicationException("Connection error, See log for more info");
         } catch (TimeoutException e) {
             logger.warn("TimeoutException" + e.getMessage());
+        } catch (DaikinCommunicationForbiddenException e) {
+            logger.warn("DaikinCommunicationForbiddenException" + e.getMessage());
+            throw new DaikinCommunicationForbiddenException(" " + e.getMessage());
         } catch (DaikinCommunicationException e) {
             throw new RuntimeException(e);
         }
@@ -261,5 +282,13 @@ public class OnectaSignInClient {
     public Boolean isOnline() {
         return !this.refreshToken.isEmpty()
                 && !this.respAuthenticationRoot.getAuthenticationResult().getAccessToken().isEmpty();
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

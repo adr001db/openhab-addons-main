@@ -32,6 +32,7 @@ import org.openhab.core.thing.ThingStatus;
 import org.openhab.core.thing.ThingStatusDetail;
 import org.openhab.core.thing.binding.BaseThingHandler;
 import org.openhab.core.types.Command;
+import org.openhab.core.types.State;
 import org.openhab.core.types.UnDefType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,7 +117,13 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                         dataTransService.setDemandControlFixedValue(((QuantityType<?>) command).intValue());
                     }
                     break;
+                case CHANNEL_AC_TARGETTEMP:
+                    if (command instanceof QuantityType) {
+                        dataTransService.setTargetTemperatur(((QuantityType<?>) command).intValue());
+                    }
+                    break;
             }
+
             updateStatus(ThingStatus.ONLINE);
         } catch (Exception ex) {
             // catch exceptions and handle it in your binding
@@ -178,8 +185,8 @@ public class OnectaDeviceHandler extends BaseThingHandler {
 
         if (dataTransService.isAvailable()) {
 
-            getThing().setLabel(String.format("Daikin Onecta Unit (%s)", dataTransService.getUnitName()));
-            getThing().setProperty(CHANNEL_AC_NAME, dataTransService.getUnitName());
+            // getThing().setLabel(String.format("Daikin Onecta Unit (%s)", dataTransService.getUnitName()));
+            getThing().setProperty(PROPERTY_AC_NAME, dataTransService.getUnitName());
 
             updateState(CHANNEL_AC_RAWDATA, new StringType(dataTransService.getRawData().toString()));
 
@@ -189,13 +196,30 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                 updateState(CHANNEL_AC_OPERATIONMODE,
                         new StringType(dataTransService.getCurrentOperationMode().toString()));
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMP))
-                updateState(CHANNEL_AC_TEMP, (dataTransService.getCurrentTemperatureSet() == null ? UnDefType.UNDEF
-                        : new DecimalType(dataTransService.getCurrentTemperatureSet())));
+                updateState(CHANNEL_AC_TEMP, (DecimalType) getCurrentTemperatureSet());
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMPMIN))
+                updateState(CHANNEL_AC_TEMPMIN, getCurrentTemperatureSetMin());
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMPMAX))
+                updateState(CHANNEL_AC_TEMPMAX, getCurrentTemperatureSetMax());
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMPSTEP))
+                updateState(CHANNEL_AC_TEMPSTEP, getCurrentTemperatureSetStep());
+
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TARGETTEMP))
+                updateState(CHANNEL_AC_TARGETTEMP, getTargetTemperatur());
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TARGETTEMPMIN))
+                updateState(CHANNEL_AC_TARGETTEMPMIN, getTargetTemperaturMin());
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TARGETTEMPMAX))
+                updateState(CHANNEL_AC_TARGETTEMPMAX, getTargetTemperaturMax());
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TARGETTEMPSTEP))
+                updateState(CHANNEL_AC_TARGETTEMPSTEP, getTargetTemperaturStep());
+
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_FANMOVEMENT))
                 updateState(CHANNEL_AC_FANMOVEMENT,
                         new StringType(dataTransService.getCurrentFanDirection().toString()));
+
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_FANSPEED))
-                updateState(CHANNEL_AC_FANSPEED, new StringType(dataTransService.getCurrentFanspeed().toString()));
+                updateState(CHANNEL_AC_FANSPEED, getCurrentFanspeed());
+
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_ECONOMODE))
                 updateState(CHANNEL_AC_ECONOMODE, dataTransService.getEconoMode() == null ? UnDefType.UNDEF
                         : OnOffType.from(dataTransService.getEconoMode()));
@@ -203,10 +227,10 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                 updateState(CHANNEL_AC_STREAMER, dataTransService.getStreamerMode() == null ? UnDefType.UNDEF
                         : OnOffType.from(dataTransService.getStreamerMode()));
 
-            updateState(CHANNEL_INDOOR_TEMP, (dataTransService.getIndoorTemperature() == null ? UnDefType.UNDEF
-                    : new DecimalType(dataTransService.getIndoorTemperature())));
-            updateState(CHANNEL_OUTDOOR_TEMP, (dataTransService.getOutdoorTemperature() == null ? UnDefType.UNDEF
-                    : new DecimalType(dataTransService.getOutdoorTemperature())));
+            updateState(CHANNEL_INDOOR_TEMP, getIndoorTemperature());
+            updateState(CHANNEL_OUTDOOR_TEMP, getOutdoorTemperature());
+            updateState(CHANNEL_LEAVINGWATER_TEMP, getLeavingWaterTemperatur());
+
             updateState(CHANNEL_INDOOR_HUMIDITY, (dataTransService.getIndoorHumidity() == null ? UnDefType.UNDEF
                     : new DecimalType(dataTransService.getIndoorHumidity())));
 
@@ -288,7 +312,103 @@ public class OnectaDeviceHandler extends BaseThingHandler {
             }
 
         } else {
-            getThing().setProperty(CHANNEL_AC_NAME, "Unit not registered at Onecta, unitID does not exists.");
+            getThing().setProperty(PROPERTY_AC_NAME, "Unit not registered at Onecta, unitID does not exists.");
+        }
+    }
+
+    private State getCurrentFanspeed() {
+        try {
+            return new StringType(dataTransService.getCurrentFanspeed().toString());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getCurrentTemperatureSet() {
+        try {
+            return new DecimalType(dataTransService.getCurrentTemperatureSet());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getCurrentTemperatureSetMin() {
+        try {
+            return new DecimalType(dataTransService.getCurrentTemperatureSetMin());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getCurrentTemperatureSetMax() {
+        try {
+            return new DecimalType(dataTransService.getCurrentTemperatureSetMax());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getCurrentTemperatureSetStep() {
+        try {
+            return new DecimalType(dataTransService.getCurrentTemperatureSetStep());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getOutdoorTemperature() {
+        try {
+            return new DecimalType(dataTransService.getOutdoorTemperature());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getIndoorTemperature() {
+        try {
+            return new DecimalType(dataTransService.getIndoorTemperature());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getLeavingWaterTemperatur() {
+        try {
+            return new DecimalType(dataTransService.getLeavingWaterTemperatur());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getTargetTemperatur() {
+        try {
+            return new DecimalType(dataTransService.getTargetTemperatur());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getTargetTemperaturMax() {
+        try {
+            return new DecimalType(dataTransService.getTargetTemperaturMax());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getTargetTemperaturMin() {
+        try {
+            return new DecimalType(dataTransService.getTargetTemperaturMin());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getTargetTemperaturStep() {
+        try {
+            return new DecimalType(dataTransService.getTargetTemperaturStep());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
         }
     }
 }

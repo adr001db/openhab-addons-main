@@ -2,17 +2,17 @@ package org.openhab.binding.onecta.internal.api.dto.units;
 
 import com.google.gson.annotations.SerializedName;
 
-public class IconID {
+public class FanSpeedFixed {
     @SerializedName("settable")
     private boolean settable;
     @SerializedName("value")
-    private Float value;
+    private Integer value;
     @SerializedName("maxValue")
-    private Float maxValue;
+    private Integer maxValue;
     @SerializedName("minValue")
-    private Float minValue;
+    private Integer minValue;
     @SerializedName("stepValue")
-    private Float stepValue;
+    private Integer stepValue;
     @SerializedName("unit")
     private String unit;
 
@@ -20,19 +20,19 @@ public class IconID {
         return settable;
     }
 
-    public Float getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public Float getMaxValue() {
+    public Integer getMaxValue() {
         return maxValue;
     }
 
-    public Float getMinValue() {
+    public Integer getMinValue() {
         return minValue;
     }
 
-    public Float getStepValue() {
+    public Integer getStepValue() {
         return stepValue;
     }
 

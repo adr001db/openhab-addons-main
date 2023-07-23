@@ -34,7 +34,7 @@ public class DataTransportService {
     }
 
     public ManagementPoint getManagementPoint(Enums.ManagementPoint managementPoint) {
-        return unit.findManagementPointsById(managementPoint.getValue());
+        return unit.findManagementPointsByType(managementPoint.getValue());
     }
 
     public Enums.OperationMode getCurrentOperationMode() {
@@ -146,7 +146,7 @@ public class DataTransportService {
 
     public String getUnitName() {
         try {
-            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getName().getValue();
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getNameValue();
         } catch (Exception e) {
             return null;
         }
@@ -166,6 +166,36 @@ public class DataTransportService {
         onectaConnectionClient.setCurrentTemperatureSet(unitId, getCurrentOperationMode(), value);
     }
 
+    public Number getCurrentTemperatureSetMin() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getTemperatureControl().getValue()
+                    .getOperationModes().getOperationMode(getCurrentOperationMode()).getSetpoints().getRoomTemperature()
+                    .getMinValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Number getCurrentTemperatureSetMax() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getTemperatureControl().getValue()
+                    .getOperationModes().getOperationMode(getCurrentOperationMode()).getSetpoints().getRoomTemperature()
+                    .getMaxValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Number getCurrentTemperatureSetStep() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getTemperatureControl().getValue()
+                    .getOperationModes().getOperationMode(getCurrentOperationMode()).getSetpoints().getRoomTemperature()
+                    .getStepValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public Number getIndoorTemperature() {
         try {
             return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getSensoryData().getValue()
@@ -175,7 +205,16 @@ public class DataTransportService {
         }
     }
 
-    public Integer getIndoorHumidity() {
+    public Number getLeavingWaterTemperatur() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getSensoryData().getValue()
+                    .getLeavingWaterTemperature().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Number getIndoorHumidity() {
         try {
             return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getSensoryData().getValue()
                     .getRoomHumidity().getValue();
@@ -188,6 +227,42 @@ public class DataTransportService {
         try {
             return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getSensoryData().getValue()
                     .getOutdoorTemperature().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Number getTargetTemperatur() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getTargetTemperature().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void setTargetTemperatur(float value) {
+        onectaConnectionClient.setTargetTemperatur(unitId, value);
+    }
+
+    public Number getTargetTemperaturMax() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getTargetTemperature().getMaxValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Number getTargetTemperaturMin() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getTargetTemperature().getMinValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Number getTargetTemperaturStep() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getTargetTemperature().getStepValue();
         } catch (Exception e) {
             return null;
         }

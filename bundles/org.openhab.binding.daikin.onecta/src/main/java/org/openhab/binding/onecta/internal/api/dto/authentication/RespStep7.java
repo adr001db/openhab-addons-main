@@ -7,6 +7,10 @@ public class RespStep7 {
     public String callId;
     @SerializedName("errorCode")
     public Integer errorCode;
+    @SerializedName("errorDetails")
+    public String errorDetails;
+    @SerializedName("errorMessage")
+    public String errorMessage;
     @SerializedName("apiVersion")
     public Integer apiVersion;
     @SerializedName("statusCode")
@@ -15,6 +19,8 @@ public class RespStep7 {
     public String statusReason;
     @SerializedName("time")
     public String time;
+    @SerializedName("errorFlags")
+    public String errorFlags;
     @SerializedName("registeredTimestamp")
     public Integer registeredTimestamp;
     @SerializedName("uID")
@@ -176,5 +182,17 @@ public class RespStep7 {
 
     public RespStep7SessionInfo getSessionInfo() {
         return sessionInfo;
+    }
+
+    public String getErrorDetails() {
+        return errorDetails;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public String getErrorFlags() {
+        return errorFlags;
     }
 }

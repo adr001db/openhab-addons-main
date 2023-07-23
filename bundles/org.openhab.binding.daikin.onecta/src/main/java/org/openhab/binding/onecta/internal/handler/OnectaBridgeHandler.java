@@ -25,10 +25,7 @@ import org.openhab.binding.onecta.internal.api.OnectaConnectionClient;
 import org.openhab.binding.onecta.internal.api.dto.units.Units;
 import org.openhab.binding.onecta.internal.exception.DaikinCommunicationException;
 import org.openhab.binding.onecta.internal.service.DeviceDiscoveryService;
-import org.openhab.core.thing.Bridge;
-import org.openhab.core.thing.ChannelUID;
-import org.openhab.core.thing.Thing;
-import org.openhab.core.thing.ThingStatus;
+import org.openhab.core.thing.*;
 import org.openhab.core.thing.binding.BaseBridgeHandler;
 import org.openhab.core.types.Command;
 import org.slf4j.Logger;
@@ -112,16 +109,24 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
         // the framework is then able to reuse the resources from the thing handler initialization.
         // we set this upfront to reliably check status updates in unit tests.
         updateStatus(ThingStatus.UNKNOWN);
-        onectaConnectionClient.startConnecton(thing.getConfiguration().get("userId").toString(),
-                thing.getConfiguration().get("password").toString());
+        try {
+            String refreshToken = thing.getConfiguration().get(CHANNEL_REFRESH_TOKEN) == null ? ""
+                    : thing.getConfiguration().get(CHANNEL_REFRESH_TOKEN).toString();
+            onectaConnectionClient.startConnecton(thing.getConfiguration().get(CHANNEL_USERID).toString(),
+                    thing.getConfiguration().get(CHANNEL_PASSWORD).toString(), refreshToken);
+
+            if (onectaConnectionClient.isOnline()) {
+                updateStatus(ThingStatus.ONLINE);
+            } else {
+                updateStatus(ThingStatus.OFFLINE);
+            }
+        } catch (DaikinCommunicationException e) {
+            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
+        }
 
         // Example for background initialization:
         // scheduler.execute(() -> {
-        if (onectaConnectionClient.isOnline()) {
-            updateStatus(ThingStatus.ONLINE);
-        } else {
-            updateStatus(ThingStatus.OFFLINE);
-        }
+
         // try {
         // //units = onactaConnectionClient.getUnits();
         // updateStatus(ThingStatus.ONLINE);
@@ -131,7 +136,7 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
         //
         // });
         pollingJob = scheduler.scheduleWithFixedDelay(this::pollDevices, 10,
-                Integer.parseInt(thing.getConfiguration().get("refreshInterval").toString()), TimeUnit.SECONDS);
+                Integer.parseInt(thing.getConfiguration().get(CHANNEL_REFRESHINTERVAL).toString()), TimeUnit.SECONDS);
 
         // Trigger discovery of Devices
         scheduler.submit(runnable);
@@ -165,11 +170,16 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
         logger.debug("pollDevices.");
         if (onectaConnectionClient.isOnline()) {
             updateStatus(ThingStatus.ONLINE);
+
+            getThing().getConfiguration().put(CHANNEL_REFRESH_TOKEN, onectaConnectionClient.getRefreshToken());
+
         } else {
-            updateStatus(ThingStatus.OFFLINE);
+            if (getThing().getStatus() != ThingStatus.OFFLINE) {
+                updateStatus(ThingStatus.OFFLINE);
+            }
         }
         try {
-            onectaConnectionClient.refreshUnitsData();
+            onectaConnectionClient.refreshUnitsData(getThing());
             // if (thing.getConfiguration().get("showAvailableUnitsInLog").toString() == "true") {
             //
             // for (Unit unit : units.getAll()) {
@@ -178,8 +188,8 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
             // }
             // }
         } catch (DaikinCommunicationException e) {
-            logger.error("DaikinCommunicationException: " + e.getMessage());
-            updateStatus(ThingStatus.OFFLINE);
+            logger.debug("DaikinCommunicationException: " + e.getMessage());
+            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
         }
 
         List<Thing> things = getThing().getThings();

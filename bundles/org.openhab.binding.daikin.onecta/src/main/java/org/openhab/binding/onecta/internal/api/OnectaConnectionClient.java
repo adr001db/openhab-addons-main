@@ -1,7 +1,12 @@
 package org.openhab.binding.onecta.internal.api;
 
+import static org.openhab.binding.onecta.internal.OnectaBridgeConstants.*;
 import static org.openhab.binding.onecta.internal.api.OnectaProperties.*;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 import org.eclipse.jetty.client.HttpClient;
@@ -19,6 +24,7 @@ import org.openhab.binding.onecta.internal.api.dto.units.Units;
 import org.openhab.binding.onecta.internal.exception.DaikinCommunicationException;
 import org.openhab.binding.onecta.internal.exception.DaikinCommunicationForbiddenException;
 import org.openhab.core.io.net.http.HttpClientFactory;
+import org.openhab.core.thing.Thing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,15 +52,16 @@ public class OnectaConnectionClient {
         this.onectaSignInClient = new OnectaSignInClient(httpClientFactory);
     }
 
-    public void startConnecton(String userId, String password) {
-        onectaSignInClient.signIn(userId, password);
+    public void startConnecton(String userId, String password, String refreshToken)
+            throws DaikinCommunicationException {
+        onectaSignInClient.signIn(userId, password, refreshToken);
     }
 
     public Boolean isOnline() {
         return onectaSignInClient.isOnline();
     }
 
-    private Response doBearerRequestGet(Boolean refreshed) {
+    private Response doBearerRequestGet(Boolean refreshed) throws DaikinCommunicationException {
         Response response = null;
         logger.debug(String.format("doBearerRequestGet : refershed %s", refreshed.toString()));
         try {
@@ -78,7 +85,7 @@ public class OnectaConnectionClient {
                     onectaSignInClient.fetchAccessToken();
                     response = doBearerRequestGet(true);
                 } catch (DaikinCommunicationException ex) {
-                    throw new RuntimeException(ex);
+                    throw new DaikinCommunicationException(ex);
                 }
             }
         }
@@ -121,12 +128,31 @@ public class OnectaConnectionClient {
         return response;
     }
 
-    public void refreshUnitsData() throws DaikinCommunicationException {
-        Response response;
+    public void refreshUnitsData(Thing bridgeThing) throws DaikinCommunicationException {
+        Response response = null;
+        String jsonString = "";
+        boolean dataAvailable = false;
+        Boolean logRawData = bridgeThing.getConfiguration().get(CHANNEL_LOGRAWDATA).toString().equals("true");
+        String stubDataFile = bridgeThing.getConfiguration().get(CHANNEL_STUBDATAFILE) == null ? ""
+                : bridgeThing.getConfiguration().get(CHANNEL_STUBDATAFILE).toString();
 
-        response = doBearerRequestGet(false);
-        String jsonString = JsonParser.parseString(((HttpContentResponse) response).getContentAsString()).toString();
-        if (response.getStatus() == HttpStatus.OK_200) {
+        if (stubDataFile.isEmpty()) {
+            response = doBearerRequestGet(false);
+            if (logRawData) {
+                logger.info(((HttpContentResponse) response).getContentAsString());
+            }
+            dataAvailable = (response.getStatus() == HttpStatus.OK_200);
+            jsonString = JsonParser.parseString(((HttpContentResponse) response).getContentAsString()).toString();
+        } else {
+            try {
+                jsonString = new String(Files.readAllBytes(Paths.get(stubDataFile)), StandardCharsets.UTF_8);
+                dataAvailable = true;
+            } catch (IOException e) {
+                logger.debug("Error reading file :" + e.getMessage());
+            }
+        }
+
+        if (dataAvailable) {
             rawData = JsonParser.parseString(jsonString).getAsJsonArray();
             onectaData.getAll().clear();
             for (int i = 0; i < rawData.size(); i++) {
@@ -244,5 +270,18 @@ public class OnectaConnectionClient {
         logger.debug(String.format("setDemandControlFixedValue: %s, %s", unitId, value));
 
         doBearerRequestPatch(getTDemandControlUrl(unitId), OnectaProperties.getTDemandControlFixedValueCommand(value));
+    }
+
+    public String getRefreshToken() {
+        return onectaSignInClient.getRefreshToken();
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        onectaSignInClient.setRefreshToken(refreshToken);
+    }
+
+    public void setTargetTemperatur(String unitId, Float value) {
+        logger.debug(String.format("setRefreshToken: %s, %s", unitId, value));
+        doBearerRequestPatch(getTargetTemperaturUrl(unitId), getTargetTemperaturCommand(value));
     }
 }

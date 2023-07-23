@@ -32,6 +32,7 @@ public class OnectaProperties {
     private static final String COMMAND_ECONOMODE = "econoMode";
     private static final String COMMAND_OPERATIONMODE = "operationMode";
     private static final String COMMAND_TEMPERATURECONTROL = "temperatureControl";
+    private static final String COMMAND_TARGETTEMPERATURECONTROL = "targetTemperature";
     private static final String COMMAND_STREAMERMODE = "streamerMode";
     private static final String COMMAND_HOLIDAYMODE = "holidayMode";
     private static final String COMMAND_SUBPATH_TEMPERATURECONTROL = "/operationModes/%s/setpoints/roomTemperature";
@@ -58,6 +59,14 @@ public class OnectaProperties {
 
     public static String getOperationModeUrl(String unitId) {
         return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, COMMAND_OPERATIONMODE);
+    }
+
+    public static String getTargetTemperaturUrl(String unitId) {
+        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, COMMAND_TARGETTEMPERATURECONTROL);
+    }
+
+    public static CommandFloat getTargetTemperaturCommand(float value) {
+        return new CommandFloat(value, null);
     }
 
     public static CommandString getOperationModeCommand(Enums.OperationMode operationMode) {

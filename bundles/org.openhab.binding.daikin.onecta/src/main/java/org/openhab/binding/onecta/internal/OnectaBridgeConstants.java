@@ -28,6 +28,12 @@ public class OnectaBridgeConstants {
     public static final String BRIDGE = "account";
     // List of all Device Types
     public static final String DEVICE = "device";
+    public static final String CHANNEL_REFRESH_TOKEN = "refreshToken";
+    public static final String CHANNEL_PASSWORD = "password";
+    public static final String CHANNEL_USERID = "userId";
+    public static final String CHANNEL_REFRESHINTERVAL = "refreshInterval";
+    public static final String CHANNEL_LOGRAWDATA = "rawdataLogging";
+    public static final String CHANNEL_STUBDATAFILE = "stubdataFile";
 
     // List of all Bridge Thing Type UIDs
     public static final ThingTypeUID BRIDGE_THING_TYPE = new ThingTypeUID(BINDING_ID, BRIDGE);

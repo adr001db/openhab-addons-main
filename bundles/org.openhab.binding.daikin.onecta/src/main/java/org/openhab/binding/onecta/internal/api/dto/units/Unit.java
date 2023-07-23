@@ -55,9 +55,9 @@ public class Unit {
         return timestamp;
     }
 
-    public ManagementPoint findManagementPointsById(String key) {
+    public ManagementPoint findManagementPointsByType(String key) {
         return managementPoints.stream()
-                .filter(managementPoint -> key.equals(managementPoint.getEmbeddedId().toString())).findFirst()
+                .filter(managementPoint -> key.equals(managementPoint.getManagementPointType().toString())).findFirst()
                 .orElse(null);
     }
 }
