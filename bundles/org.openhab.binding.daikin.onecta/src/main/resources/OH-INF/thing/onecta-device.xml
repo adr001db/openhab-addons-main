@@ -1508,11 +1508,16 @@
 
 	<channel-type id="acunit-settemp">
 		<item-type>Number:Temperature</item-type>
-		<label>Set Point</label>
-		<description>The set point temperature</description>
+		<label>SetPoint</label>
+		<description>Thermostat temperature setpoint</description>
 		<category>Temperature</category>
-		<state min="12" max="30" step="0.5" pattern="%.1f %unit%"/>
+		<tags>
+			<tag>Setpoint</tag>
+			<tag>Temperature</tag>
+		</tags>
+		<state min="12" max="30" step="0.5" pattern="%.1d %unit%"/>
 	</channel-type>
+
 	<channel-type id="acunit-settempmin">
 		<item-type>Number:Temperature</item-type>
 		<label>Set Point Min value</label>
@@ -1520,6 +1525,9 @@
 		<category>Temperature</category>
 		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
+
+
+
 	<channel-type id="acunit-settempmax">
 		<item-type>Number:Temperature</item-type>
 		<label>Set Point Max value</label>

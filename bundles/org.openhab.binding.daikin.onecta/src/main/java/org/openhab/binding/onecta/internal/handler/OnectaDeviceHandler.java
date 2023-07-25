@@ -21,6 +21,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.onecta.internal.OnectaConfiguration;
 import org.openhab.binding.onecta.internal.api.Enums;
 import org.openhab.binding.onecta.internal.api.OnectaConnectionClient;
+import org.openhab.binding.onecta.internal.service.ChannelsRefreshDelay;
 import org.openhab.binding.onecta.internal.service.DataTransportService;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.OnOffType;
@@ -52,7 +53,7 @@ public class OnectaDeviceHandler extends BaseThingHandler {
 
     private @Nullable ScheduledFuture<?> pollingJob;
 
-    private DataTransportService dataTransService;
+    private final DataTransportService dataTransService;
     private @Nullable ChannelsRefreshDelay channelsRefreshDelay;
 
     public OnectaDeviceHandler(Thing thing, OnectaConnectionClient onectaConnectionClient) {
@@ -195,8 +196,10 @@ public class OnectaDeviceHandler extends BaseThingHandler {
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_OPERATIONMODE))
                 updateState(CHANNEL_AC_OPERATIONMODE,
                         new StringType(dataTransService.getCurrentOperationMode().toString()));
-            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMP))
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMP)) {
                 updateState(CHANNEL_AC_TEMP, (DecimalType) getCurrentTemperatureSet());
+            }
+;
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMPMIN))
                 updateState(CHANNEL_AC_TEMPMIN, getCurrentTemperatureSetMin());
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMPMAX))

@@ -1,4 +1,4 @@
-package org.openhab.binding.onecta.internal.handler;
+package org.openhab.binding.onecta.internal.service;
 
 import java.util.ArrayList;
 import java.util.Date;
