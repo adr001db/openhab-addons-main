@@ -29,6 +29,7 @@ public class OnectaProperties {
     private static final String BASE_URL = "https://api.prod.unicloud.edc.dknadmin.be/v1/gateway-devices/%s";
     private static final String BASE_URL_COMMAND = "/management-points/climateControl/characteristics/%s";
     private static final String COMMAND_ONOFF = "onOffMode";
+    private static final String COMMAND_POWERFULMODEONOFF = "powerfulMode";
     private static final String COMMAND_ECONOMODE = "econoMode";
     private static final String COMMAND_OPERATIONMODE = "operationMode";
     private static final String COMMAND_TEMPERATURECONTROL = "temperatureControl";
@@ -51,6 +52,10 @@ public class OnectaProperties {
 
     public static String getUrlOnOff(String unitId) {
         return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, COMMAND_ONOFF);
+    }
+
+    public static String getUrlPowerFulModeOnOff(String unitId) {
+        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, COMMAND_POWERFULMODEONOFF);
     }
 
     public static String getEconoMode(String unitId) {

@@ -128,8 +128,20 @@ public class DataTransportService {
         }
     }
 
+    public String getPowerFulModeOnOff() {
+        try {
+            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getPowerfulMode().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public void setPowerOnOff(Enums.OnOff value) {
         onectaConnectionClient.setPowerOnOff(unitId, value);
+    }
+
+    public void setPowerFulModeOnOff(Enums.OnOff value) {
+        onectaConnectionClient.setPowerFulModeOnOff(unitId, value);
     }
 
     public String getEconoMode() {
@@ -163,7 +175,8 @@ public class DataTransportService {
     }
 
     public void setCurrentTemperatureSet(float value) {
-        onectaConnectionClient.setCurrentTemperatureSet(unitId, getCurrentOperationMode(), value);
+        if (value <= getCurrentTemperatureSetMax().floatValue())
+            onectaConnectionClient.setCurrentTemperatureSet(unitId, getCurrentOperationMode(), value);
     }
 
     public Number getCurrentTemperatureSetMin() {

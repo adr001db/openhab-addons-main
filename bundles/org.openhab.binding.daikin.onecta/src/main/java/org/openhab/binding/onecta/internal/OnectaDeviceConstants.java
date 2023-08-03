@@ -54,6 +54,7 @@ public class OnectaDeviceConstants {
     public static final String CHANNEL_OUTDOOR_TEMP = "basic#outdoortemp";
     public static final String CHANNEL_INDOOR_HUMIDITY = "basic#humidity";
     public static final String CHANNEL_AC_POWER = "basic#power";
+    public static final String CHANNEL_AC_POWERFULMODE = "basic#powerfulmode";
     public static final String CHANNEL_AC_RAWDATA = "extra#rawdata";
     public static final String CHANNEL_AC_OPERATIONMODE = "basic#operationmode";
     public static final String CHANNEL_AC_NAME = "basic#name";

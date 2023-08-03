@@ -59,6 +59,7 @@
 			<channel id="fandir" typeId="acunit-fandir"/>
 			<channel id="economode" typeId="acunit-economode"/>
 			<channel id="streamer" typeId="acunit-streamer"/>
+			<channel id="powerfulmode" typeId="acunit-powerfulmode"/>
 			<channel id="holidaymode" typeId="acunit-holidaymode"/>
 			<channel id="targettemp" typeId="acunit-targetTemp"/>
 			<channel id="targettempmin" typeId="acunit-targetTempMin"/>
@@ -1488,10 +1489,6 @@
 		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
 
-
-
-
-
 	<channel-type id="acunit-power">
 		<item-type>Switch</item-type>
 		<label>Power</label>
@@ -1511,11 +1508,7 @@
 		<label>SetPoint</label>
 		<description>Thermostat temperature setpoint</description>
 		<category>Temperature</category>
-		<tags>
-			<tag>Setpoint</tag>
-			<tag>Temperature</tag>
-		</tags>
-		<state min="12" max="30" step="0.5" pattern="%.1d %unit%"/>
+		<state step="0.5" pattern="%.1d %unit%"/>
 	</channel-type>
 
 	<channel-type id="acunit-settempmin">
@@ -1525,8 +1518,6 @@
 		<category>Temperature</category>
 		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
-
-
 
 	<channel-type id="acunit-settempmax">
 		<item-type>Number:Temperature</item-type>
@@ -1626,13 +1617,13 @@
 		<description>Current fan speed setting of the AC unit</description>
 		<state>
 			<options>
-				<option value="AUTO">auto</option>
-				<option value="SILENCE">silence</option>
-				<option value="LEVEL_1">level 1</option>
-				<option value="LEVEL_2">level 2</option>
-				<option value="LEVEL_3">level 3</option>
-				<option value="LEVEL_4">level 4</option>
-				<option value="LEVEL_5">level 5</option>
+				<option value="AUTO">Auto</option>
+				<option value="SILENCE">Silence</option>
+				<option value="LEVEL_1">Level 1</option>
+				<option value="LEVEL_2">Level 2</option>
+				<option value="LEVEL_3">Level 3</option>
+				<option value="LEVEL_4">Level 4</option>
+				<option value="LEVEL_5">Level 5</option>
 			</options>
 		</state>
 	</channel-type>
@@ -1651,8 +1642,8 @@
 		<description>Current fan horizontal swing setting of the AC unit</description>
 		<state>
 			<options>
-				<option value="STOPPED">stopped</option>
-				<option value="SWING">swing</option>
+				<option value="STOPPED">Stopped</option>
+				<option value="SWING">Swing</option>
 			</options>
 		</state>
 	</channel-type>
@@ -1663,9 +1654,9 @@
 		<description>Current fan vertical swing setting of the AC unit</description>
 		<state>
 			<options>
-				<option value="STOPPED">stopped</option>
-				<option value="SWING">swing</option>
-				<option value="WINDNICE">windnice</option>
+				<option value="STOPPED">Stopped</option>
+				<option value="SWING">Swing</option>
+				<option value="WINDNICE">Windnice</option>
 			</options>
 		</state>
 	</channel-type>
@@ -1676,12 +1667,12 @@
 		<description>Current fan swing setting of the AC unit</description>
 		<state>
 			<options>
-				<option value="STOPPED">stopped</option>
-				<option value="VERTICAL">vertical</option>
-				<option value="VERTICAL_EXTRA">vertical (Scanner)</option>
-				<option value="HORIZONTAL">horizontal</option>
-				<option value="VERTICAL_AND_HORIZONTAL">vertical and horizontal</option>
-				<option value="VERTICAL_AND_HORIZONTAL_EXTRA">vertical and horizontal (Scanner)</option>
+				<option value="STOPPED">Stopped</option>
+				<option value="VERTICAL">Vertical</option>
+				<option value="VERTICAL_EXTRA">Vertical (Scanner)</option>
+				<option value="HORIZONTAL">Horizontal</option>
+				<option value="VERTICAL_AND_HORIZONTAL">Vertical and horizontal</option>
+				<option value="VERTICAL_AND_HORIZONTAL_EXTRA">Vertical and horizontal (Scanner)</option>
 			</options>
 		</state>
 	</channel-type>
@@ -1690,6 +1681,11 @@
 		<item-type>Switch</item-type>
 		<label>Streamer</label>
 		<description>Streamer Mode</description>
+	</channel-type>
+	<channel-type id="acunit-powerfulmode">
+		<item-type>Switch</item-type>
+		<label>Powerful mode</label>
+		<description>Powerful mode</description>
 	</channel-type>
 
 	<channel-type id="acunit-holidaymode">

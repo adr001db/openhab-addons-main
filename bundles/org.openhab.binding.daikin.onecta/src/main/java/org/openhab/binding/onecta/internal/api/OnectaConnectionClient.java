@@ -187,6 +187,12 @@ public class OnectaConnectionClient {
         doBearerRequestPatch(getUrlOnOff(unitId), commandOnOf);
     }
 
+    public void setPowerFulModeOnOff(String unitId, Enums.OnOff value) {
+        logger.debug(String.format("setPowerFulModeOnOff : %s, %s", unitId, value));
+        CommandOnOf commandOnOf = new CommandOnOf(value);
+        doBearerRequestPatch(getUrlPowerFulModeOnOff(unitId), commandOnOf);
+    }
+
     public void setEconoMode(String unitId, Enums.OnOff value) {
         logger.debug(String.format("setEconoMode: %s, %s", unitId, value));
         CommandOnOf commandOnOf = new CommandOnOf(value);

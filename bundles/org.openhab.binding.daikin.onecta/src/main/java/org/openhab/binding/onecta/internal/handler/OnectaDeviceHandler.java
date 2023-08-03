@@ -73,6 +73,11 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                         dataTransService.setPowerOnOff(Enums.OnOff.valueOf(command.toString()));
                     }
                     break;
+                case CHANNEL_AC_POWERFULMODE:
+                    if (command instanceof OnOffType) {
+                        dataTransService.setPowerFulModeOnOff(Enums.OnOff.valueOf(command.toString()));
+                    }
+                    break;
                 case CHANNEL_AC_OPERATIONMODE:
                     if (command instanceof StringType) {
                         dataTransService.setCurrentOperationMode(Enums.OperationMode.valueOf(command.toString()));
@@ -193,13 +198,16 @@ public class OnectaDeviceHandler extends BaseThingHandler {
 
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_POWER))
                 updateState(CHANNEL_AC_POWER, OnOffType.from(dataTransService.getPowerOnOff()));
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_POWERFULMODE))
+                updateState(CHANNEL_AC_POWERFULMODE, OnOffType.from(dataTransService.getPowerFulModeOnOff()));
+
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_OPERATIONMODE))
                 updateState(CHANNEL_AC_OPERATIONMODE,
                         new StringType(dataTransService.getCurrentOperationMode().toString()));
-            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMP)) {
-                updateState(CHANNEL_AC_TEMP, (DecimalType) getCurrentTemperatureSet());
-            }
-;
+
+            // Set Temp
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMP))
+                updateState(CHANNEL_AC_TEMP, getCurrentTemperatureSet());
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMPMIN))
                 updateState(CHANNEL_AC_TEMPMIN, getCurrentTemperatureSetMin());
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMPMAX))
@@ -207,6 +215,7 @@ public class OnectaDeviceHandler extends BaseThingHandler {
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TEMPSTEP))
                 updateState(CHANNEL_AC_TEMPSTEP, getCurrentTemperatureSetStep());
 
+            // Target temp
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TARGETTEMP))
                 updateState(CHANNEL_AC_TARGETTEMP, getTargetTemperatur());
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TARGETTEMPMIN))
@@ -216,53 +225,38 @@ public class OnectaDeviceHandler extends BaseThingHandler {
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TARGETTEMPSTEP))
                 updateState(CHANNEL_AC_TARGETTEMPSTEP, getTargetTemperaturStep());
 
+            // Fan
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_FANMOVEMENT))
-                updateState(CHANNEL_AC_FANMOVEMENT,
-                        new StringType(dataTransService.getCurrentFanDirection().toString()));
-
+                updateState(CHANNEL_AC_FANMOVEMENT, getCurrentFanDirection());
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_FANSPEED))
                 updateState(CHANNEL_AC_FANSPEED, getCurrentFanspeed());
-
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_ECONOMODE))
-                updateState(CHANNEL_AC_ECONOMODE, dataTransService.getEconoMode() == null ? UnDefType.UNDEF
-                        : OnOffType.from(dataTransService.getEconoMode()));
+                updateState(CHANNEL_AC_ECONOMODE, getEconoMode());
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_STREAMER))
-                updateState(CHANNEL_AC_STREAMER, dataTransService.getStreamerMode() == null ? UnDefType.UNDEF
-                        : OnOffType.from(dataTransService.getStreamerMode()));
+                updateState(CHANNEL_AC_STREAMER, getStreamerMode());
 
             updateState(CHANNEL_INDOOR_TEMP, getIndoorTemperature());
             updateState(CHANNEL_OUTDOOR_TEMP, getOutdoorTemperature());
             updateState(CHANNEL_LEAVINGWATER_TEMP, getLeavingWaterTemperatur());
 
-            updateState(CHANNEL_INDOOR_HUMIDITY, (dataTransService.getIndoorHumidity() == null ? UnDefType.UNDEF
-                    : new DecimalType(dataTransService.getIndoorHumidity())));
+            updateState(CHANNEL_INDOOR_HUMIDITY, getIndoorHumidity());
 
-            updateState(CHANNEL_AC_FANMOVEMENT_HOR,
-                    (dataTransService.getCurrentFanDirectionHor() == Enums.FanMovementHor.NOTAVAILABLE ? UnDefType.UNDEF
-                            : new StringType(dataTransService.getCurrentFanDirectionHor().toString())));
-            updateState(CHANNEL_AC_FANMOVEMENT_VER,
-                    (dataTransService.getCurrentFanDirectionVer() == Enums.FanMovementVer.NOTAVAILABLE ? UnDefType.UNDEF
-                            : new StringType(dataTransService.getCurrentFanDirectionVer().toString())));
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_FANMOVEMENT_HOR))
+                updateState(CHANNEL_AC_FANMOVEMENT_HOR, getCurrentFanDirectionHor());
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_FANMOVEMENT_VER))
+                updateState(CHANNEL_AC_FANMOVEMENT_VER, getCurrentFanDirectionVer());
 
-            updateState(CHANNEL_AC_HOLIDAYMODE, dataTransService.getHolidayMode() == null ? UnDefType.UNDEF
-                    : OnOffType.from(dataTransService.getHolidayMode()));
-            updateState(CHANNEL_AC_DEMANDCONTROL, dataTransService.getDemandControl() == null ? UnDefType.UNDEF
-                    : new StringType(dataTransService.getDemandControl().toString()));
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_HOLIDAYMODE))
+                updateState(CHANNEL_AC_HOLIDAYMODE, getHolidayMode());
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_DEMANDCONTROL))
+                updateState(CHANNEL_AC_DEMANDCONTROL, getDemandControl());
 
             // DEMANDCONTROL
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_DEMANDCONTROLFIXEDVALUE))
-                updateState(CHANNEL_AC_DEMANDCONTROLFIXEDVALUE,
-                        dataTransService.getDemandControl() == null ? UnDefType.UNDEF
-                                : new DecimalType(dataTransService.getDemandControlFixedValue()));
-            updateState(CHANNEL_AC_DEMANDCONTROLFIXEDSTEPVALUE,
-                    dataTransService.getDemandControl() == null ? UnDefType.UNDEF
-                            : new DecimalType(dataTransService.getDemandControlFixedStepValue()));
-            updateState(CHANNEL_AC_DEMANDCONTROLFIXEDMINVALUE,
-                    dataTransService.getDemandControl() == null ? UnDefType.UNDEF
-                            : new DecimalType(dataTransService.getDemandControlFixedMinValue()));
-            updateState(CHANNEL_AC_DEMANDCONTROLFIXEDMAXVALUE,
-                    dataTransService.getDemandControl() == null ? UnDefType.UNDEF
-                            : new DecimalType(dataTransService.getDemandControlFixedMaxValue()));
+                updateState(CHANNEL_AC_DEMANDCONTROLFIXEDVALUE, getDemandControlFixedValue());
+            updateState(CHANNEL_AC_DEMANDCONTROLFIXEDSTEPVALUE, getDemandControlFixedStepValue());
+            updateState(CHANNEL_AC_DEMANDCONTROLFIXEDMINVALUE, getDemandControlFixedMinValue());
+            updateState(CHANNEL_AC_DEMANDCONTROLFIXEDMAXVALUE, getDemandControlFixedMaxValue());
 
             // Energy consumption Cooling Day
             if (dataTransService.getConsumptionCoolingDay() != null) {
@@ -410,6 +404,102 @@ public class OnectaDeviceHandler extends BaseThingHandler {
     private State getTargetTemperaturStep() {
         try {
             return new DecimalType(dataTransService.getTargetTemperaturStep());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getDemandControlFixedValue() {
+        try {
+            return new DecimalType(dataTransService.getDemandControlFixedValue());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getDemandControlFixedStepValue() {
+        try {
+            return new DecimalType(dataTransService.getDemandControlFixedStepValue());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getDemandControlFixedMinValue() {
+        try {
+            return new DecimalType(dataTransService.getDemandControlFixedMinValue());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getDemandControlFixedMaxValue() {
+        try {
+            return new DecimalType(dataTransService.getDemandControlFixedMaxValue());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getIndoorHumidity() {
+        try {
+            return new DecimalType(dataTransService.getIndoorHumidity());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getEconoMode() {
+        try {
+            return OnOffType.from(dataTransService.getEconoMode());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getStreamerMode() {
+        try {
+            return OnOffType.from(dataTransService.getStreamerMode());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getCurrentFanDirectionHor() {
+        try {
+            return new StringType(dataTransService.getCurrentFanDirectionHor().toString());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getCurrentFanDirectionVer() {
+        try {
+            return new StringType(dataTransService.getCurrentFanDirectionVer().toString());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getCurrentFanDirection() {
+        try {
+            return new StringType(dataTransService.getCurrentFanDirection().toString());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getHolidayMode() {
+        try {
+            return OnOffType.from(dataTransService.getHolidayMode());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getDemandControl() {
+        try {
+            return new StringType(dataTransService.getDemandControl().toString());
         } catch (Exception e) {
             return UnDefType.UNDEF;
         }
