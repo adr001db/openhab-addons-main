@@ -1,25 +1,26 @@
 # Onecta Binding
 
-_Give some details about what this binding is meant for - a protocol, system, specific device._
 
-_If possible, provide some resources like pictures (only PNG is supported currently), a video, etc. to give an impression of what can be done with this binding._
-_You can place such resources into a `doc` folder next to this README.md._
+With the newer Daikin units it is no longer possible to control them directly. The units can only be connected to the Daikin cloud called Onecta.
+The units can then 'only' be controlled with the Onecta app on a phone or tablet.
+This binding makes it possible to still control the units with OpenHAB. It's now done by connecting the binding to Daikin's Onecta.
+The unit information is then received from the Daikin cloud just like the app. Commands to the units also run via the Daikin Cloud.
+Older units can also be controlled with this binding as long as they are registered in Onecta.
 
-_Put each sentence in a separate line to improve readability of diffs._
+<img alt="discovery pictures"  src="doc/Onecta1.png" width="250"/>
+<img alt="discovery pictures"  src="doc/Onecta2.png" width="250"/>
+<img alt="discovery pictures"  src="doc/Things.png" width="500"/>
+
 
 ## Supported Things
 
-_Please describe the different supported things / devices including their ThingTypeUID within this section._
-_Which different types are supported, which models were tested etc.?_
-_Note that it is planned to generate some part of this based on the XML files within ```src/main/resources/OH-INF/thing``` of your binding._
+Basically all devices connected to Daikin Onecta cloud could be connected with the binding.
 
-- `bridge`: Short description of the Bridge, if any
-- `sample`: Short description of the Thing with the ThingTypeUID `sample`
+- `bridge`: Ensures the connection to Onecta cloud and the recognition of connected units
 
 ## Discovery
 
-_Describe the available auto-discovery features here._
-_Mention for what it works and what needs to be kept in mind when using it._
+Once the bridge is connected to Daikin Onecta it will receive all data from the connected units. The available units will appear in the inbox. From here they can be added as a new thing
 
 ## Binding Configuration
 
