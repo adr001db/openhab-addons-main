@@ -24,22 +24,16 @@ Once the bridge is connected to Daikin Onecta it will receive all data from the 
 
 ## Binding Configuration
 
-_If your binding requires or supports general configuration settings, please create a folder ```cfg``` and place the configuration file ```<bindingId>.cfg``` inside it._
-_In this section, you should link to this file and provide some information about the options._
-_The file could e.g. look like:_
 
-```
-# Configuration for the Onecta Binding
-#
-# Default secret key for the pairing of the Onecta Thing.
-# It has to be between 10-40 (alphanumeric) characters.
-# This may be changed by the user for security reasons.
-secret=openHABSecret
-```
+| Name             | Type    | Description                                                    | Default | Required | Advanced |
+|------------------|---------|----------------------------------------------------------------|---------|----------|----------|
+| UserId           | text    | UserId / Emailadress Onecta account                            | N/A     | yes      | no       |
+| Password         | text    | Password to access Onecta account                              | N/A     | yes      | no       |
+| refreshInterval  | integer | Interval the device is polled in sec.                          | 60      | yes      | no       |
+| Onecta Refresh token  | text    | Is filled automaticly with Refresh token to speedup connection | N/A      | No       | no       |
+| Drop Raw-data    | boolean | If true raw JSon Data is dropt in log file                     | false   | yes      | no       |
+| Stub datafile  | text    | Path to JSon stubdata file only for debugging                  | N/A     | no       | no       |
 
-_Note that it is planned to generate some part of this based on the information that is available within ```src/main/resources/OH-INF/binding``` of your binding._
-
-_If your binding does not offer any generic configurations, you can remove this section completely._
 
 ## Thing Configuration
 
