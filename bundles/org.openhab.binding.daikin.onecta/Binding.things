@@ -1,3 +1,0 @@
-Bridge onecta:account:bridge "Onect Bridge" [userId="alex@",password="*******", refreshInterval=5, rawdataLogging=false] {
-    Thing device woonkamer "Onecta Woonkamer" [unitID="80100dc5-a289-47c1-bbdb-31feda751885", refreshDelay=15]
-}
