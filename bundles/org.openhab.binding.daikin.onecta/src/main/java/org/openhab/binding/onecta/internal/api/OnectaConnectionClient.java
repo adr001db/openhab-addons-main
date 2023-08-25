@@ -17,7 +17,6 @@ import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpStatus;
 import org.openhab.binding.onecta.internal.api.dto.commands.CommandOnOf;
-import org.openhab.binding.onecta.internal.api.dto.commands.CommandString;
 import org.openhab.binding.onecta.internal.api.dto.commands.CommandTrueFalse;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
 import org.openhab.binding.onecta.internal.api.dto.units.Units;
@@ -220,7 +219,6 @@ public class OnectaConnectionClient {
 
     public void setCurrentFanDirection(String unitId, Enums.OperationMode currentMode, Enums.FanMovement fanMovement) {
         String url = getTFanControlUrl(unitId);
-        CommandString commandString;
         switch (fanMovement) {
             case STOPPED:
                 doBearerRequestPatch(url,
@@ -253,6 +251,18 @@ public class OnectaConnectionClient {
             default:
                 break;
         }
+    }
+
+    public void setCurrentFanDirectionHor(String unitId, Enums.OperationMode currentMode,
+            Enums.FanMovementHor fanMovement) {
+        String url = getTFanControlUrl(unitId);
+        doBearerRequestPatch(url, OnectaProperties.getTFanDirectionHorCommand(currentMode, fanMovement));
+    }
+
+    public void setCurrentFanDirectionVer(String unitId, Enums.OperationMode currentMode,
+            Enums.FanMovementVer fanMovement) {
+        String url = getTFanControlUrl(unitId);
+        doBearerRequestPatch(url, OnectaProperties.getTFanDirectionVerCommand(currentMode, fanMovement));
     }
 
     public void setStreamerMode(String unitId, Enums.OnOff value) {

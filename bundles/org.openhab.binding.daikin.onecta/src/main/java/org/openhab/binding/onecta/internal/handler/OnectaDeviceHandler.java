@@ -14,6 +14,7 @@ package org.openhab.binding.onecta.internal.handler;
 
 import static org.openhab.binding.onecta.internal.OnectaDeviceConstants.*;
 
+import java.time.LocalDate;
 import java.util.concurrent.ScheduledFuture;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
@@ -96,6 +97,16 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                 case CHANNEL_AC_FANMOVEMENT:
                     if (command instanceof StringType) {
                         dataTransService.setCurrentFanDirection(Enums.FanMovement.valueOf(command.toString()));
+                    }
+                    break;
+                case CHANNEL_AC_FANMOVEMENT_HOR:
+                    if (command instanceof StringType) {
+                        dataTransService.setCurrentFanDirectionHor(Enums.FanMovementHor.valueOf(command.toString()));
+                    }
+                    break;
+                case CHANNEL_AC_FANMOVEMENT_VER:
+                    if (command instanceof StringType) {
+                        dataTransService.setCurrentFanDirectionVer(Enums.FanMovementVer.valueOf(command.toString()));
                     }
                     break;
                 case CHANNEL_AC_ECONOMODE:
@@ -300,13 +311,18 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                 }
             }
             // Energy consumption Heating Month
-            if (dataTransService.getConsumptionheatingMonth() != null) {
-                for (int i = 0; i < dataTransService.getConsumptionheatingMonth().length; i++) {
+            if (dataTransService.getConsumptionHeatingMonth() != null) {
+                for (int i = 0; i < dataTransService.getConsumptionHeatingMonth().length; i++) {
                     updateState(String.format(CHANNEL_AC_ENERGY_HEATING_MONTH, i),
-                            dataTransService.getConsumptionheatingMonth()[i] == null ? UnDefType.UNDEF
-                                    : new DecimalType(dataTransService.getConsumptionheatingMonth()[i]));
+                            dataTransService.getConsumptionHeatingMonth()[i] == null ? UnDefType.UNDEF
+                                    : new DecimalType(dataTransService.getConsumptionHeatingMonth()[i]));
                 }
             }
+            // calculate current day and year energy consumption
+            updateState(CHANNEL_AC_ENERGY_HEATING_CURRENT_DAY, getEnergyHeatingCurrentDay());
+            updateState(CHANNEL_AC_ENERGY_HEATING_CURRENT_YEAR, getEnergyHeatingCurrentYear());
+            updateState(CHANNEL_AC_ENERGY_COOLING_CURRENT_DAY, getEnergyCoolingCurrentDay());
+            updateState(CHANNEL_AC_ENERGY_COOLING_CURRENT_YEAR, getEnergyCoolingCurrentYear());
 
         } else {
             getThing().setProperty(PROPERTY_AC_NAME, "Unit not registered at Onecta, unitID does not exists.");
@@ -503,5 +519,46 @@ public class OnectaDeviceHandler extends BaseThingHandler {
         } catch (Exception e) {
             return UnDefType.UNDEF;
         }
+    }
+
+    private int getCurrentDayOfWeek() {
+        LocalDate today = LocalDate.now();
+        return today.getDayOfWeek().getValue() - 1;
+    }
+
+    private State getEnergyHeatingCurrentDay() {
+        try {
+            return new DecimalType(dataTransService.getConsumptionHeatingWeek()[7 + getCurrentDayOfWeek()]);
+        } catch (Exception e) {
+            return new DecimalType(0);
+        }
+    }
+
+    private State getEnergyCoolingCurrentDay() {
+        try {
+            return new DecimalType(dataTransService.getConsumptionCoolingWeek()[7 + getCurrentDayOfWeek()]);
+        } catch (Exception e) {
+            return new DecimalType(0);
+        }
+    }
+
+    private State getEnergyCoolingCurrentYear() {
+        double total = 0;
+        for (int i = 12; i < 23; i++) {
+            if (dataTransService.getConsumptionCoolingMonth()[i] != null) {
+                total += dataTransService.getConsumptionCoolingMonth()[i];
+            }
+        }
+        return new DecimalType(Math.round(total * 10) / 10D);
+    }
+
+    private State getEnergyHeatingCurrentYear() {
+        double total = 0;
+        for (int i = 12; i < 23; i++) {
+            if (dataTransService.getConsumptionHeatingMonth()[i] != null) {
+                total += dataTransService.getConsumptionHeatingMonth()[i];
+            }
+        }
+        return new DecimalType(Math.round(total * 10) / 10D);
     }
 }

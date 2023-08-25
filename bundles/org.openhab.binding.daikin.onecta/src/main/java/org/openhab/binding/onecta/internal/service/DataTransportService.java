@@ -120,6 +120,14 @@ public class DataTransportService {
         onectaConnectionClient.setCurrentFanDirection(unitId, getCurrentOperationMode(), value);
     }
 
+    public void setCurrentFanDirectionHor(Enums.FanMovementHor value) {
+        onectaConnectionClient.setCurrentFanDirectionHor(unitId, getCurrentOperationMode(), value);
+    }
+
+    public void setCurrentFanDirectionVer(Enums.FanMovementVer value) {
+        onectaConnectionClient.setCurrentFanDirectionVer(unitId, getCurrentOperationMode(), value);
+    }
+
     public String getPowerOnOff() {
         try {
             return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getOnOffMode().getValue();
@@ -403,7 +411,7 @@ public class DataTransportService {
         }
     }
 
-    public Float[] getConsumptionheatingMonth() {
+    public Float[] getConsumptionHeatingMonth() {
         try {
             return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getConsumptionData().getValue()
                     .getElectrical().getHeating().getMonth();

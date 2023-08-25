@@ -76,6 +76,10 @@ public class OnectaDeviceConstants {
     public static final String CHANNEL_AC_ENERGY_HEATING_DAY = "consumptionDataHeating#energyheatingday-%s";
     public static final String CHANNEL_AC_ENERGY_HEATING_WEEK = "consumptionDataHeating#energyheatingweek-%s";
     public static final String CHANNEL_AC_ENERGY_HEATING_MONTH = "consumptionDataHeating#energyheatingmonth-%s";
+    public static final String CHANNEL_AC_ENERGY_HEATING_CURRENT_DAY = "consumptionDataHeating#energyheatingcurrentday";
+    public static final String CHANNEL_AC_ENERGY_HEATING_CURRENT_YEAR = "consumptionDataHeating#energyheatingcurrentyear";
+    public static final String CHANNEL_AC_ENERGY_COOLING_CURRENT_DAY = "consumptionDataCooling#energycoolingcurrentday";
+    public static final String CHANNEL_AC_ENERGY_COOLING_CURRENT_YEAR = "consumptionDataCooling#energycoolingcurrentyear";
 
     public static final String PROPERTY_AC_NAME = "name";
 }

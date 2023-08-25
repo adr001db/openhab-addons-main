@@ -230,7 +230,7 @@ public class Enums {
     public enum FanMovementVer {
         STOPPED("stop"),
         SWING("swing"),
-        WINDNICE("windnice"),
+        WINDNICE("windNice"),
 
         NOTAVAILABLE("notavailable");
 
@@ -247,11 +247,11 @@ public class Enums {
 
         public static FanMovementVer fromValue(String value) {
             for (FanMovementVer m : FanMovementVer.values()) {
-                if (m.getValue().equals(value.toLowerCase())) {
+                if (m.getValue().toLowerCase().equals(value.toLowerCase())) {
                     return m;
                 }
             }
-            LOGGER.debug("Unexpected FanMovementHor value of \"{}\"", value);
+            LOGGER.debug("Unexpected FanMovementVer value of \"{}\"", value);
 
             // Default to stopped
             return NOTAVAILABLE;

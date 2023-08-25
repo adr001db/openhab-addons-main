@@ -33,9 +33,24 @@
 			</parameter>
 			<parameter name="stubdataFile" type="text">
 				<label>Stub datafile</label>
-				<description>With the stub datafile conecta data input can be simulate. This is just for testing during development.</description>
+				<description>With the stub datafile conecta data input can be simulated. This is just for testing during
+					development.</description>
 				<default></default>
 			</parameter>
+
+			<parameter name="openhabHost" type="text">
+				<label>OpenHAB host</label>
+				<description>OpenHAB server URL. To access the api.</description>
+				<default>https://localhost:8080</default>
+			</parameter>
+
+			<parameter name="openhabApiToken" type="text">
+				<label>OpenHab API Token</label>
+				<description>OpenHAB API Token. You can manage all access tokens in your profile settings in the Main UI.</description>
+				<default></default>
+			</parameter>
+
+
 		</config-description>
 
 	</bridge-type>

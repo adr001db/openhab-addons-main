@@ -156,6 +156,10 @@
 			<channel id="energycoolingmonth-22" typeId="acunit-energycoolingmonth-22"/>
 			<channel id="energycoolingmonth-23" typeId="acunit-energycoolingmonth-23"/>
 
+
+			<channel id="energycoolingcurrentday" typeId="acunit-energycoolingcurrentday"/>
+			<channel id="energycoolingcurrentyear" typeId="acunit-energycoolingcurrentyear"/>
+
 		</channels>
 	</channel-group-type>
 
@@ -227,6 +231,9 @@
 			<channel id="energyheatingmonth-21" typeId="acunit-energyheatingmonth-21"/>
 			<channel id="energyheatingmonth-22" typeId="acunit-energyheatingmonth-22"/>
 			<channel id="energyheatingmonth-23" typeId="acunit-energyheatingmonth-23"/>
+
+			<channel id="energyheatingcurrentday" typeId="acunit-energyheatingcurrentday"/>
+			<channel id="energyheatingcurrentyear" typeId="acunit-energyheatingcurrentyear"/>
 
 		</channels>
 	</channel-group-type>
@@ -399,6 +406,21 @@
 		<item-type>Number:Energy</item-type>
 		<label>Energy heating current year (11) December</label>
 		<description>The energy usage for heating current year December</description>
+		<category>Energy</category>
+		<state readOnly="true" pattern="%.1f %unit%"/>
+	</channel-type>
+
+	<channel-type id="acunit-energyheatingcurrentday">
+		<item-type>Number:Energy</item-type>
+		<label>Energy Heating current day total</label>
+		<description>The energy usage for heating current day total</description>
+		<category>Energy</category>
+		<state readOnly="true" pattern="%.1f %unit%"/>
+	</channel-type>
+	<channel-type id="acunit-energyheatingcurrentyear">
+		<item-type>Number:Energy</item-type>
+		<label>Energy Heating current year total</label>
+		<description>The energy usage for heating current year total</description>
 		<category>Energy</category>
 		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
@@ -1028,6 +1050,21 @@
 		<item-type>Number:Energy</item-type>
 		<label>Energy Cooling current year (11) December</label>
 		<description>The energy usage for cooling current year December</description>
+		<category>Energy</category>
+		<state readOnly="true" pattern="%.1f %unit%"/>
+	</channel-type>
+
+	<channel-type id="acunit-energycoolingcurrentday">
+		<item-type>Number:Energy</item-type>
+		<label>Energy Cooling current day total</label>
+		<description>The energy usage for cooling current day total</description>
+		<category>Energy</category>
+		<state readOnly="true" pattern="%.1f %unit%"/>
+	</channel-type>
+	<channel-type id="acunit-energycoolingcurrentyear">
+		<item-type>Number:Energy</item-type>
+		<label>Energy Cooling current year total</label>
+		<description>The energy usage for cooling current year total</description>
 		<category>Energy</category>
 		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
