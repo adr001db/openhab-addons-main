@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 public class OpenHabLocalClient {
       private final Logger logger = LoggerFactory.getLogger(OnectaSignInClient.class);
 
-      private HttpClient httpClient;
+      private HttpClient httpClient; test
       private String LocalHostUrl;
       private String apiToken;
 
