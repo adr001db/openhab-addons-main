@@ -63,7 +63,6 @@ public class OnectaDeviceHandler extends BaseThingHandler {
         super(thing);
         this.dataTransService = new DataTransportService(onectaConnectionClient,
                 thing.getConfiguration().get("unitID").toString());
-        ((OnectaBridgeHandlerFactory) test).onectaConnectionClient.getRefreshToken();
     }
 
     @Override
