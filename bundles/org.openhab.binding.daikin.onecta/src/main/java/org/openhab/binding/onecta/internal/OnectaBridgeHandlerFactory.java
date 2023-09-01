@@ -52,7 +52,7 @@ public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
 
     private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Set.of(BRIDGE_THING_TYPE, DEVICE_THING_TYPE);
     private final HttpClientFactory httpClientFactory;
-    private OnectaConnectionClient onectaConnectionClient;
+    public OnectaConnectionClient onectaConnectionClient;
     private final TimeZoneProvider timeZoneProvider;
 
     private @Nullable OnectaBridgeHandler bridgeHandler = null;
@@ -88,7 +88,7 @@ public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
             return bridgeHandler;
 
         } else if (thingTypeUID.equals((DEVICE_THING_TYPE))) {
-            return new OnectaDeviceHandler(thing, onectaConnectionClient);
+            return new OnectaDeviceHandler(thing, onectaConnectionClient, this);
         }
         return null;
     }
