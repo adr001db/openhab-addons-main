@@ -51,8 +51,7 @@ import org.osgi.service.component.annotations.Reference;
 public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
 
     private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Set.of(BRIDGE_THING_TYPE, DEVICE_THING_TYPE);
-    private final HttpClientFactory httpClientFactory;
-    public OnectaConnectionClient onectaConnectionClient;
+    private HttpClientFactory httpClientFactory;
     private final TimeZoneProvider timeZoneProvider;
 
     private @Nullable OnectaBridgeHandler bridgeHandler = null;
@@ -64,7 +63,8 @@ public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
             @Reference TimeZoneProvider timeZoneProvider) {
         this.httpClientFactory = httpClientFactory;
         this.timeZoneProvider = timeZoneProvider;
-        this.onectaConnectionClient = new OnectaConnectionClient(httpClientFactory);
+        // this.onectaConnectionClient = new OnectaConnectionClient(httpClientFactory);
+        OnectaConnectionClient.SetConnectionClient(httpClientFactory);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
         if (thingTypeUID.equals((BRIDGE_THING_TYPE))) {
-            bridgeHandler = new OnectaBridgeHandler((Bridge) thing, onectaConnectionClient);
+            bridgeHandler = new OnectaBridgeHandler((Bridge) thing);
 
             DeviceDiscoveryService deviceDiscoveryService = new DeviceDiscoveryService(bridgeHandler);
             bridgeHandler.setDiscovery(deviceDiscoveryService);
@@ -88,7 +88,7 @@ public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
             return bridgeHandler;
 
         } else if (thingTypeUID.equals((DEVICE_THING_TYPE))) {
-            return new OnectaDeviceHandler(thing, onectaConnectionClient, this);
+            return new OnectaDeviceHandler(thing);
         }
         return null;
     }

@@ -34,33 +34,33 @@ import com.google.gson.JsonParser;
 
 public class OnectaConnectionClient {
 
-    private final Logger logger = LoggerFactory.getLogger(OnectaSignInClient.class);
-    private JsonArray rawData = new JsonArray();
-    private Units onectaData = new Units();
+    static private final Logger logger = LoggerFactory.getLogger(OnectaSignInClient.class);
+    static private JsonArray rawData = new JsonArray();
+    static private Units onectaData = new Units();
 
-    public Units getUnits() {
+    public static Units getUnits() {
         return onectaData;
     }
 
-    private HttpClient httpClient;
+    private static HttpClient httpClient;
 
-    private OnectaSignInClient onectaSignInClient;
+    private static OnectaSignInClient onectaSignInClient;
 
-    public OnectaConnectionClient(HttpClientFactory httpClientFactory) {
-        this.httpClient = httpClientFactory.getCommonHttpClient();
-        this.onectaSignInClient = new OnectaSignInClient(httpClientFactory);
+    public static void SetConnectionClient(HttpClientFactory httpClientFactory) {
+        httpClient = httpClientFactory.getCommonHttpClient();
+        onectaSignInClient = new OnectaSignInClient(httpClientFactory);
     }
 
-    public void startConnecton(String userId, String password, String refreshToken)
+    public static void startConnecton(String userId, String password, String refreshToken)
             throws DaikinCommunicationException {
         onectaSignInClient.signIn(userId, password, refreshToken);
     }
 
-    public Boolean isOnline() {
+    public static Boolean isOnline() {
         return onectaSignInClient.isOnline();
     }
 
-    private Response doBearerRequestGet(Boolean refreshed) throws DaikinCommunicationException {
+    private static Response doBearerRequestGet(Boolean refreshed) throws DaikinCommunicationException {
         Response response = null;
         logger.debug(String.format("doBearerRequestGet : refershed %s", refreshed.toString()));
         try {
@@ -92,11 +92,11 @@ public class OnectaConnectionClient {
         return response;
     }
 
-    private Response doBearerRequestPatch(String url, Object body) {
+    private static Response doBearerRequestPatch(String url, Object body) {
         return doBearerRequestPatch(url, body, false);
     }
 
-    private Response doBearerRequestPatch(String url, Object body, Boolean refreshed) {
+    private static Response doBearerRequestPatch(String url, Object body, Boolean refreshed) {
         Response response = null;
         try {
             if (!onectaSignInClient.isOnline()) {
@@ -127,7 +127,7 @@ public class OnectaConnectionClient {
         return response;
     }
 
-    public void refreshUnitsData(Thing bridgeThing) throws DaikinCommunicationException {
+    public static void refreshUnitsData(Thing bridgeThing) throws DaikinCommunicationException {
         Response response = null;
         String jsonString = "";
         boolean dataAvailable = false;
@@ -164,11 +164,11 @@ public class OnectaConnectionClient {
         }
     }
 
-    public Unit getUnit(String unitId) {
+    public static Unit getUnit(String unitId) {
         return onectaData.findById(unitId);
     }
 
-    public JsonObject getRawData(String unitId) {
+    public static JsonObject getRawData(String unitId) {
         JsonObject jsonObject = null;
         for (int i = 0; i < rawData.size(); i++) {
             jsonObject = rawData.get(i).getAsJsonObject();
@@ -180,35 +180,35 @@ public class OnectaConnectionClient {
         return new JsonObject();
     }
 
-    public void setPowerOnOff(String unitId, Enums.OnOff value) {
+    public static void setPowerOnOff(String unitId, Enums.OnOff value) {
         logger.debug(String.format("setPowerOnOff : %s, %s", unitId, value));
         CommandOnOf commandOnOf = new CommandOnOf(value);
         doBearerRequestPatch(getUrlOnOff(unitId), commandOnOf);
     }
 
-    public void setPowerFulModeOnOff(String unitId, Enums.OnOff value) {
+    public static void setPowerFulModeOnOff(String unitId, Enums.OnOff value) {
         logger.debug(String.format("setPowerFulModeOnOff : %s, %s", unitId, value));
         CommandOnOf commandOnOf = new CommandOnOf(value);
         doBearerRequestPatch(getUrlPowerFulModeOnOff(unitId), commandOnOf);
     }
 
-    public void setEconoMode(String unitId, Enums.OnOff value) {
+    public static void setEconoMode(String unitId, Enums.OnOff value) {
         logger.debug(String.format("setEconoMode: %s, %s", unitId, value));
         CommandOnOf commandOnOf = new CommandOnOf(value);
         doBearerRequestPatch(getEconoMode(unitId), commandOnOf);
     }
 
-    public void setCurrentOperationMode(String unitId, Enums.OperationMode operationMode) {
+    public static void setCurrentOperationMode(String unitId, Enums.OperationMode operationMode) {
         doBearerRequestPatch(OnectaProperties.getOperationModeUrl(unitId),
                 OnectaProperties.getOperationModeCommand(operationMode));
     }
 
-    public void setCurrentTemperatureSet(String unitId, Enums.OperationMode currentMode, float value) {
+    public static void setCurrentTemperatureSet(String unitId, Enums.OperationMode currentMode, float value) {
         doBearerRequestPatch(OnectaProperties.getTemperatureControlUrl(unitId),
                 OnectaProperties.getTemperatureControlCommand(value, currentMode));
     }
 
-    public void setFanSpeed(String unitId, Enums.OperationMode currentMode, Enums.FanSpeed fanspeed) {
+    public static void setFanSpeed(String unitId, Enums.OperationMode currentMode, Enums.FanSpeed fanspeed) {
         doBearerRequestPatch(OnectaProperties.getTFanControlUrl(unitId),
                 getTFanSpeedCurrentCommand(currentMode, fanspeed));
         if (fanspeed.getValueMode().equals(Enums.FanSpeedMode.FIXED.getValue())) {
@@ -217,7 +217,8 @@ public class OnectaConnectionClient {
         }
     }
 
-    public void setCurrentFanDirection(String unitId, Enums.OperationMode currentMode, Enums.FanMovement fanMovement) {
+    public static void setCurrentFanDirection(String unitId, Enums.OperationMode currentMode,
+            Enums.FanMovement fanMovement) {
         String url = getTFanControlUrl(unitId);
         switch (fanMovement) {
             case STOPPED:
@@ -253,50 +254,50 @@ public class OnectaConnectionClient {
         }
     }
 
-    public void setCurrentFanDirectionHor(String unitId, Enums.OperationMode currentMode,
+    public static void setCurrentFanDirectionHor(String unitId, Enums.OperationMode currentMode,
             Enums.FanMovementHor fanMovement) {
         String url = getTFanControlUrl(unitId);
         doBearerRequestPatch(url, OnectaProperties.getTFanDirectionHorCommand(currentMode, fanMovement));
     }
 
-    public void setCurrentFanDirectionVer(String unitId, Enums.OperationMode currentMode,
+    public static void setCurrentFanDirectionVer(String unitId, Enums.OperationMode currentMode,
             Enums.FanMovementVer fanMovement) {
         String url = getTFanControlUrl(unitId);
         doBearerRequestPatch(url, OnectaProperties.getTFanDirectionVerCommand(currentMode, fanMovement));
     }
 
-    public void setStreamerMode(String unitId, Enums.OnOff value) {
+    public static void setStreamerMode(String unitId, Enums.OnOff value) {
         logger.debug(String.format("setStreamerMode: %s, %s", unitId, value));
         CommandOnOf commandOnOf = new CommandOnOf(value);
         doBearerRequestPatch(getStreamerMode(unitId), commandOnOf);
     }
 
-    public void setHolidayMode(String unitId, Enums.OnOff value) {
+    public static void setHolidayMode(String unitId, Enums.OnOff value) {
         logger.debug(String.format("setHolidayMode: %s, %s", unitId, value));
         CommandTrueFalse commandTrueFalse = new CommandTrueFalse(value);
         doBearerRequestPatch(getHolidayMode(unitId), commandTrueFalse);
     }
 
-    public void setDemandControl(String unitId, Enums.DemandControl value) {
+    public static void setDemandControl(String unitId, Enums.DemandControl value) {
         logger.debug(String.format("setDemandControl: %s, %s", unitId, value));
         doBearerRequestPatch(getTDemandControlUrl(unitId), OnectaProperties.getTDemandControlCommand(value));
     }
 
-    public void setDemandControlFixedValue(String unitId, Integer value) {
+    public static void setDemandControlFixedValue(String unitId, Integer value) {
         logger.debug(String.format("setDemandControlFixedValue: %s, %s", unitId, value));
 
         doBearerRequestPatch(getTDemandControlUrl(unitId), OnectaProperties.getTDemandControlFixedValueCommand(value));
     }
 
-    public String getRefreshToken() {
+    public static String getRefreshToken() {
         return onectaSignInClient.getRefreshToken();
     }
 
-    public void setRefreshToken(String refreshToken) {
+    public static void setRefreshToken(String refreshToken) {
         onectaSignInClient.setRefreshToken(refreshToken);
     }
 
-    public void setTargetTemperatur(String unitId, Float value) {
+    public static void setTargetTemperatur(String unitId, Float value) {
         logger.debug(String.format("setRefreshToken: %s, %s", unitId, value));
         doBearerRequestPatch(getTargetTemperaturUrl(unitId), getTargetTemperaturCommand(value));
     }

@@ -45,12 +45,6 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
 
     private @Nullable ScheduledFuture<?> pollingJob;
 
-    public OnectaConnectionClient getOnectaConnectionClient() {
-        return onectaConnectionClient;
-    }
-
-    private OnectaConnectionClient onectaConnectionClient;
-
     private Units units = new Units();
 
     public Units getUnits() {
@@ -71,9 +65,8 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
         }
     };
 
-    public OnectaBridgeHandler(Bridge bridge, OnectaConnectionClient onectaConnectionClient) {
+    public OnectaBridgeHandler(Bridge bridge) {
         super(bridge);
-        this.onectaConnectionClient = onectaConnectionClient;
     }
 
     @Override
@@ -112,10 +105,10 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
         try {
             String refreshToken = thing.getConfiguration().get(CHANNEL_REFRESH_TOKEN) == null ? ""
                     : thing.getConfiguration().get(CHANNEL_REFRESH_TOKEN).toString();
-            onectaConnectionClient.startConnecton(thing.getConfiguration().get(CHANNEL_USERID).toString(),
+            OnectaConnectionClient.startConnecton(thing.getConfiguration().get(CHANNEL_USERID).toString(),
                     thing.getConfiguration().get(CHANNEL_PASSWORD).toString(), refreshToken);
 
-            if (onectaConnectionClient.isOnline()) {
+            if (OnectaConnectionClient.isOnline()) {
                 updateStatus(ThingStatus.ONLINE);
             } else {
                 updateStatus(ThingStatus.OFFLINE);
@@ -168,10 +161,10 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
 
     private void pollDevices() {
         logger.debug("pollDevices.");
-        if (onectaConnectionClient.isOnline()) {
+        if (OnectaConnectionClient.isOnline()) {
             updateStatus(ThingStatus.ONLINE);
 
-            getThing().getConfiguration().put(CHANNEL_REFRESH_TOKEN, onectaConnectionClient.getRefreshToken());
+            getThing().getConfiguration().put(CHANNEL_REFRESH_TOKEN, OnectaConnectionClient.getRefreshToken());
 
         } else {
             if (getThing().getStatus() != ThingStatus.OFFLINE) {
@@ -179,7 +172,7 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
             }
         }
         try {
-            onectaConnectionClient.refreshUnitsData(getThing());
+            OnectaConnectionClient.refreshUnitsData(getThing());
             // if (thing.getConfiguration().get("showAvailableUnitsInLog").toString() == "true") {
             //
             // for (Unit unit : units.getAll()) {

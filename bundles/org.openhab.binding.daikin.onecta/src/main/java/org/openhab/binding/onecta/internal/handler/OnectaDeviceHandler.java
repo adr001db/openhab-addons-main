@@ -19,10 +19,8 @@ import java.util.concurrent.ScheduledFuture;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.openhab.binding.onecta.internal.OnectaBridgeHandlerFactory;
 import org.openhab.binding.onecta.internal.OnectaConfiguration;
 import org.openhab.binding.onecta.internal.api.Enums;
-import org.openhab.binding.onecta.internal.api.OnectaConnectionClient;
 import org.openhab.binding.onecta.internal.service.ChannelsRefreshDelay;
 import org.openhab.binding.onecta.internal.service.DataTransportService;
 import org.openhab.core.library.types.DecimalType;
@@ -58,11 +56,9 @@ public class OnectaDeviceHandler extends BaseThingHandler {
     private final DataTransportService dataTransService;
     private @Nullable ChannelsRefreshDelay channelsRefreshDelay;
 
-    public OnectaDeviceHandler(Thing thing, OnectaConnectionClient onectaConnectionClient,
-            OnectaBridgeHandlerFactory test) {
+    public OnectaDeviceHandler(Thing thing) {
         super(thing);
-        this.dataTransService = new DataTransportService(onectaConnectionClient,
-                thing.getConfiguration().get("unitID").toString());
+        this.dataTransService = new DataTransportService(thing.getConfiguration().get("unitID").toString());
     }
 
     @Override

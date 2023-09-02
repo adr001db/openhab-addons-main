@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jdt.annotation.Nullable;
+import org.openhab.binding.onecta.internal.api.OnectaConnectionClient;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
 import org.openhab.binding.onecta.internal.handler.OnectaBridgeHandler;
 import org.openhab.core.config.discovery.AbstractDiscoveryService;
@@ -47,8 +48,8 @@ public class DeviceDiscoveryService extends AbstractDiscoveryService {
             Map<String, Object> properties;
             String unitId;
             String unitName;
-            bridgeHandler.getOnectaConnectionClient().refreshUnitsData(bridgeHandler.getThing());
-            List<Unit> units = bridgeHandler.getOnectaConnectionClient().getUnits().getAll();
+            OnectaConnectionClient.refreshUnitsData(bridgeHandler.getThing());
+            List<Unit> units = OnectaConnectionClient.getUnits().getAll();
             for (int i = 0; i < units.size(); i++) {
                 unitId = units.get(i).getId().toString();
                 unitName = units.get(i).findManagementPointsByType("climateControl").getNameValue();
