@@ -528,7 +528,7 @@ public class OnectaDeviceHandler extends BaseThingHandler {
         try {
             return new DecimalType(dataTransService.getConsumptionHeatingWeek()[7 + getCurrentDayOfWeek()]);
         } catch (Exception e) {
-            return new DecimalType(0);
+            return UnDefType.UNDEF;
         }
     }
 
@@ -536,27 +536,35 @@ public class OnectaDeviceHandler extends BaseThingHandler {
         try {
             return new DecimalType(dataTransService.getConsumptionCoolingWeek()[7 + getCurrentDayOfWeek()]);
         } catch (Exception e) {
-            return new DecimalType(0);
+            return UnDefType.UNDEF;
         }
     }
 
     private State getEnergyCoolingCurrentYear() {
         double total = 0;
-        for (int i = 12; i < 23; i++) {
-            if (dataTransService.getConsumptionCoolingMonth()[i] != null) {
-                total += dataTransService.getConsumptionCoolingMonth()[i];
+        try {
+            for (int i = 12; i < 23; i++) {
+                if (dataTransService.getConsumptionCoolingMonth()[i] != null) {
+                    total += dataTransService.getConsumptionCoolingMonth()[i];
+                }
             }
+            return new DecimalType(Math.round(total * 10) / 10D);
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
         }
-        return new DecimalType(Math.round(total * 10) / 10D);
     }
 
     private State getEnergyHeatingCurrentYear() {
         double total = 0;
-        for (int i = 12; i < 23; i++) {
-            if (dataTransService.getConsumptionHeatingMonth()[i] != null) {
-                total += dataTransService.getConsumptionHeatingMonth()[i];
+        try {
+            for (int i = 12; i < 23; i++) {
+                if (dataTransService.getConsumptionHeatingMonth()[i] != null) {
+                    total += dataTransService.getConsumptionHeatingMonth()[i];
+                }
             }
+            return new DecimalType(Math.round(total * 10) / 10D);
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
         }
-        return new DecimalType(Math.round(total * 10) / 10D);
     }
 }
