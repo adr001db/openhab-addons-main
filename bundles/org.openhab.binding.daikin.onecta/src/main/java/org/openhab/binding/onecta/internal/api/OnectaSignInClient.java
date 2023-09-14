@@ -15,6 +15,7 @@ import org.eclipse.jetty.client.api.Request;
 import org.eclipse.jetty.client.util.StringContentProvider;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpMethod;
+import org.openhab.binding.onecta.internal.OnectaConfiguration;
 import org.openhab.binding.onecta.internal.api.dto.authentication.*;
 import org.openhab.binding.onecta.internal.exception.DaikinCommunicationException;
 import org.openhab.binding.onecta.internal.exception.DaikinCommunicationForbiddenException;
@@ -42,12 +43,12 @@ public class OnectaSignInClient {
     private String userId = "";
     private String password = "";
 
-    private HttpClient httpClient;
+    // private HttpClient httpClient;
 
     private RespAuthenticationRoot respAuthenticationRoot = new RespAuthenticationRoot();
 
     public OnectaSignInClient(HttpClientFactory httpClientFactory) {
-        this.httpClient = httpClientFactory.getCommonHttpClient();
+        // this.httpClient = httpClientFactory.getCommonHttpClient();
     }
 
     public String getToken() {
@@ -83,6 +84,9 @@ public class OnectaSignInClient {
     protected void signIn(String userId, String password) throws DaikinCommunicationException {
         this.userId = userId;
         this.password = password;
+
+        HttpClient httpClient = OnectaConfiguration.getHttpClient();
+
         try {
             logger.info("Start logon to Daikin : " + userId);
             httpClient.setFollowRedirects(false);
@@ -246,6 +250,8 @@ public class OnectaSignInClient {
 
     public void fetchAccessToken() throws DaikinCommunicationException {
         logger.debug("Refresh token.");
+        HttpClient httpClient = OnectaConfiguration.getHttpClient();
+
         respAuthenticationRoot = new RespAuthenticationRoot();
         ReqAuthenticationRoot reqAuthenticationRoot = new ReqAuthenticationRoot(OPENID_CLIENT_ID, this.refreshToken);
 

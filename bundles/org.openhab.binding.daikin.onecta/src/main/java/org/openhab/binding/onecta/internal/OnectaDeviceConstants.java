@@ -65,6 +65,7 @@ public class OnectaDeviceConstants {
     public static final String CHANNEL_AC_ECONOMODE = "basic#economode";
     public static final String CHANNEL_AC_STREAMER = "basic#streamer";
     public static final String CHANNEL_AC_HOLIDAYMODE = "basic#holidaymode";
+    public static final String CHANNEL_AC_TIMESTAMP = "basic#timestamp";
     public static final String CHANNEL_AC_DEMANDCONTROL = "demandcontrol#demandcontrol";
     public static final String CHANNEL_AC_DEMANDCONTROLFIXEDVALUE = "demandcontrol#demandcontrolfixedvalue";
     public static final String CHANNEL_AC_DEMANDCONTROLFIXEDSTEPVALUE = "demandcontrol#demandcontrolfixedstepvalue";

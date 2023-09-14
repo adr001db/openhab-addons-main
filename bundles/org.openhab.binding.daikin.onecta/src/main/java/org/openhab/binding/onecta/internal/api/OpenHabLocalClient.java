@@ -9,19 +9,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class OpenHabLocalClient {
-    private final Logger logger = LoggerFactory.getLogger(OnectaSignInClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(OnectaSignInClient.class);
 
-    private HttpClient httpClient;
-    private String LocalHostUrl;
-    private String apiToken;
+    private static HttpClient httpClient;
+    private static String LocalHostUrl;
+    private static String apiToken;
 
-    public OpenHabLocalClient(HttpClientFactory httpClientFactory, String localHostUrl, String apiToken) {
-        this.httpClient = httpClientFactory.getCommonHttpClient();
-        this.apiToken = apiToken;
-        this.LocalHostUrl = localHostUrl;
+    public static void SetOpenHabLocalClient(HttpClientFactory httpClientFactory, String localHostUrl,
+            String apiToken) {
+        httpClient = httpClientFactory.getCommonHttpClient();
+        apiToken = apiToken;
+        LocalHostUrl = localHostUrl;
     }
 
-    public Response doBearerRequestGet(Boolean refreshed) throws DaikinCommunicationException {
+    private static Response doBearerRequestGet(Boolean refreshed) throws DaikinCommunicationException {
         Response response = null;
         HttpClient httpClient = new HttpClient();
         // logger.debug(String.format("doBearerRequestGet : refershed %s", refreshed.toString()));

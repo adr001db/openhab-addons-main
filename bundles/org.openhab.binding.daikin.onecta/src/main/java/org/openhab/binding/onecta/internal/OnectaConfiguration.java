@@ -12,7 +12,13 @@
  */
 package org.openhab.binding.onecta.internal;
 
+import static org.openhab.binding.onecta.internal.OnectaBridgeConstants.*;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.jetty.client.HttpClient;
+import org.openhab.core.io.net.http.HttpClientFactory;
+import org.openhab.core.thing.Thing;
 
 /**
  * The {@link OnectaConfiguration} class contains fields mapping thing configuration parameters.
@@ -25,7 +31,29 @@ public class OnectaConfiguration {
     /**
      * Sample configuration parameters. Replace with your own.
      */
-    public String hostname = "test";
-    public String password = "testtest";
-    public int refreshInterval = 600;
+    private @Nullable static Thing bridgeThing = null;
+    private @Nullable static HttpClientFactory httpClientFactory = null;
+
+    private @Nullable static HttpClient httpClient = null;
+
+    public static void setHttpClientFactory(HttpClientFactory httpClientFactory) {
+        OnectaConfiguration.httpClientFactory = httpClientFactory;
+        httpClient = httpClientFactory.getCommonHttpClient();
+    }
+
+    public static void setBridgeThing(Thing bridgeThing) {
+        OnectaConfiguration.bridgeThing = bridgeThing;
+    }
+
+    public static String getHost() {
+        return OnectaConfiguration.bridgeThing.getConfiguration().get(CHANNEL_OPENHAB_HOST).toString();
+    };
+
+    public static @Nullable HttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    public static @Nullable HttpClientFactory getHttpClientFactory() {
+        return httpClientFactory;
+    }
 }
