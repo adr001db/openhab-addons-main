@@ -23,10 +23,7 @@ import org.openhab.binding.onecta.internal.OnectaConfiguration;
 import org.openhab.binding.onecta.internal.api.Enums;
 import org.openhab.binding.onecta.internal.service.ChannelsRefreshDelay;
 import org.openhab.binding.onecta.internal.service.DataTransportService;
-import org.openhab.core.library.types.DecimalType;
-import org.openhab.core.library.types.OnOffType;
-import org.openhab.core.library.types.QuantityType;
-import org.openhab.core.library.types.StringType;
+import org.openhab.core.library.types.*;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingStatus;
@@ -247,8 +244,8 @@ public class OnectaDeviceHandler extends BaseThingHandler {
             updateState(CHANNEL_INDOOR_TEMP, getIndoorTemperature());
             updateState(CHANNEL_OUTDOOR_TEMP, getOutdoorTemperature());
             updateState(CHANNEL_LEAVINGWATER_TEMP, getLeavingWaterTemperatur());
-
             updateState(CHANNEL_INDOOR_HUMIDITY, getIndoorHumidity());
+            updateState(CHANNEL_AC_TIMESTAMP, getTimestamp());
 
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_FANMOVEMENT_HOR))
                 updateState(CHANNEL_AC_FANMOVEMENT_HOR, getCurrentFanDirectionHor());
@@ -458,6 +455,14 @@ public class OnectaDeviceHandler extends BaseThingHandler {
     private State getIndoorHumidity() {
         try {
             return new DecimalType(dataTransService.getIndoorHumidity());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getTimestamp() {
+        try {
+            return new DateTimeType(dataTransService.getTimeStamp());
         } catch (Exception e) {
             return UnDefType.UNDEF;
         }

@@ -65,7 +65,7 @@
 			<channel id="targettempmin" typeId="acunit-targetTempMin"/>
 			<channel id="targettempmax" typeId="acunit-targetTempMax"/>
 			<channel id="targettempstep" typeId="acunit-targetTempStep"/>
-
+			<channel id="timestamp" typeId="acunit-timestamp"/>
 		</channels>
 	</channel-group-type>
 
@@ -1599,7 +1599,13 @@
 		<category>Temperature</category>
 		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
-
+	<channel-type id="acunit-timestamp">
+		<item-type>DateTime</item-type>
+		<label>Timestamp of unit</label>
+		<description>Timestamp of unit</description>
+		<category>Time</category>
+		<state readOnly="true"/>
+	</channel-type>
 
 	<channel-type id="acunit-indoortemp">
 		<item-type>Number:Temperature</item-type>

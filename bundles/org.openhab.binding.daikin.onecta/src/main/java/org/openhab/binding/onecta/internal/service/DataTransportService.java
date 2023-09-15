@@ -1,5 +1,7 @@
 package org.openhab.binding.onecta.internal.service;
 
+import java.time.ZonedDateTime;
+
 import org.openhab.binding.onecta.internal.api.Enums;
 import org.openhab.binding.onecta.internal.api.OnectaConnectionClient;
 import org.openhab.binding.onecta.internal.api.dto.units.ManagementPoint;
@@ -236,6 +238,14 @@ public class DataTransportService {
         try {
             return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getSensoryData().getValue()
                     .getRoomHumidity().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public ZonedDateTime getTimeStamp() {
+        try {
+            return ZonedDateTime.parse(unit.getTimestamp());
         } catch (Exception e) {
             return null;
         }

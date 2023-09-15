@@ -63,8 +63,11 @@ public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
             @Reference TimeZoneProvider timeZoneProvider) {
         this.httpClientFactory = httpClientFactory;
         this.timeZoneProvider = timeZoneProvider;
+        OnectaConfiguration.setHttpClientFactory(httpClientFactory);
+
         // this.onectaConnectionClient = new OnectaConnectionClient(httpClientFactory);
         OnectaConnectionClient.SetConnectionClient(httpClientFactory);
+        // OpenHabLocalClient.SetOpenHabLocalClient(httpClientFactory);
     }
 
     @Override
@@ -78,6 +81,7 @@ public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
 
         if (thingTypeUID.equals((BRIDGE_THING_TYPE))) {
             bridgeHandler = new OnectaBridgeHandler((Bridge) thing);
+            OnectaConfiguration.setBridgeThing((Bridge) thing);
 
             DeviceDiscoveryService deviceDiscoveryService = new DeviceDiscoveryService(bridgeHandler);
             bridgeHandler.setDiscovery(deviceDiscoveryService);

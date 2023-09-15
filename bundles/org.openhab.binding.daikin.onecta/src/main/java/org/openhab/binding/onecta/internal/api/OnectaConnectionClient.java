@@ -9,13 +9,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpContentResponse;
 import org.eclipse.jetty.client.api.Response;
 import org.eclipse.jetty.client.util.StringContentProvider;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpStatus;
+import org.openhab.binding.onecta.internal.OnectaConfiguration;
 import org.openhab.binding.onecta.internal.api.dto.commands.CommandOnOf;
 import org.openhab.binding.onecta.internal.api.dto.commands.CommandTrueFalse;
 import org.openhab.binding.onecta.internal.api.dto.units.Unit;
@@ -42,12 +42,12 @@ public class OnectaConnectionClient {
         return onectaData;
     }
 
-    private static HttpClient httpClient;
+    // private static HttpClient httpClient;
 
     private static OnectaSignInClient onectaSignInClient;
 
     public static void SetConnectionClient(HttpClientFactory httpClientFactory) {
-        httpClient = httpClientFactory.getCommonHttpClient();
+        // httpClient = httpClientFactory.getCommonHttpClient();
         onectaSignInClient = new OnectaSignInClient(httpClientFactory);
     }
 
@@ -67,7 +67,8 @@ public class OnectaConnectionClient {
             if (!onectaSignInClient.isOnline()) {
                 onectaSignInClient.signIn();
             }
-            response = httpClient.newRequest(OnectaProperties.getBaseUrl("")).method(HttpMethod.GET)
+            response = OnectaConfiguration.getHttpClient().newRequest(OnectaProperties.getBaseUrl(""))
+                    .method(HttpMethod.GET)
                     .header(HttpHeader.AUTHORIZATION, String.format("Bearer %s", onectaSignInClient.getToken()))
                     .header(HttpHeader.USER_AGENT, "Daikin/1.6.1.4681 CFNetwork/1209 Darwin/20.2.0")
                     .header("x-api-key", "xw6gvOtBHq5b1pyceadRp6rujSNSZdjx2AqT03iC").send();
@@ -102,7 +103,7 @@ public class OnectaConnectionClient {
             if (!onectaSignInClient.isOnline()) {
                 onectaSignInClient.signIn();
             }
-            response = httpClient.newRequest(url).method(HttpMethod.PATCH)
+            response = OnectaConfiguration.getHttpClient().newRequest(url).method(HttpMethod.PATCH)
                     .content(new StringContentProvider(new Gson().toJson(body)), "application/json")
                     .header(HttpHeader.AUTHORIZATION, String.format("Bearer %s", onectaSignInClient.getToken()))
                     .header(HttpHeader.USER_AGENT, "Daikin/1.6.1.4681 CFNetwork/1209 Darwin/20.2.0")
