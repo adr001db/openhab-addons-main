@@ -2,6 +2,7 @@ package org.openhab.binding.onecta.internal.api.dto.units;
 
 import java.util.List;
 import java.util.UUID;
+
 import com.google.gson.annotations.SerializedName;
 
 public class Unit {
