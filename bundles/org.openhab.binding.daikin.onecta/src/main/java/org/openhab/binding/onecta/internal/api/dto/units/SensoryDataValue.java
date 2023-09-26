@@ -1,7 +1,6 @@
 package org.openhab.binding.onecta.internal.api.dto.units;
 
 import org.openhab.binding.onecta.internal.api.Enums;
-
 import com.google.gson.annotations.SerializedName;
 
 public class SensoryDataValue {
