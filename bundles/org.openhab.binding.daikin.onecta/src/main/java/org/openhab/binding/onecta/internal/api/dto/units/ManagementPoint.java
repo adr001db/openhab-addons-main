@@ -40,7 +40,7 @@ public class ManagementPoint {
     @SerializedName("wifiConnectionSSID")
     private GatwaySubValueString wifiConnectionSSID;
     @SerializedName("wifiConnectionStrength")
-    private GatwaySubValueString wifiConnectionStrength;
+    private GatwaySubValueInteger wifiConnectionStrength;
     @SerializedName("consumptionData")
     private ConsumptionData consumptionData;
 
@@ -190,7 +190,7 @@ public class ManagementPoint {
         return wifiConnectionSSID;
     }
 
-    public GatwaySubValueString getWifiConnectionStrength() {
+    public GatwaySubValueInteger getWifiConnectionStrength() {
         return wifiConnectionStrength;
     }
 

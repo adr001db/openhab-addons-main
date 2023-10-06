@@ -55,7 +55,8 @@ public class OnectaDeviceHandler extends BaseThingHandler {
 
     public OnectaDeviceHandler(Thing thing) {
         super(thing);
-        this.dataTransService = new DataTransportService(thing.getConfiguration().get("unitID").toString());
+        this.dataTransService = new DataTransportService(thing.getConfiguration().get("unitID").toString(),
+                Enums.ManagementPoint.CLIMATECONTROL);
     }
 
     @Override

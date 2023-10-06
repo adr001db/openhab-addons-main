@@ -188,18 +188,20 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
         List<Thing> things = getThing().getThings();
 
         for (Thing t : things) {
-
-            if (!t.getThingTypeUID().equals(DEVICE_THING_TYPE)) {
+            // BaseThingHandler handler;
+            if (t.getThingTypeUID().equals(DEVICE_THING_TYPE)) {
+                OnectaDeviceHandler onectaDeviceHandler = (OnectaDeviceHandler) t.getHandler();
+                onectaDeviceHandler.refreshDevice();
+            } else if (t.getThingTypeUID().equals(GATEWAY_THING_TYPE)) {
+                OnectaGatewayHandler onectaGatewayHandler = (OnectaGatewayHandler) t.getHandler();
+                onectaGatewayHandler.refreshDevice();
+            } else
                 continue;
-            }
 
-            OnectaDeviceHandler handler = (OnectaDeviceHandler) t.getHandler();
-            if (handler == null) {
-                logger.trace("no handler for thing: {}", t.getUID());
-                continue;
-            }
-
-            handler.refreshDevice();
+            // if (handler == null) {
+            // logger.trace("no handler for thing: {}", t.getUID());
+            // continue;
+            // }
 
         }
     }

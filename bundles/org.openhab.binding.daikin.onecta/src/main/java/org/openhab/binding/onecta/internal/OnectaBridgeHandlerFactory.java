@@ -24,6 +24,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.onecta.internal.api.OnectaConnectionClient;
 import org.openhab.binding.onecta.internal.handler.OnectaBridgeHandler;
 import org.openhab.binding.onecta.internal.handler.OnectaDeviceHandler;
+import org.openhab.binding.onecta.internal.handler.OnectaGatewayHandler;
 import org.openhab.binding.onecta.internal.service.DeviceDiscoveryService;
 import org.openhab.core.config.discovery.DiscoveryService;
 import org.openhab.core.i18n.TimeZoneProvider;
@@ -50,7 +51,8 @@ import org.osgi.service.component.annotations.Reference;
 @Component(configurationPid = "binding.onecta", service = ThingHandlerFactory.class)
 public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
 
-    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Set.of(BRIDGE_THING_TYPE, DEVICE_THING_TYPE);
+    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Set.of(BRIDGE_THING_TYPE, DEVICE_THING_TYPE,
+            GATEWAY_THING_TYPE);
     private HttpClientFactory httpClientFactory;
     private final TimeZoneProvider timeZoneProvider;
 
@@ -93,6 +95,8 @@ public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
 
         } else if (thingTypeUID.equals((DEVICE_THING_TYPE))) {
             return new OnectaDeviceHandler(thing);
+        } else if (thingTypeUID.equals((GATEWAY_THING_TYPE))) {
+            return new OnectaGatewayHandler(thing);
         }
         return null;
     }
