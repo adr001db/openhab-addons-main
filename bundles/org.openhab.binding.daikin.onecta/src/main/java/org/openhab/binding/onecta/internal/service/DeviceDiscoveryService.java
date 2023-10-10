@@ -56,15 +56,26 @@ public class DeviceDiscoveryService extends AbstractDiscoveryService {
                 unitName = !unitName.isEmpty() ? unitName : unitId;
                 properties = new LinkedHashMap<>();
                 properties.put("unitID", unitId);
-                ThingUID thingUID = new ThingUID(DEVICE_THING_TYPE, bridgeUID, unitId);
 
+                ThingUID thingUID = new ThingUID(DEVICE_THING_TYPE, bridgeUID, unitId);
                 DiscoveryResult discoveryResult = DiscoveryResultBuilder.create(thingUID).withProperties(properties)
                         .withBridge(bridgeHandler.getThing().getUID())
                         .withLabel(String.format("Daikin Onecta Unit (%s)", unitName)).build();
 
                 thingDiscovered(discoveryResult);
-
                 logger.debug("Discovered a onecta unit thing with ID '{}'", unitId);
+
+                if (units.get(i).findManagementPointsByType("gateway") != null) {
+                    thingUID = new ThingUID(GATEWAY_THING_TYPE, bridgeUID, unitId);
+                    discoveryResult = DiscoveryResultBuilder.create(thingUID).withProperties(properties)
+                            .withBridge(bridgeHandler.getThing().getUID())
+                            .withLabel(String.format("Daikin Onecta gateway (%s)", unitName)).build();
+
+                    thingDiscovered(discoveryResult);
+                    logger.debug("Discovered a onecta gateway thing with ID '{}'", unitId);
+
+                }
+
             }
         } catch (Exception e) {
             logger.error("Error in DiscoveryService", e);

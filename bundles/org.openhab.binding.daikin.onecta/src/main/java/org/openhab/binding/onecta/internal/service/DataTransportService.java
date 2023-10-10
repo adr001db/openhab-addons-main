@@ -12,11 +12,13 @@ import com.google.gson.JsonObject;
 public class DataTransportService {
 
     private String unitId;
+    private Enums.ManagementPoint managementPointType;
     private Unit unit;
     private JsonObject rawData;
 
-    public DataTransportService(String unitId) {
+    public DataTransportService(String unitId, Enums.ManagementPoint managementPointType) {
         this.unitId = unitId;
+        this.managementPointType = managementPointType;
     }
 
     public void refreshUnit() {
@@ -422,6 +424,96 @@ public class DataTransportService {
         try {
             return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getConsumptionData().getValue()
                     .getElectrical().getHeating().getMonth();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /* GateWay data */
+
+    public Boolean getDaylightSavingTimeEnabled() {
+        try {
+            return getManagementPoint(this.managementPointType).getDaylightSavingTimeEnabled().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getFirmwareVerion() {
+        try {
+            return getManagementPoint(this.managementPointType).getFirmwareVersion().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Boolean getIsFirmwareUpdateSupported() {
+        try {
+            return getManagementPoint(this.managementPointType).getIsFirmwareUpdateSupported().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Boolean getIsInErrorState() {
+        try {
+            return getManagementPoint(this.managementPointType).getIsInErrorState().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Boolean getIsLedEnabled() {
+        try {
+            return getManagementPoint(this.managementPointType).getIsLedEnabled().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getRegionCode() {
+        try {
+            return getManagementPoint(this.managementPointType).getRegionCode().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getSerialNumber() {
+        try {
+            return getManagementPoint(this.managementPointType).getSerialNumber().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getSsid() {
+        try {
+            return getManagementPoint(this.managementPointType).getSsid().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getTimeZone() {
+        try {
+            return getManagementPoint(this.managementPointType).getTimeZone().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getWifiConectionSSid() {
+        try {
+            return getManagementPoint(this.managementPointType).getWifiConnectionSSID().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Integer getWifiConectionStrength() {
+        try {
+            return getManagementPoint(this.managementPointType).getWifiConnectionStrength().getValue();
         } catch (Exception e) {
             return null;
         }

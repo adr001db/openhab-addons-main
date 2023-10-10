@@ -1636,7 +1636,7 @@
 		<label>Indoor Humidity</label>
 		<description>The indoor humidity as measured by the A/C unit (readonly)</description>
 		<category>Humidity</category>
-		<state readOnly="true" pattern="%d "/>
+		<state readOnly="true" pattern="%d%%"/>
 	</channel-type>
 
 	<channel-type id="acunit-operationmode">

@@ -13,7 +13,6 @@
 package org.openhab.binding.onecta.internal;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.openhab.core.thing.ThingTypeUID;
 
 /**
  * The {@link OnectaDeviceConstants} class defines common constants, which are
@@ -23,22 +22,6 @@ import org.openhab.core.thing.ThingTypeUID;
  */
 @NonNullByDefault
 public class OnectaDeviceConstants {
-
-    private static final String BINDING_ID = "onecta";
-    public static final String BRIDGE = "account";
-    // List of all Device Types
-    public static final String DEVICE = "device";
-
-    // List of all Thing Type UIDs
-    public static final ThingTypeUID THING_TYPE_SAMPLE = new ThingTypeUID(BINDING_ID, "sample");
-
-    // List of Bridge Type
-
-    // List of all Bridge Thing Type UIDs
-    public static final ThingTypeUID BRIDGE_THING_TYPE = new ThingTypeUID(BINDING_ID, BRIDGE);
-
-    // List of all Thing Type UIDs
-    public static final ThingTypeUID DEVICE_THING_TYPE = new ThingTypeUID(BINDING_ID, DEVICE);
 
     // List of all Channel ids
     public static final String CHANNEL_AC_TEMP = "basic#settemp";
