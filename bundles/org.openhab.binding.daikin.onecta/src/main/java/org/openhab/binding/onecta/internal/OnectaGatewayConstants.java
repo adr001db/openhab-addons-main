@@ -28,13 +28,13 @@ public class OnectaGatewayConstants {
     public static final String CHANNEL_GW_FIRMWAREVERSION = "basic#firmwareversion";
     public static final String CHANNEL_GW_IS_FIRMWAREUPDATE_SUPPORTED = "basic#isfirmwareupdatesupported";
     public static final String CHANNEL_GW_IS_IN_ERROR_STATE = "basic#isinerrorstate";
-    public static final String CHANNEL_GW_REGION_CODE = "regioncode";
+    public static final String CHANNEL_GW_REGION_CODE = "basic#regioncode";
     public static final String CHANNEL_GW_LED_ENABLED = "basic#ledenabled";
     public static final String CHANNEL_GW_SERIAL_NUMBER = "basic#serialnumber";
     public static final String CHANNEL_GW_SSID = "basic#ssid";
     public static final String CHANNEL_GW_TIME_ZONE = "basic#timezone";
     public static final String CHANNEL_GW_WIFICONNENTION_SSID = "basic#wificonnectionssid";
-    public static final String CHANNEL_GW_WIFICONNENTION_STRENGTH = "basic#wificonnectionstrength";
+    public static final String CHANNEL_GW_WIFICONNENTION_STRENGTH = "basic#wificonnectionpower";
 
     public static final String PROPERTY_GW_NAME = "name";
 }

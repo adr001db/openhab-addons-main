@@ -431,6 +431,70 @@ public class DataTransportService {
 
     /* GateWay data */
 
+    public Boolean getDaylightSavingTimeEnabled() {
+        try {
+            return getManagementPoint(this.managementPointType).getDaylightSavingTimeEnabled().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getFirmwareVerion() {
+        try {
+            return getManagementPoint(this.managementPointType).getFirmwareVersion().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Boolean getIsFirmwareUpdateSupported() {
+        try {
+            return getManagementPoint(this.managementPointType).getIsFirmwareUpdateSupported().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Boolean getIsInErrorState() {
+        try {
+            return getManagementPoint(this.managementPointType).getIsInErrorState().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Boolean getIsLedEnabled() {
+        try {
+            return getManagementPoint(this.managementPointType).getIsLedEnabled().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getRegionCode() {
+        try {
+            return getManagementPoint(this.managementPointType).getRegionCode().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getSerialNumber() {
+        try {
+            return getManagementPoint(this.managementPointType).getSerialNumber().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getSsid() {
+        try {
+            return getManagementPoint(this.managementPointType).getSsid().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public String getTimeZone() {
         try {
             return getManagementPoint(this.managementPointType).getTimeZone().getValue();

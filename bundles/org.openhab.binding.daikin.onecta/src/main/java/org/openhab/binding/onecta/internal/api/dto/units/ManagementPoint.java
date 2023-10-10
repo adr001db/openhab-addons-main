@@ -154,7 +154,7 @@ public class ManagementPoint {
         return isInErrorState;
     }
 
-    public GatwaySubValueBoolean getLedEnabled() {
+    public GatwaySubValueBoolean getIsLedEnabled() {
         return ledEnabled;
     }
 

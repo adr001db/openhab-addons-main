@@ -127,19 +127,84 @@ public class OnectaGatewayHandler extends BaseThingHandler {
             // getThing().setLabel(String.format("Daikin Onecta Unit (%s)", dataTransService.getUnitName()));
             getThing().setProperty(PROPERTY_GW_NAME, dataTransService.getUnitName());
 
-            // updateState(CHANNEL_GW_DAYLIGHTSAVINGENABLED, getWifiConnectionSsid());
-            // updateState(CHANNEL_GW_FIRMWAREVERSION, getWifiConnectionSsid());
-            // updateState(CHANNEL_GW_IS_FIRMWAREUPDATE_SUPPORTED, getWifiConnectionSsid());
-            // updateState(CHANNEL_GW_IS_IN_ERROR_STATE, getWifiConnectionSsid());
-            // updateState(CHANNEL_GW_LED_ENABLED, getWifiConnectionSsid());
-            // updateState(CHANNEL_GW_SERIAL_NUMBER, getWifiConnectionSsid());
-            // updateState(CHANNEL_GW_SSID, getWifiConnectionSsid());
-            updateState(CHANNEL_GW_TIME_ZONE, getWifiConnectionSsid());
+            updateState(CHANNEL_GW_DAYLIGHTSAVINGENABLED, getDaylightSavingTimeEnabled());
+            updateState(CHANNEL_GW_FIRMWAREVERSION, getFirmwareVerion());
+            updateState(CHANNEL_GW_IS_FIRMWAREUPDATE_SUPPORTED, getIsFirmwareUpdateSupported());
+            updateState(CHANNEL_GW_IS_IN_ERROR_STATE, getIsInErrorState());
+            updateState(CHANNEL_GW_LED_ENABLED, getIsLedEnabled());
+            updateState(CHANNEL_GW_REGION_CODE, getRegionCode());
+            updateState(CHANNEL_GW_SERIAL_NUMBER, getSerialNumber());
+            updateState(CHANNEL_GW_SSID, getSsid());
+            updateState(CHANNEL_GW_TIME_ZONE, getTimeZone());
             updateState(CHANNEL_GW_WIFICONNENTION_SSID, getWifiConnectionSsid());
             updateState(CHANNEL_GW_WIFICONNENTION_STRENGTH, getWifiConnectionStrength());
 
         } else {
             getThing().setProperty(PROPERTY_GW_NAME, "Unit not registered at Onecta, unitID does not exists.");
+        }
+    }
+
+    private State getDaylightSavingTimeEnabled() {
+        try {
+            return OnOffType.from(this.dataTransService.getDaylightSavingTimeEnabled());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getFirmwareVerion() {
+        try {
+            return new StringType(this.dataTransService.getFirmwareVerion());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getIsFirmwareUpdateSupported() {
+        try {
+            return OnOffType.from(this.dataTransService.getIsFirmwareUpdateSupported());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getIsInErrorState() {
+        try {
+            return OnOffType.from(this.dataTransService.getIsInErrorState());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getIsLedEnabled() {
+        try {
+            return OnOffType.from(this.dataTransService.getIsLedEnabled());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getRegionCode() {
+        try {
+            return new StringType(this.dataTransService.getRegionCode());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getSerialNumber() {
+        try {
+            return new StringType(this.dataTransService.getSerialNumber());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getSsid() {
+        try {
+            return new StringType(this.dataTransService.getSsid());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
         }
     }
 
