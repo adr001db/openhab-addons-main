@@ -74,7 +74,8 @@ public class OnectaGatewayHandler extends BaseThingHandler {
     @Override
     public void initialize() {
         config = getConfigAs(OnectaConfiguration.class);
-
+        channelsRefreshDelay = new ChannelsRefreshDelay(
+                Long.parseLong(thing.getConfiguration().get("refreshDelay").toString()) * 1000);
         // DataTransportService dataTransService = new DataTransportService();
         // TODO: Initialize the handler.
         // The framework requires you to return from this method quickly, i.e. any network access must be done in
