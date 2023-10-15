@@ -29,6 +29,7 @@ public class OnectaBridgeConstants {
     // List of all Device Types
     public static final String DEVICE = "device";
     public static final String GATEWAY = "gateway";
+    public static final String WATERTANK = "domesticHotWaterTank";
     public static final String CHANNEL_REFRESH_TOKEN = "refreshToken";
     public static final String CHANNEL_PASSWORD = "password";
     public static final String CHANNEL_USERID = "userId";
@@ -43,4 +44,5 @@ public class OnectaBridgeConstants {
     // List of all Thing Type UIDs
     public static final ThingTypeUID DEVICE_THING_TYPE = new ThingTypeUID(BINDING_ID, DEVICE);
     public static final ThingTypeUID GATEWAY_THING_TYPE = new ThingTypeUID(BINDING_ID, GATEWAY);
+    public static final ThingTypeUID WATERTANK_THING_TYPE = new ThingTypeUID(BINDING_ID, WATERTANK);
 }

@@ -62,20 +62,25 @@ public class ManagementPoint {
     // @SerializedName("_id")
     // private DtoIsCloudConnectionUp isCoolHeatMaster;
     //
-    // @SerializedName("_id")
-    // private DtoIsCloudConnectionUp isHolidayModeActive;
+    @SerializedName("isHolidayModeActive")
+    private GatwaySubValueBoolean isHolidayModeActive;
+
+    @SerializedName("isInEmergencyState")
+    private GatwaySubValueBoolean isInEmergencyState;
     //
     // @SerializedName("_id")
     // private DtoIsCloudConnectionUp isInCautionState;
     //
-    // @SerializedName("_id")
-    // private DtoIsCloudConnectionUp isInModeConflict;
-    //
-    // @SerializedName("_id")
-    // private DtoIsCloudConnectionUp isInWarningState;
-    //
-    // @SerializedName("_id")
-    // private DtoIsCloudConnectionUp isLockFunctionEnabled;
+    @SerializedName("heatupMode")
+    private GatwaySubValueString heatupMode;
+    @SerializedName("setpointMode")
+    private GatwaySubValueString setpointMode;
+
+    @SerializedName("isInWarningState")
+    private GatwaySubValueBoolean isInWarningState;
+
+    @SerializedName("isInInstallerState")
+    private GatwaySubValueBoolean isInInstallerState;
     //
     @SerializedName("name")
     private Name name;
@@ -154,6 +159,18 @@ public class ManagementPoint {
         return isInErrorState;
     }
 
+    public GatwaySubValueBoolean getisInWarningState() {
+        return isInWarningState;
+    }
+
+    public GatwaySubValueBoolean getIsInInstallerState() {
+        return isInInstallerState;
+    }
+
+    public GatwaySubValueBoolean getIsInWarningState() {
+        return isInWarningState;
+    }
+
     public GatwaySubValueBoolean getIsLedEnabled() {
         return ledEnabled;
     }
@@ -206,6 +223,14 @@ public class ManagementPoint {
         return holidayMode;
     }
 
+    public GatwaySubValueBoolean getisHolidayModeActive() {
+        return isHolidayModeActive;
+    }
+
+    public GatwaySubValueBoolean getIsInEmergencyState() {
+        return isInEmergencyState;
+    }
+
     public Name getName() {
         return name;
     }
@@ -220,6 +245,14 @@ public class ManagementPoint {
 
     public GatwaySubValueString getOperationMode() {
         return operationMode;
+    }
+
+    public GatwaySubValueString getHeatupMode() {
+        return heatupMode;
+    }
+
+    public GatwaySubValueString getSetpointMode() {
+        return setpointMode;
     }
 
     public IconID getTargetTemperature() {

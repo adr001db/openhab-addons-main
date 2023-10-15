@@ -1518,6 +1518,7 @@
 		<category>Energy</category>
 		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
+
 	<channel-type id="acunit-energycoolingcurrentyear-12" advanced="true">
 		<item-type>Number:Energy</item-type>
 		<label>Energy Cooling Current Year December</label>

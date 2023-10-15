@@ -65,14 +65,24 @@ public class DeviceDiscoveryService extends AbstractDiscoveryService {
                 thingDiscovered(discoveryResult);
                 logger.debug("Discovered a onecta unit thing with ID '{}'", unitId);
 
-                if (units.get(i).findManagementPointsByType("gateway") != null) {
+                if (units.get(i).findManagementPointsByType(GATEWAY) != null) {
                     thingUID = new ThingUID(GATEWAY_THING_TYPE, bridgeUID, unitId);
                     discoveryResult = DiscoveryResultBuilder.create(thingUID).withProperties(properties)
                             .withBridge(bridgeHandler.getThing().getUID())
-                            .withLabel(String.format("Daikin Onecta gateway (%s)", unitName)).build();
+                            .withLabel(String.format("Daikin Onecta (%s) (%s)", GATEWAY, unitName)).build();
 
                     thingDiscovered(discoveryResult);
                     logger.debug("Discovered a onecta gateway thing with ID '{}'", unitId);
+
+                }
+                if (units.get(i).findManagementPointsByType("domesticHotWaterTank") != null) {
+                    thingUID = new ThingUID(WATERTANK_THING_TYPE, bridgeUID, unitId);
+                    discoveryResult = DiscoveryResultBuilder.create(thingUID).withProperties(properties)
+                            .withBridge(bridgeHandler.getThing().getUID())
+                            .withLabel(String.format("Daikin Onecta (%s) (%s)", WATERTANK, unitName)).build();
+
+                    thingDiscovered(discoveryResult);
+                    logger.debug("Discovered a onecta watertank thing with ID '{}'", unitId);
 
                 }
 

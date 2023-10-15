@@ -87,11 +87,73 @@ public class Enums {
         }
     }
 
+    public enum HeatupMode {
+        UNKNOWN(""),
+        REHEATONLY("reheatOnly"),
+        SCHEDULEONLY("scheduleOnly"),
+        REHEATSCHEDULE("reheatSchedule");
+
+        private static final Logger LOGGER = LoggerFactory.getLogger(HeatupMode.class);
+        private final String value;
+
+        HeatupMode(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static HeatupMode fromValue(String value) {
+            for (HeatupMode m : HeatupMode.values()) {
+                if (m.getValue().equals(value)) {
+                    return m;
+                }
+            }
+
+            LOGGER.debug("Unexpected Mode value of \"{}\"", value);
+
+            // Default to auto
+            return UNKNOWN;
+        }
+    }
+
+    public enum SetpointMode {
+        UNKNOWN(""),
+        WEATHERDEPENDENT("weatherDependent"),
+        FIXED("fixed");
+
+        private static final Logger LOGGER = LoggerFactory.getLogger(SetpointMode.class);
+        private final String value;
+
+        SetpointMode(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static SetpointMode fromValue(String value) {
+            for (SetpointMode m : SetpointMode.values()) {
+                if (m.getValue().equals(value)) {
+                    return m;
+                }
+            }
+
+            LOGGER.debug("Unexpected Mode value of \"{}\"", value);
+
+            // Default to auto
+            return UNKNOWN;
+        }
+    }
+
     public enum ManagementPoint {
         GATEWAY("gateway"),
         CLIMATECONTROL("climateControl"),
         INDOORUNIT("indoorUnit"),
-        OUTDOORUNIT("outdoorUnit");
+        OUTDOORUNIT("outdoorUnit"),
+        WATERTANK("domesticHotWaterTank");
 
         private final String value;
 

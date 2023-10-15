@@ -13,6 +13,8 @@ public class SensoryDataValue {
     private IconID outdoorTemperature;
     @SerializedName("leavingWaterTemperature")
     private IconID leavingWaterTemperature;
+    @SerializedName("tankTemperature")
+    private IconID tankTemperature;
 
     public IconID getRoomTemperature() {
         return roomTemperature;
@@ -28,6 +30,10 @@ public class SensoryDataValue {
 
     public IconID getLeavingWaterTemperature() {
         return leavingWaterTemperature;
+    }
+
+    public IconID getTankTemperature() {
+        return tankTemperature;
     }
 
     public IconID getSensorData(Enums.SensorData sensorData) {

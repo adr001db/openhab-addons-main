@@ -195,6 +195,9 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
             } else if (t.getThingTypeUID().equals(GATEWAY_THING_TYPE)) {
                 OnectaGatewayHandler onectaGatewayHandler = (OnectaGatewayHandler) t.getHandler();
                 onectaGatewayHandler.refreshDevice();
+            } else if (t.getThingTypeUID().equals(WATERTANK_THING_TYPE)) {
+                OnectaWaterTankHandler onectaWaterTankHandler = (OnectaWaterTankHandler) t.getHandler();
+                onectaWaterTankHandler.refreshDevice();
             } else
                 continue;
 

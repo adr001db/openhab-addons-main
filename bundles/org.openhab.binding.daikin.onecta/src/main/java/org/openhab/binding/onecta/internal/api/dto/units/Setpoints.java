@@ -10,6 +10,8 @@ public class Setpoints {
     private IconID leavingWaterTemperature;
     private IconID leavingWaterOffset;
 
+    private IconID domesticHotWaterTemperature;
+
     public IconID getRoomTemperature() {
         return roomTemperature;
     }
@@ -20,5 +22,9 @@ public class Setpoints {
 
     public IconID getLeavingWaterOffset() {
         return leavingWaterOffset;
+    }
+
+    public IconID getdomesticHotWaterTemperature() {
+        return domesticHotWaterTemperature;
     }
 }

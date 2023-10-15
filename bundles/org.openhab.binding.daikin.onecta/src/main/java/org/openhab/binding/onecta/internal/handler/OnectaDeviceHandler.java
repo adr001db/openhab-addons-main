@@ -383,7 +383,7 @@ public class OnectaDeviceHandler extends BaseThingHandler {
 
     private State getLeavingWaterTemperatur() {
         try {
-            return new DecimalType(dataTransService.getLeavingWaterTemperatur());
+            return new DecimalType(dataTransService.getLeavingWaterTemperature());
         } catch (Exception e) {
             return UnDefType.UNDEF;
         }

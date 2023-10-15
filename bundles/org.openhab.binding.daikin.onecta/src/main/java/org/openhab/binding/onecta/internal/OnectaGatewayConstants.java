@@ -35,6 +35,5 @@ public class OnectaGatewayConstants {
     public static final String CHANNEL_GW_TIME_ZONE = "basic#timezone";
     public static final String CHANNEL_GW_WIFICONNENTION_SSID = "basic#wificonnectionssid";
     public static final String CHANNEL_GW_WIFICONNENTION_STRENGTH = "basic#wificonnectionpower";
-
     public static final String PROPERTY_GW_NAME = "name";
 }

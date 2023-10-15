@@ -40,7 +40,15 @@ public class DataTransportService {
 
     public Enums.OperationMode getCurrentOperationMode() {
         return Enums.OperationMode
-                .fromValue(getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getOperationMode().getValue());
+                .fromValue(getManagementPoint(this.managementPointType).getOperationMode().getValue());
+    }
+
+    public Enums.SetpointMode getSetpointMode() {
+        return Enums.SetpointMode.fromValue(getManagementPoint(this.managementPointType).getSetpointMode().getValue());
+    }
+
+    public Enums.HeatupMode getHeatupMode() {
+        return Enums.HeatupMode.fromValue(getManagementPoint(this.managementPointType).getHeatupMode().getValue());
     }
 
     public void setCurrentOperationMode(Enums.OperationMode value) {
@@ -131,7 +139,7 @@ public class DataTransportService {
 
     public String getPowerOnOff() {
         try {
-            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getOnOffMode().getValue();
+            return getManagementPoint(managementPointType).getOnOffMode().getValue();
         } catch (Exception e) {
             return null;
         }
@@ -167,7 +175,7 @@ public class DataTransportService {
 
     public String getUnitName() {
         try {
-            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getNameValue();
+            return getManagementPoint(managementPointType).getNameValue();
         } catch (Exception e) {
             return null;
         }
@@ -175,9 +183,8 @@ public class DataTransportService {
 
     public Number getCurrentTemperatureSet() {
         try {
-            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getTemperatureControl().getValue()
-                    .getOperationModes().getOperationMode(getCurrentOperationMode()).getSetpoints().getRoomTemperature()
-                    .getValue();
+            return getManagementPoint(this.managementPointType).getTemperatureControl().getValue().getOperationModes()
+                    .getOperationMode(getCurrentOperationMode()).getSetpoints().getRoomTemperature().getValue();
         } catch (Exception e) {
             return null;
         }
@@ -190,9 +197,8 @@ public class DataTransportService {
 
     public Number getCurrentTemperatureSetMin() {
         try {
-            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getTemperatureControl().getValue()
-                    .getOperationModes().getOperationMode(getCurrentOperationMode()).getSetpoints().getRoomTemperature()
-                    .getMinValue();
+            return getManagementPoint(this.managementPointType).getTemperatureControl().getValue().getOperationModes()
+                    .getOperationMode(getCurrentOperationMode()).getSetpoints().getRoomTemperature().getMinValue();
         } catch (Exception e) {
             return null;
         }
@@ -200,9 +206,8 @@ public class DataTransportService {
 
     public Number getCurrentTemperatureSetMax() {
         try {
-            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getTemperatureControl().getValue()
-                    .getOperationModes().getOperationMode(getCurrentOperationMode()).getSetpoints().getRoomTemperature()
-                    .getMaxValue();
+            return getManagementPoint(this.managementPointType).getTemperatureControl().getValue().getOperationModes()
+                    .getOperationMode(getCurrentOperationMode()).getSetpoints().getRoomTemperature().getMaxValue();
         } catch (Exception e) {
             return null;
         }
@@ -210,8 +215,52 @@ public class DataTransportService {
 
     public Number getCurrentTemperatureSetStep() {
         try {
-            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getTemperatureControl().getValue()
-                    .getOperationModes().getOperationMode(getCurrentOperationMode()).getSetpoints().getRoomTemperature()
+            return getManagementPoint(this.managementPointType).getTemperatureControl().getValue().getOperationModes()
+                    .getOperationMode(getCurrentOperationMode()).getSetpoints().getRoomTemperature().getStepValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Number getCurrentTankTemperatureSet() {
+        try {
+            return getManagementPoint(this.managementPointType).getTemperatureControl().getValue().getOperationModes()
+                    .getOperationMode(getCurrentOperationMode()).getSetpoints().getdomesticHotWaterTemperature()
+                    .getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void setCurrentTankTemperatureSet(float value) {
+        if (value <= getCurrentTemperatureSetMax().floatValue())
+            OnectaConnectionClient.setCurrentTemperatureSet(unitId, getCurrentOperationMode(), value);
+    }
+
+    public Number getCurrentTankTemperatureSetMin() {
+        try {
+            return getManagementPoint(this.managementPointType).getTemperatureControl().getValue().getOperationModes()
+                    .getOperationMode(getCurrentOperationMode()).getSetpoints().getdomesticHotWaterTemperature()
+                    .getMinValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Number getCurrentTankTemperatureSetMax() {
+        try {
+            return getManagementPoint(this.managementPointType).getTemperatureControl().getValue().getOperationModes()
+                    .getOperationMode(getCurrentOperationMode()).getSetpoints().getdomesticHotWaterTemperature()
+                    .getMaxValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Number getCurrentTankTemperatureSetStep() {
+        try {
+            return getManagementPoint(this.managementPointType).getTemperatureControl().getValue().getOperationModes()
+                    .getOperationMode(getCurrentOperationMode()).getSetpoints().getdomesticHotWaterTemperature()
                     .getStepValue();
         } catch (Exception e) {
             return null;
@@ -220,17 +269,26 @@ public class DataTransportService {
 
     public Number getIndoorTemperature() {
         try {
-            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getSensoryData().getValue()
-                    .getRoomTemperature().getValue();
+            return getManagementPoint(this.managementPointType).getSensoryData().getValue().getRoomTemperature()
+                    .getValue();
         } catch (Exception e) {
             return null;
         }
     }
 
-    public Number getLeavingWaterTemperatur() {
+    public Number getLeavingWaterTemperature() {
         try {
-            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getSensoryData().getValue()
-                    .getLeavingWaterTemperature().getValue();
+            return getManagementPoint(this.managementPointType).getSensoryData().getValue().getLeavingWaterTemperature()
+                    .getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Number getTankTemperature() {
+        try {
+            return getManagementPoint(this.managementPointType).getSensoryData().getValue().getTankTemperature()
+                    .getValue();
         } catch (Exception e) {
             return null;
         }
@@ -312,7 +370,23 @@ public class DataTransportService {
 
     public String getHolidayMode() {
         try {
-            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getHolidayMode().getValue();
+            return getManagementPoint(this.managementPointType).getHolidayMode().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Boolean getIsHolidayModeActive() {
+        try {
+            return getManagementPoint(this.managementPointType).getisHolidayModeActive().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Boolean getIsPowerfulModeActive() {
+        try {
+            return getManagementPoint(this.managementPointType).getIsPowerfulModeActive().getValue();
         } catch (Exception e) {
             return null;
         }
@@ -458,6 +532,38 @@ public class DataTransportService {
     public Boolean getIsInErrorState() {
         try {
             return getManagementPoint(this.managementPointType).getIsInErrorState().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getErrorCode() {
+        try {
+            return getManagementPoint(this.managementPointType).getErrorCode().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Boolean getIsInEmergencyState() {
+        try {
+            return getManagementPoint(this.managementPointType).getIsInEmergencyState().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Boolean getIsInInstallerState() {
+        try {
+            return getManagementPoint(this.managementPointType).getIsInInstallerState().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Boolean getIsInWarningState() {
+        try {
+            return getManagementPoint(this.managementPointType).getIsInWarningState().getValue();
         } catch (Exception e) {
             return null;
         }
