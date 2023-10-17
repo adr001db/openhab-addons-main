@@ -46,8 +46,6 @@
 			<channel id="isinwarningstate" typeId="hwt-isinwarningstate"/>
 			<channel id="isininstallerstate" typeId="hwt-isininstallerstate"/>
 			<channel id="isinemergencystate" typeId="hwt-isinemergencystate"/>
-			<channel id="isinwarningstate" typeId="hwt-isInWarningState"/>
-			<channel id="ispowerfulmodeactive" typeId="hwt-ispowerfulmodeactive"/>
 
 			<channel id="powerfulmode" typeId="hwt-powerfulmode"/>
 			<channel id="heatupmode" typeId="hwt-heatupmode"/>
@@ -110,7 +108,7 @@
 		<state readOnly="true"/>
 	</channel-type>
 
-	<channel-type id="hwt-isInWarningState">
+	<channel-type id="hwt-isinwarningstate">
 		<item-type>Switch</item-type>
 		<label>Is in warning State</label>
 		<description>Is in warning State</description>

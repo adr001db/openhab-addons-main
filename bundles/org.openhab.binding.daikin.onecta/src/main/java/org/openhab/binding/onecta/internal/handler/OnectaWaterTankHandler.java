@@ -142,7 +142,6 @@ public class OnectaWaterTankHandler extends BaseThingHandler {
             updateState(CHANNEL_HWT_IS_IN_INSTALLER_STATE, getIsInInstallerState());
             updateState(CHANNEL_HWT_IS_IN_WARNING_STATE, getIsInWarningState());
 
-            updateState(CHANNEL_HWT_IS_POWERFUL_MODE_ACTIVE, getIsPowerfulModeActive());
             updateState(CHANNEL_HWT_IS_HOLIDAY_MODE_ACTIVE, getIsHolidayModeActive());
             updateState(CHANNEL_HWT_POWERFUL_MODE, getPowerFulMode());
 

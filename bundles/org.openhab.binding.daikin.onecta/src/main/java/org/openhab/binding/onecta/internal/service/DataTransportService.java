@@ -147,7 +147,7 @@ public class DataTransportService {
 
     public String getPowerFulModeOnOff() {
         try {
-            return getManagementPoint(Enums.ManagementPoint.CLIMATECONTROL).getPowerfulMode().getValue();
+            return getManagementPoint(this.managementPointType).getPowerfulMode().getValue();
         } catch (Exception e) {
             return null;
         }
