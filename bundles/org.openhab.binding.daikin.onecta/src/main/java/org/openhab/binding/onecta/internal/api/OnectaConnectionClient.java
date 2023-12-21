@@ -42,8 +42,6 @@ public class OnectaConnectionClient {
         return onectaData;
     }
 
-    // private static HttpClient httpClient;
-
     private static OnectaSignInClient onectaSignInClient;
 
     public static void SetConnectionClient(HttpClientFactory httpClientFactory) {
@@ -181,46 +179,56 @@ public class OnectaConnectionClient {
         return new JsonObject();
     }
 
-    public static void setPowerOnOff(String unitId, Enums.OnOff value) {
-        logger.debug(String.format("setPowerOnOff : %s, %s", unitId, value));
+    public static void setPowerOnOffTest(String unitId, String managementPointType, Enums.OnOff value) {
+        logger.debug(String.format("setPowerOnOff : %s, %s, %s", unitId, managementPointType, value));
         CommandOnOf commandOnOf = new CommandOnOf(value);
-        doBearerRequestPatch(getUrlOnOff(unitId), commandOnOf);
+        doBearerRequestPatch(getUrlOnOffTest(unitId, managementPointType), commandOnOf);
     }
 
-    public static void setPowerFulModeOnOff(String unitId, Enums.OnOff value) {
-        logger.debug(String.format("setPowerFulModeOnOff : %s, %s", unitId, value));
+    public static void setPowerOnOff(String unitId, Enums.ManagementPoint managementPointType, Enums.OnOff value) {
+        logger.debug(String.format("setPowerOnOff : %s, %s, %s", unitId, managementPointType.getValue(), value));
         CommandOnOf commandOnOf = new CommandOnOf(value);
-        doBearerRequestPatch(getUrlPowerFulModeOnOff(unitId), commandOnOf);
+        doBearerRequestPatch(getUrlOnOff(unitId, managementPointType), commandOnOf);
     }
 
-    public static void setEconoMode(String unitId, Enums.OnOff value) {
-        logger.debug(String.format("setEconoMode: %s, %s", unitId, value));
+    public static void setPowerFulModeOnOff(String unitId, Enums.ManagementPoint managementPointType,
+            Enums.OnOff value) {
+        logger.debug(String.format("setPowerFulModeOnOff : %s, %s, %s", unitId, managementPointType.getValue(), value));
         CommandOnOf commandOnOf = new CommandOnOf(value);
-        doBearerRequestPatch(getEconoMode(unitId), commandOnOf);
+        doBearerRequestPatch(getUrlPowerFulModeOnOff(unitId, managementPointType), commandOnOf);
     }
 
-    public static void setCurrentOperationMode(String unitId, Enums.OperationMode operationMode) {
-        doBearerRequestPatch(OnectaProperties.getOperationModeUrl(unitId),
+    public static void setEconoMode(String unitId, Enums.ManagementPoint managementPointType, Enums.OnOff value) {
+        logger.debug(String.format("setEconoMode: %s, %s, %s", unitId, managementPointType.getValue(), value));
+        CommandOnOf commandOnOf = new CommandOnOf(value);
+        doBearerRequestPatch(getEconoMode(unitId, managementPointType), commandOnOf);
+    }
+
+    public static void setCurrentOperationMode(String unitId, Enums.ManagementPoint managementPointType,
+            Enums.OperationMode operationMode) {
+        doBearerRequestPatch(OnectaProperties.getOperationModeUrl(unitId, managementPointType),
                 OnectaProperties.getOperationModeCommand(operationMode));
     }
 
-    public static void setCurrentTemperatureSet(String unitId, Enums.OperationMode currentMode, float value) {
-        doBearerRequestPatch(OnectaProperties.getTemperatureControlUrl(unitId),
+    public static void setCurrentTemperatureSet(String unitId, Enums.ManagementPoint managementPointType,
+            Enums.OperationMode currentMode, float value) {
+        doBearerRequestPatch(OnectaProperties.getTemperatureControlUrl(unitId, managementPointType),
                 OnectaProperties.getTemperatureControlCommand(value, currentMode));
     }
 
-    public static void setFanSpeed(String unitId, Enums.OperationMode currentMode, Enums.FanSpeed fanspeed) {
-        doBearerRequestPatch(OnectaProperties.getTFanControlUrl(unitId),
+    public static void setFanSpeed(String unitId, Enums.ManagementPoint managementPointType,
+            Enums.OperationMode currentMode, Enums.FanSpeed fanspeed) {
+        doBearerRequestPatch(OnectaProperties.getTFanControlUrl(unitId, managementPointType),
                 getTFanSpeedCurrentCommand(currentMode, fanspeed));
         if (fanspeed.getValueMode().equals(Enums.FanSpeedMode.FIXED.getValue())) {
-            doBearerRequestPatch(OnectaProperties.getTFanControlUrl(unitId),
+            doBearerRequestPatch(OnectaProperties.getTFanControlUrl(unitId, managementPointType),
                     OnectaProperties.getTFanSpeedFixedCommand(currentMode, fanspeed));
         }
     }
 
-    public static void setCurrentFanDirection(String unitId, Enums.OperationMode currentMode,
-            Enums.FanMovement fanMovement) {
-        String url = getTFanControlUrl(unitId);
+    public static void setCurrentFanDirection(String unitId, Enums.ManagementPoint managementPointType,
+            Enums.OperationMode currentMode, Enums.FanMovement fanMovement) {
+        String url = getTFanControlUrl(unitId, managementPointType);
         switch (fanMovement) {
             case STOPPED:
                 doBearerRequestPatch(url,
@@ -255,39 +263,44 @@ public class OnectaConnectionClient {
         }
     }
 
-    public static void setCurrentFanDirectionHor(String unitId, Enums.OperationMode currentMode,
-            Enums.FanMovementHor fanMovement) {
-        String url = getTFanControlUrl(unitId);
+    public static void setCurrentFanDirectionHor(String unitId, Enums.ManagementPoint managementPointType,
+            Enums.OperationMode currentMode, Enums.FanMovementHor fanMovement) {
+        String url = getTFanControlUrl(unitId, managementPointType);
         doBearerRequestPatch(url, OnectaProperties.getTFanDirectionHorCommand(currentMode, fanMovement));
     }
 
-    public static void setCurrentFanDirectionVer(String unitId, Enums.OperationMode currentMode,
-            Enums.FanMovementVer fanMovement) {
-        String url = getTFanControlUrl(unitId);
+    public static void setCurrentFanDirectionVer(String unitId, Enums.ManagementPoint managementPointType,
+            Enums.OperationMode currentMode, Enums.FanMovementVer fanMovement) {
+        String url = getTFanControlUrl(unitId, managementPointType);
         doBearerRequestPatch(url, OnectaProperties.getTFanDirectionVerCommand(currentMode, fanMovement));
     }
 
-    public static void setStreamerMode(String unitId, Enums.OnOff value) {
-        logger.debug(String.format("setStreamerMode: %s, %s", unitId, value));
+    public static void setStreamerMode(String unitId, Enums.ManagementPoint managementPointType, Enums.OnOff value) {
+        logger.debug(String.format("setStreamerMode: %s, %s, %s", unitId, managementPointType.getValue(), value));
         CommandOnOf commandOnOf = new CommandOnOf(value);
-        doBearerRequestPatch(getStreamerMode(unitId), commandOnOf);
+        doBearerRequestPatch(getStreamerMode(unitId, managementPointType), commandOnOf);
     }
 
-    public static void setHolidayMode(String unitId, Enums.OnOff value) {
-        logger.debug(String.format("setHolidayMode: %s, %s", unitId, value));
+    public static void setHolidayMode(String unitId, Enums.ManagementPoint managementPointType, Enums.OnOff value) {
+        logger.debug(String.format("setHolidayMode: %s, %s, %s", unitId, managementPointType.getValue(), value));
         CommandTrueFalse commandTrueFalse = new CommandTrueFalse(value);
-        doBearerRequestPatch(getHolidayMode(unitId), commandTrueFalse);
+        doBearerRequestPatch(getHolidayMode(unitId, managementPointType), commandTrueFalse);
     }
 
-    public static void setDemandControl(String unitId, Enums.DemandControl value) {
-        logger.debug(String.format("setDemandControl: %s, %s", unitId, value));
-        doBearerRequestPatch(getTDemandControlUrl(unitId), OnectaProperties.getTDemandControlCommand(value));
+    public static void setDemandControl(String unitId, Enums.ManagementPoint managementPointType,
+            Enums.DemandControl value) {
+        logger.debug(String.format("setDemandControl: %s, %s, %s", unitId, managementPointType.getValue(), value));
+        doBearerRequestPatch(getTDemandControlUrl(unitId, managementPointType),
+                OnectaProperties.getTDemandControlCommand(value));
     }
 
-    public static void setDemandControlFixedValue(String unitId, Integer value) {
-        logger.debug(String.format("setDemandControlFixedValue: %s, %s", unitId, value));
+    public static void setDemandControlFixedValue(String unitId, Enums.ManagementPoint managementPointType,
+            Integer value) {
+        logger.debug(
+                String.format("setDemandControlFixedValue: %s, %s, %s", unitId, managementPointType.getValue(), value));
 
-        doBearerRequestPatch(getTDemandControlUrl(unitId), OnectaProperties.getTDemandControlFixedValueCommand(value));
+        doBearerRequestPatch(getTDemandControlUrl(unitId, managementPointType),
+                OnectaProperties.getTDemandControlFixedValueCommand(value));
     }
 
     public static String getRefreshToken() {
@@ -298,8 +311,8 @@ public class OnectaConnectionClient {
         onectaSignInClient.setRefreshToken(refreshToken);
     }
 
-    public static void setTargetTemperatur(String unitId, Float value) {
-        logger.debug(String.format("setRefreshToken: %s, %s", unitId, value));
-        doBearerRequestPatch(getTargetTemperaturUrl(unitId), getTargetTemperaturCommand(value));
+    public static void setTargetTemperatur(String unitId, Enums.ManagementPoint managementPointType, Float value) {
+        logger.debug(String.format("setRefreshToken: %s, %s, %s", unitId, managementPointType.getValue(), value));
+        doBearerRequestPatch(getTargetTemperaturUrl(unitId, managementPointType), getTargetTemperaturCommand(value));
     }
 }

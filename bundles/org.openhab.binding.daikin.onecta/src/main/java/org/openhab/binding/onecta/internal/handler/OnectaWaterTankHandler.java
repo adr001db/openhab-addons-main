@@ -66,6 +66,18 @@ public class OnectaWaterTankHandler extends BaseThingHandler {
 
         try {
             channelsRefreshDelay.add(channelUID.getId());
+            switch (channelUID.getId()) {
+                case CHANNEL_HWT_POWER:
+                    if (command instanceof OnOffType) {
+                        dataTransService.setPowerOnOff(Enums.OnOff.valueOf(command.toString()));
+                    }
+                    break;
+                case CHANNEL_HWT_POWERFUL_MODE:
+                    if (command instanceof OnOffType) {
+                        dataTransService.setPowerFulModeOnOff(Enums.OnOff.valueOf(command.toString()));
+                    }
+                    break;
+            }
 
             updateStatus(ThingStatus.ONLINE);
         } catch (Exception ex) {

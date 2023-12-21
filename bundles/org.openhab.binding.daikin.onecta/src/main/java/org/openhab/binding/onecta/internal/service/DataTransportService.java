@@ -38,6 +38,10 @@ public class DataTransportService {
         return unit.findManagementPointsByType(managementPoint.getValue());
     }
 
+    public String getEmbeddedId() {
+        return getManagementPoint(this.managementPointType).getEmbeddedId();
+    }
+
     public Enums.OperationMode getCurrentOperationMode() {
         return Enums.OperationMode
                 .fromValue(getManagementPoint(this.managementPointType).getOperationMode().getValue());
@@ -52,7 +56,7 @@ public class DataTransportService {
     }
 
     public void setCurrentOperationMode(Enums.OperationMode value) {
-        OnectaConnectionClient.setCurrentOperationMode(unitId, value);
+        OnectaConnectionClient.setCurrentOperationMode(unitId, managementPointType, value);
     }
 
     public Enums.FanSpeed getCurrentFanspeed() {
@@ -69,7 +73,7 @@ public class DataTransportService {
     }
 
     public void setFanSpeed(Enums.FanSpeed value) {
-        OnectaConnectionClient.setFanSpeed(unitId, getCurrentOperationMode(), value);
+        OnectaConnectionClient.setFanSpeed(unitId, managementPointType, getCurrentOperationMode(), value);
     }
 
     public Enums.FanMovementHor getCurrentFanDirectionHor() {
@@ -126,15 +130,15 @@ public class DataTransportService {
     }
 
     public void setCurrentFanDirection(Enums.FanMovement value) {
-        OnectaConnectionClient.setCurrentFanDirection(unitId, getCurrentOperationMode(), value);
+        OnectaConnectionClient.setCurrentFanDirection(unitId, managementPointType, getCurrentOperationMode(), value);
     }
 
     public void setCurrentFanDirectionHor(Enums.FanMovementHor value) {
-        OnectaConnectionClient.setCurrentFanDirectionHor(unitId, getCurrentOperationMode(), value);
+        OnectaConnectionClient.setCurrentFanDirectionHor(unitId, managementPointType, getCurrentOperationMode(), value);
     }
 
     public void setCurrentFanDirectionVer(Enums.FanMovementVer value) {
-        OnectaConnectionClient.setCurrentFanDirectionVer(unitId, getCurrentOperationMode(), value);
+        OnectaConnectionClient.setCurrentFanDirectionVer(unitId, managementPointType, getCurrentOperationMode(), value);
     }
 
     public String getPowerOnOff() {
@@ -154,11 +158,11 @@ public class DataTransportService {
     }
 
     public void setPowerOnOff(Enums.OnOff value) {
-        OnectaConnectionClient.setPowerOnOff(unitId, value);
+        OnectaConnectionClient.setPowerOnOffTest(unitId, getEmbeddedId(), value);
     }
 
     public void setPowerFulModeOnOff(Enums.OnOff value) {
-        OnectaConnectionClient.setPowerFulModeOnOff(unitId, value);
+        OnectaConnectionClient.setPowerFulModeOnOff(unitId, managementPointType, value);
     }
 
     public String getEconoMode() {
@@ -170,7 +174,7 @@ public class DataTransportService {
     }
 
     public void setEconoMode(Enums.OnOff value) {
-        OnectaConnectionClient.setEconoMode(unitId, value);
+        OnectaConnectionClient.setEconoMode(unitId, managementPointType, value);
     }
 
     public String getUnitName() {
@@ -192,7 +196,8 @@ public class DataTransportService {
 
     public void setCurrentTemperatureSet(float value) {
         if (value <= getCurrentTemperatureSetMax().floatValue())
-            OnectaConnectionClient.setCurrentTemperatureSet(unitId, getCurrentOperationMode(), value);
+            OnectaConnectionClient.setCurrentTemperatureSet(unitId, managementPointType, getCurrentOperationMode(),
+                    value);
     }
 
     public Number getCurrentTemperatureSetMin() {
@@ -234,7 +239,8 @@ public class DataTransportService {
 
     public void setCurrentTankTemperatureSet(float value) {
         if (value <= getCurrentTemperatureSetMax().floatValue())
-            OnectaConnectionClient.setCurrentTemperatureSet(unitId, getCurrentOperationMode(), value);
+            OnectaConnectionClient.setCurrentTemperatureSet(unitId, managementPointType, getCurrentOperationMode(),
+                    value);
     }
 
     public Number getCurrentTankTemperatureSetMin() {
@@ -329,7 +335,7 @@ public class DataTransportService {
     }
 
     public void setTargetTemperatur(float value) {
-        OnectaConnectionClient.setTargetTemperatur(unitId, value);
+        OnectaConnectionClient.setTargetTemperatur(unitId, managementPointType, value);
     }
 
     public Number getTargetTemperaturMax() {
@@ -365,7 +371,7 @@ public class DataTransportService {
     }
 
     public void setStreamerMode(Enums.OnOff value) {
-        OnectaConnectionClient.setStreamerMode(unitId, value);
+        OnectaConnectionClient.setStreamerMode(unitId, managementPointType, value);
     }
 
     public String getHolidayMode() {
@@ -393,7 +399,7 @@ public class DataTransportService {
     }
 
     public void setHolidayMode(Enums.OnOff value) {
-        OnectaConnectionClient.setHolidayMode(unitId, value);
+        OnectaConnectionClient.setHolidayMode(unitId, managementPointType, value);
     }
 
     public Enums.DemandControl getDemandControl() {
@@ -406,7 +412,7 @@ public class DataTransportService {
     }
 
     public void setDemandControl(Enums.DemandControl value) {
-        OnectaConnectionClient.setDemandControl(unitId, value);
+        OnectaConnectionClient.setDemandControl(unitId, managementPointType, value);
     }
 
     public Integer getDemandControlFixedValue() {
@@ -446,7 +452,7 @@ public class DataTransportService {
     }
 
     public void setDemandControlFixedValue(Integer value) {
-        OnectaConnectionClient.setDemandControlFixedValue(unitId, value);
+        OnectaConnectionClient.setDemandControlFixedValue(unitId, managementPointType, value);
     }
 
     public Float[] getConsumptionCoolingDay() {
