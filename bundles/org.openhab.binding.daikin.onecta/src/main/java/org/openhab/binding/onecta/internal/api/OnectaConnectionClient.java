@@ -1,14 +1,9 @@
 package org.openhab.binding.onecta.internal.api;
 
-import static org.openhab.binding.onecta.internal.OnectaBridgeConstants.*;
-import static org.openhab.binding.onecta.internal.api.OnectaProperties.*;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Objects;
-
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.eclipse.jetty.client.HttpContentResponse;
 import org.eclipse.jetty.client.api.Response;
 import org.eclipse.jetty.client.util.StringContentProvider;
@@ -27,10 +22,15 @@ import org.openhab.core.thing.Thing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Objects;
+
+import static org.openhab.binding.onecta.internal.OnectaBridgeConstants.CHANNEL_LOGRAWDATA;
+import static org.openhab.binding.onecta.internal.OnectaBridgeConstants.CHANNEL_STUBDATAFILE;
+import static org.openhab.binding.onecta.internal.api.OnectaProperties.*;
 
 public class OnectaConnectionClient {
 
@@ -109,7 +109,7 @@ public class OnectaConnectionClient {
 
             if (response.getStatus() == HttpStatus.UNAUTHORIZED_401 && !refreshed) {
                 onectaSignInClient.fetchAccessToken();
-                doBearerRequestPatch(url, body, true);
+                response = doBearerRequestPatch(url, body, true);
             }
             return response;
         } catch (Exception e) {
@@ -117,7 +117,7 @@ public class OnectaConnectionClient {
                 try {
                     logger.debug(String.format("Get new token"));
                     onectaSignInClient.fetchAccessToken();
-                    response = doBearerRequestGet(true);
+                    response = doBearerRequestPatch(url, body, true);
                 } catch (DaikinCommunicationException ex) {
                     throw new RuntimeException(ex);
                 }

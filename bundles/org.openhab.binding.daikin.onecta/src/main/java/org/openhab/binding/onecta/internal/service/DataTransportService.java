@@ -630,4 +630,71 @@ public class DataTransportService {
             return null;
         }
     }
+
+    public String getModelInfo() {
+        try {
+            return getManagementPoint(this.managementPointType).getModelInfo().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getSoftwareVersion() {
+        try {
+            return getManagementPoint(this.managementPointType).getSoftwareVersion().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getEepromVerion() {
+        try {
+            return getManagementPoint(this.managementPointType).getEepromVersion().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getDryKeepSetting() {
+        try {
+            return getManagementPoint(this.managementPointType).getDryKeepSetting().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Number getFanMotorRotationSpeed() {
+        try {
+            return getManagementPoint(this.managementPointType).getSensoryData().getValue().getFanMotorRotationSpeed()
+                    .getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Number getDeltaD() {
+        try {
+            return getManagementPoint(this.managementPointType).getSensoryData().getValue().getDeltaD().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Number getHeatExchangerTemperature() {
+        try {
+            return getManagementPoint(this.managementPointType).getSensoryData().getValue()
+                    .getHeatExchangerTemperature().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Number getSuctionTemperature() {
+        try {
+            return getManagementPoint(this.managementPointType).getSensoryData().getValue().getSuctionTemperature()
+                    .getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

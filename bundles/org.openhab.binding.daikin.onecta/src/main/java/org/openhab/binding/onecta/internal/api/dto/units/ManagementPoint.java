@@ -33,6 +33,8 @@ public class ManagementPoint {
     private GatwaySubValueString regionCode;
     @SerializedName("serialNumber")
     private GatwaySubValueString serialNumber;
+    @SerializedName("eepromVersion")
+    private GatwaySubValueString eepromVersion;
     @SerializedName("ssid")
     private GatwaySubValueString ssid;
     @SerializedName("timeZone")
@@ -114,14 +116,14 @@ public class ManagementPoint {
     @SerializedName("temperatureControl")
     private TemperatureControl temperatureControl;
 
-    // @SerializedName("_id")
-    // private GatwaySubValueString softwareVersion;
+    @SerializedName("softwareVersion")
+    private GatwaySubValueString softwareVersion;
     //
     // @SerializedName("_id")
     // private GatwaySubValueString gatwaySubValue;
     //
-    // @SerializedName("_id")
-    // private DryKeepSetting dryKeepSetting;
+    @SerializedName("dryKeepSetting")
+    private GatwaySubValueString dryKeepSetting;
 
     public String getEmbeddedId() {
         return embeddedId;
@@ -289,5 +291,17 @@ public class ManagementPoint {
 
     public GatwaySubValueString getEconoMode() {
         return econoMode;
+    }
+
+    public GatwaySubValueString getEepromVersion() {
+        return eepromVersion;
+    }
+
+    public GatwaySubValueString getSoftwareVersion() {
+        return softwareVersion;
+    }
+
+    public GatwaySubValueString getDryKeepSetting() {
+        return dryKeepSetting;
     }
 }

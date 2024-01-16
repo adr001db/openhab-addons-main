@@ -15,6 +15,14 @@ public class SensoryDataValue {
     private IconID leavingWaterTemperature;
     @SerializedName("tankTemperature")
     private IconID tankTemperature;
+    @SerializedName("deltaD")
+    private IconID deltaD;
+    @SerializedName("fanMotorRotationSpeed")
+    private IconID fanMotorRotationSpeed;
+    @SerializedName("heatExchangerTemperature")
+    private IconID heatExchangerTemperature;
+    @SerializedName("suctionTemperature")
+    private IconID suctionTemperature;
 
     public IconID getRoomTemperature() {
         return roomTemperature;
@@ -34,6 +42,22 @@ public class SensoryDataValue {
 
     public IconID getTankTemperature() {
         return tankTemperature;
+    }
+
+    public IconID getDeltaD() {
+        return deltaD;
+    }
+
+    public IconID getFanMotorRotationSpeed() {
+        return fanMotorRotationSpeed;
+    }
+
+    public IconID getHeatExchangerTemperature() {
+        return heatExchangerTemperature;
+    }
+
+    public IconID getSuctionTemperature() {
+        return suctionTemperature;
     }
 
     public IconID getSensorData(Enums.SensorData sensorData) {

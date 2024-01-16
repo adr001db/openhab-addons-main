@@ -13,7 +13,7 @@
 package org.openhab.binding.onecta.internal.handler;
 
 import static org.openhab.binding.onecta.internal.OnectaDeviceConstants.*;
-import static org.openhab.binding.onecta.internal.OnectaWaterTankConstant.*;
+import static org.openhab.binding.onecta.internal.OnectaWaterTankConstants.*;
 
 import java.util.concurrent.ScheduledFuture;
 

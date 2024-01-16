@@ -22,10 +22,7 @@ import java.util.Set;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.onecta.internal.api.OnectaConnectionClient;
-import org.openhab.binding.onecta.internal.handler.OnectaBridgeHandler;
-import org.openhab.binding.onecta.internal.handler.OnectaDeviceHandler;
-import org.openhab.binding.onecta.internal.handler.OnectaGatewayHandler;
-import org.openhab.binding.onecta.internal.handler.OnectaWaterTankHandler;
+import org.openhab.binding.onecta.internal.handler.*;
 import org.openhab.binding.onecta.internal.service.DeviceDiscoveryService;
 import org.openhab.core.config.discovery.DiscoveryService;
 import org.openhab.core.i18n.TimeZoneProvider;
@@ -53,7 +50,7 @@ import org.osgi.service.component.annotations.Reference;
 public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
 
     private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Set.of(BRIDGE_THING_TYPE, DEVICE_THING_TYPE,
-            GATEWAY_THING_TYPE, WATERTANK_THING_TYPE);
+            GATEWAY_THING_TYPE, WATERTANK_THING_TYPE, INDOORUNIT_THING_TYPE);
     private HttpClientFactory httpClientFactory;
     private final TimeZoneProvider timeZoneProvider;
 
@@ -97,6 +94,8 @@ public class OnectaBridgeHandlerFactory extends BaseThingHandlerFactory {
             return new OnectaGatewayHandler(thing);
         } else if (thingTypeUID.equals((WATERTANK_THING_TYPE))) {
             return new OnectaWaterTankHandler(thing);
+        } else if (thingTypeUID.equals((INDOORUNIT_THING_TYPE))) {
+            return new OnectaIndoorUnitHandler(thing);
         }
         return null;
     }
