@@ -1,9 +1,15 @@
 package org.openhab.binding.onecta.internal.api;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import static org.openhab.binding.onecta.internal.OnectaBridgeConstants.CHANNEL_LOGRAWDATA;
+import static org.openhab.binding.onecta.internal.OnectaBridgeConstants.CHANNEL_STUBDATAFILE;
+import static org.openhab.binding.onecta.internal.api.OnectaProperties.*;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Objects;
+
 import org.eclipse.jetty.client.HttpContentResponse;
 import org.eclipse.jetty.client.api.Response;
 import org.eclipse.jetty.client.util.StringContentProvider;
@@ -22,15 +28,10 @@ import org.openhab.core.thing.Thing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Objects;
-
-import static org.openhab.binding.onecta.internal.OnectaBridgeConstants.CHANNEL_LOGRAWDATA;
-import static org.openhab.binding.onecta.internal.OnectaBridgeConstants.CHANNEL_STUBDATAFILE;
-import static org.openhab.binding.onecta.internal.api.OnectaProperties.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class OnectaConnectionClient {
 

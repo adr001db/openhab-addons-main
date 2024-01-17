@@ -1,6 +1,7 @@
 package org.openhab.binding.onecta.internal.service;
 
 import static org.openhab.binding.onecta.internal.OnectaBridgeConstants.*;
+import static org.openhab.binding.onecta.internal.OnectaGatewayConstants.PROPERTY_GW_DISCOVERED;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -63,7 +64,8 @@ public class DeviceDiscoveryService extends AbstractDiscoveryService {
                         .withLabel(String.format("Daikin Onecta Unit (%s)", unitName)).build();
 
                 thingDiscovered(discoveryResult);
-                logger.debug("Discovered a onecta unit thing with ID '{}'", unitId);
+                logger.info("Discovered a onecta unit thing with ID '{}' '{}'", unitId, unitName);
+                bridgeHandler.getThing().setProperty(PROPERTY_GW_DISCOVERED + " Unit (" + unitName + ")", unitId);
 
                 if (units.get(i).findManagementPointsByType(GATEWAY) != null) {
                     thingUID = new ThingUID(GATEWAY_THING_TYPE, bridgeUID, unitId);
@@ -72,7 +74,9 @@ public class DeviceDiscoveryService extends AbstractDiscoveryService {
                             .withLabel(String.format("Daikin Onecta (%s) (%s)", GATEWAY, unitName)).build();
 
                     thingDiscovered(discoveryResult);
-                    logger.debug("Discovered a onecta gateway thing with ID '{}'", unitId);
+                    logger.info("Discovered a onecta gateway thing with ID '{}' '{}'", unitId, unitName);
+                    bridgeHandler.getThing().setProperty(PROPERTY_GW_DISCOVERED + " Gateway (" + unitName + ")",
+                            unitId);
 
                 }
                 if (units.get(i).findManagementPointsByType("domesticHotWaterTank") != null) {
@@ -82,7 +86,9 @@ public class DeviceDiscoveryService extends AbstractDiscoveryService {
                             .withLabel(String.format("Daikin Onecta (%s) (%s)", WATERTANK, unitName)).build();
 
                     thingDiscovered(discoveryResult);
-                    logger.debug("Discovered a onecta watertank thing with ID '{}'", unitId);
+                    logger.info("Discovered a onecta watertank thing with ID '{}' '{}'", unitId, unitName);
+                    bridgeHandler.getThing().setProperty(PROPERTY_GW_DISCOVERED + " Hotwatertank (" + unitName + ")",
+                            unitId);
 
                 }
                 if (units.get(i).findManagementPointsByType(INDOORUNIT) != null) {
@@ -92,7 +98,9 @@ public class DeviceDiscoveryService extends AbstractDiscoveryService {
                             .withLabel(String.format("Daikin Onecta (%s) (%s)", INDOORUNIT, unitName)).build();
 
                     thingDiscovered(discoveryResult);
-                    logger.debug("Discovered a onecta indoorunit thing with ID '{}'", unitId);
+                    logger.info("Discovered a onecta indoorunit thing with ID '{}' '{}'", unitId, unitName);
+                    bridgeHandler.getThing().setProperty(PROPERTY_GW_DISCOVERED + " Indoorunit (" + unitName + ")",
+                            unitId);
 
                 }
             }
