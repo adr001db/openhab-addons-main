@@ -24,7 +24,7 @@ Once the bridge is set up and connected to the Daikin cloud it will receive all 
 Based on this information it will recognize the different units. 
 All recognized units end up in the Inbox, are listed in the logging and in the UI they are shown in the thing properties.<br>
 Things that can be discovered are:
-- Daikin Onecta Unit(...)<br>Is the thing to control the unit.
+- Daikin Onecta device (...)<br>Is the thing to control the unit.
 - Daikin Onecta (Gateway)<br>Is the thing for info about the network controler.
 - Daikin Onecta (IndoorUnit)<br>Is the thing for info about the indoor unit.
 - Daikin Onecta (DomesticHotWaterTank)<br> Is the thing to control the Hot water tank. 
@@ -49,7 +49,7 @@ Things that can be discovered are:
 | Name            | Type    | Description                                                                                             | Default | Required | Advanced |
 |-----------------|---------|---------------------------------------------------------------------------------------------------------|---------|----------|----------|
 | `unitID`        | text    | UID Unique Identifier. <br>If this thing is created in a thing-file this UIT can be found in the logging | N/A     | yes      | no       |
-| `refreshDelay`  | integer | Refresh Delay in sec. <br>Only available for thing 'unit' and 'DomesticHotWaterTank'                    | 15      | yes      | no       |
+| `refreshDelay`  | integer | Refresh Delay in sec. <br>Only available for thing 'device' and 'DomesticHotWaterTank'                    | 15      | yes      | no       |
 Explanation Refresh Delay: <br>
 If a command is sent from the binding to OnectaCloud, it needs time to be processed by Daikin. 
 This can cause items to flip-flop. <br>For example: You switch a Unit 'On' with the binding. 
@@ -62,10 +62,7 @@ Other items will be updated during this time with a data refresh
 
 ## Channels
 
-_Here you should provide information about available channel types, what their meaning is and how they can be used._
-
-_Note that it is planned to generate some part of this based on the XML files within ```src/main/resources/OH-INF/thing``` of your binding._
-
+### Unit
 | Channel | Type   | Read/Write | Description                 |
 |---------|--------|------------|-----------------------------|
 | control | Switch | RW         | This is the control channel |

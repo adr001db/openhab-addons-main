@@ -549,7 +549,7 @@ public class OnectaDeviceHandler extends BaseThingHandler {
     private State getEnergyCoolingCurrentYear() {
         double total = 0;
         try {
-            for (int i = 12; i < 23; i++) {
+            for (int i = 12; i <= 23; i++) {
                 if (dataTransService.getConsumptionCoolingMonth()[i] != null) {
                     total += dataTransService.getConsumptionCoolingMonth()[i];
                 }
@@ -563,7 +563,7 @@ public class OnectaDeviceHandler extends BaseThingHandler {
     private State getEnergyHeatingCurrentYear() {
         double total = 0;
         try {
-            for (int i = 12; i < 23; i++) {
+            for (int i = 12; i <= 23; i++) {
                 if (dataTransService.getConsumptionHeatingMonth()[i] != null) {
                     total += dataTransService.getConsumptionHeatingMonth()[i];
                 }
