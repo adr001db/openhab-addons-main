@@ -69,10 +69,6 @@ Other items will be updated during this time with a data refresh
 
 ## Full Example
 
-_Provide a full usage example based on textual configuration files._
-_*.things, *.items examples are mandatory as textual configuration is well used by many users._
-_*.sitemap examples are optional._
-
 ### Thing Configuration
 
 ```java
@@ -83,7 +79,8 @@ Bridge onecta:account:bridge "Onecta Bridge" [userId="aaaaa@bbbbbbb.xx",password
         Thing indoorUnit livingRoom "Onecta Woonkamer living room" [unitID="80100dc5-a289-47c1-bbdb-31feda0000000", refreshDelay=15]
         }
 ```
-### Item Configuration
+
+### Item Configuration device
 
 ```java
 Switch               Power              "Power for the AC unit"      <switch>      ["Point"] {channel="onecta:device:bridge:livingroom:basic#power"}
@@ -100,7 +97,7 @@ String               OperationMode      "Operation mode"                        
 String               FanSpeed           "Fan Speed"                  <fan>         ["Point"] {channel="onecta:device:bridge:livingroom:basic#fanspeed"}
 String               FanDirHor          "Fan Swing Horizontal"       <f7:arrow_right_arrow_left_circle>["Point"] {channel="onecta:device:bridge:livingroom:basic#fandirhor"}
 String               FanDirVer          "Fan Swing Vertical"         <f7:arrow_up_arrow_down_circle>   ["Point"] {channel="onecta:device:bridge:livingroom:basic#fandirver"}
-String               FanDir             "Fan Direction"              <f7:view_3d>  ["Point"] {channel="onecta:device:bridge:livingroom:basic#fandir"} 
+String               FanDir             "Fan Direction"              <f7:view_3d>  ["Point"] {channel="onecta:device:bridge:livingroom:basic#fandir"}
 
 Switch               Ecomode            "Ecomode"                  <switch>        ["Point"] {channel="onecta:device:bridge:livingroom:basic#economode"}
 Switch               Streamer           "Streamer mode"            <switch>        ["Point"] {channel="onecta:device:bridge:livingroom:basic#streamer"}
@@ -117,6 +114,11 @@ Number      DemandControlFixedValue     "Demand Control (fixed)"                
 Number      DemandControlFixedMinValue  "Demand Control fixed Min value"           ["Point"] {channel="onecta:device:bridge:livingroom:demandcontrol#demandcontrolfixedminvalue"}
 Number      DemandControlFixedMaxValue  "Demand Control fixed Max value"           ["Point"] {channel="onecta:device:bridge:livingroom:demandcontrol#demandcontrolfixedmaxvalue"}
 Number      DemandControlFixedStepValue "Demand Control fixed step value"          ["Point"] {channel="onecta:device:bridge:livingroom:demandcontrol#demandcontrolfixedstepvalue"}
+
+Number:Energy   EnergyCoolingCurrentYear "The energy usage for cooling current year total" <Energy> ["Point"] {channel="onecta:device:bridge:livingroom:consumptionDataCooling#energycoolingcurrentyear"}
+Number:Energy   EnergyCoolingCurrentDay  "The energy usage for cooling current day total"  <Energy> ["Point"] {channel="onecta:device:bridge:livingroom:consumptionDataCooling#energycoolingcurrentday"}
+Number:Energy   EnergyHeatingCurrentYear "The energy usage for heating current year total" <Energy> ["Point"] {channel="onecta:device:bridge:livingroom:consumptionDataHeating#energyheatingcurrentyear"}
+Number:Energy   EnergyHeatingCurrentDay  "The energy usage for heating current day total"  <Energy> ["Point"] {channel="onecta:device:bridge:livingroom:consumptionDataHeating#energyheatingcurrentday"}
 
 Number:Energy   EnergyCoolingDay0 "Energy Cooling yesterday (00:00 - 02:00)"  <Energy> ["Point"] {channel="onecta:device:bridge:livingroom:consumptionDataCooling#energycoolingday-0"}
 Number:Energy   EnergyCoolingDay1 "Energy Cooling yesterday (02:00 - 04:00)"  <Energy> ["Point"] {channel="onecta:device:bridge:livingroom:consumptionDataCooling#energycoolingday-1"}
@@ -248,6 +250,60 @@ Number:Energy   EnergyHeatingMonth21 "Energy Heating current year October"    <E
 Number:Energy   EnergyHeatingMonth22 "Energy Heating current year November"   <Energy> ["Point"] {channel="onecta:device:bridge:livingroom:consumptionDataHeating#energyheatingmonth-22"}
 Number:Energy   EnergyHeatingMonth23 "Energy Heating current year December"   <Energy> ["Point"] {channel="onecta:device:bridge:livingroom:consumptionDataHeating#energyheatingmonth-23"}
 
+```
+
+### Item Configuration gateway
+
+```java
+Switch        DaylightSavingTime      "Daylight saving time enabled" <switch>            ["Point"] {channel="onecta:gateway:bridge:livingroom:basic#daylightsavingtimeenabled", readOnly="true"}
+Switch        FirmwareUpdateSupported "Is firmware update supported" <switch>            ["Point"] {channel="onecta:gateway:bridge:livingroom:basic#isfirmwareupdatesupported", readOnly="true"}
+String        FirmwaweVersion         "firmware version"                                 ["Point"] {channel="onecta:gateway:bridge:livingroom:basic#firmwareversion", readOnly="true"}
+Switch        IsInErrorState          "Is in error state"            <switch>            ["Point"] {channel="onecta:gateway:bridge:livingroom:basic#isinerrorstate", readOnly="true"}
+Switch        LedEnabled              "Led enabled      "            <switch>            ["Point"] {channel="onecta:gateway:bridge:livingroom:basic#ledenabled", readOnly="true"}
+String        RegionCode              "Region code"                                      ["Point"] {channel="onecta:gateway:bridge:livingroom:basic#regioncode", readOnly="true"}
+String        Serialnumber            "Serialnumber"                                     ["Point"] {channel="onecta:gateway:bridge:livingroom:basic#serialnumber"  , readOnly="true"}
+String        SSID                    "SSID  "                       <network>           ["Point"] {channel="onecta:gateway:bridge:livingroom:basic#ssid", readOnly="true"}
+String        TimeZone                "Time zone"                                        ["Point"] {channel="onecta:gateway:bridge:livingroom:basic#timezone", readOnly="true"}
+String        WiFiConnectionSSID      "WiFi Connection SSID"         <network>           ["Point"] {channel="onecta:gateway:bridge:livingroom:basic#wificonnectionssid", readOnly="true"}
+Number        WifiConnectionStrength  "Wifi connection strength"     <QualityOfService>  ["Point"] {channel="onecta:gateway:bridge:livingroom:basic#wificonnectionpower", readOnly="true"}
+```
+### Item Configuration hotwatertank
+
+```java
+Switch        Power                     "Power for the AC unit"    <switch>         ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#power"}
+Switch        IsInErrorState            "Is in error state"        <switch>         ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#isinerrorstate", readOnly="true"}
+Switch        IsInWarningState          "Is in warning state"      <switch>         ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#isinwarningstate", readOnly="true"}
+Switch        IsInInstallerState        "Is in installer state"    <switch>         ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#isininstallerstate", readOnly="true"}
+Switch        IsInEmergencyState        "Is in imergency state"    <switch>         ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#isinemergencystate", readOnly="true"}
+Switch        IsHolidayModeActive       "Is holiday mode active"   <switch>         ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#isholidaymodeactive", readOnly="true"}
+Switch        PowerFulmode              "Powerful mode"            <switch>         ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#powerfulmode", readOnly="true"}
+String        HeatupMode                "Heatup mode"                               ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#heatupmode", readOnly="true"}
+
+String               ErrorCode          "Error code"                                ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#errorcode", readOnly="true"}
+String               OperationMode      "Operation mode"                            ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#operationmode"}
+String               SetPointMode       "Setpoint mode"                             ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#setpointmode"}
+
+Number:Temperature   SetPoint           "SetTemp [%.1f °C]"          <Temperature>  ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#settemp"}
+Number:Temperature   SetPointMin        "SetTempMin [%.1f °C]"       <Temperature>  ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#settempmin", readOnly="true"}
+Number:Temperature   SetPointMax        "SetTempMax [%.1f °C]"       <Temperature>  ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#settempmax", readOnly="true"}
+Number:Temperature   SetPointStep       "SetTempStep [%.1f °C]"      <Temperature>  ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#settempstep", readOnly="true"}
+
+Number:Temperature   TankTemperature   "Tank temperature [%.1f °C]" <Temperature> ["Point"] {channel="onecta:domesticHotWaterTank:bridge:livingroom:basic#tanktemperature" , readOnly="true"}
+```
+
+### Item Configuration Indoorunit
+
+```java
+String              ModelInformation      "Model information"                                  ["Point"] {channel="onecta:indoorUnit:bridge:livingroom:basic#modelinfo", readOnly="true"}
+String              SoftwareVersion       "Software version"                                   ["Point"] {channel="onecta:indoorUnit:bridge:livingroom:basic#softwareversion", readOnly="true"}
+String              EepromVersion         "Eeprom version"                                     ["Point"] {channel="onecta:indoorUnit:bridge:livingroom:basic#eepromversion", readOnly="true"}
+
+Switch              DrykeepSetting        "Dry keep setting"                    <switch>       ["Point"] {channel="onecta:indoorUnit:bridge:livingroom:basic#isdrykeepsetting", readOnly="true"}
+Number:Temperature  DeltaDvalue           "DeltaD temperature [%.1f °C]"        <Temperature>  ["Point"] {channel="onecta:indoorUnit:bridge:livingroom:basic#deltadvalue"}
+Number:Frequency    FanMotorratationSpeed "Fanmotor rotation speed [%.1f RPM]"  <Temperature>  ["Point"] {channel="onecta:indoorUnit:bridge:livingroom:basic#fanmotorratationspeed", readOnly="true"}
+
+Number:Temperature  HeatExchangerTemp     "Heatexchanger temperature [%.1f °C]" <Temperature>  ["Point"] {channel="onecta:indoorUnit:bridge:livingroom:basic#heatexchangertemp", readOnly="true"}
+Number:Temperature  SuctionTemp           "Suction temperature [%.1f °C]"       <Temperature>  ["Point"] {channel="onecta:indoorUnit:bridge:livingroom:basic#suctiontemp", readOnly="true"}
 ```
 
 ### Sitemap Configuration
