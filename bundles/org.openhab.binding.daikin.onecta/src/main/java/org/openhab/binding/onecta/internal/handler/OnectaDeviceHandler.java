@@ -15,6 +15,7 @@ package org.openhab.binding.onecta.internal.handler;
 import static org.openhab.binding.onecta.internal.OnectaDeviceConstants.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.concurrent.ScheduledFuture;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
@@ -546,12 +547,19 @@ public class OnectaDeviceHandler extends BaseThingHandler {
         }
     }
 
+    private Boolean isFirst2HourOfYear() {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        return localDateTime.getDayOfYear() == 1 && (localDateTime.getHour() == 0 || localDateTime.getHour() == 1);
+    }
+
     private State getEnergyCoolingCurrentYear() {
         double total = 0;
         try {
-            for (int i = 12; i <= 23; i++) {
-                if (dataTransService.getConsumptionCoolingMonth()[i] != null) {
-                    total += dataTransService.getConsumptionCoolingMonth()[i];
+            if (!isFirst2HourOfYear()) {
+                for (int i = 12; i <= 23; i++) {
+                    if (dataTransService.getConsumptionCoolingMonth()[i] != null) {
+                        total += dataTransService.getConsumptionCoolingMonth()[i];
+                    }
                 }
             }
             return new DecimalType(Math.round(total * 10) / 10D);
@@ -563,9 +571,11 @@ public class OnectaDeviceHandler extends BaseThingHandler {
     private State getEnergyHeatingCurrentYear() {
         double total = 0;
         try {
-            for (int i = 12; i <= 23; i++) {
-                if (dataTransService.getConsumptionHeatingMonth()[i] != null) {
-                    total += dataTransService.getConsumptionHeatingMonth()[i];
+            if (!isFirst2HourOfYear()) {
+                for (int i = 12; i <= 23; i++) {
+                    if (dataTransService.getConsumptionHeatingMonth()[i] != null) {
+                        total += dataTransService.getConsumptionHeatingMonth()[i];
+                    }
                 }
             }
             return new DecimalType(Math.round(total * 10) / 10D);
