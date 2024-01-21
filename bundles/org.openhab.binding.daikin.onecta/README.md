@@ -46,10 +46,11 @@ Things that can be discovered are:
 
 ## Discovered Things Configuration
 
-| Name            | Type    | Description                                                                                             | Default | Required | Advanced |
-|-----------------|---------|---------------------------------------------------------------------------------------------------------|---------|----------|----------|
-| `unitID`        | text    | UID Unique Identifier. <br>If this thing is created in a thing-file this UIT can be found in the logging | N/A     | yes      | no       |
-| `refreshDelay`  | integer | Refresh Delay in sec. <br>Only available for thing 'device' and 'DomesticHotWaterTank'                    | 15      | yes      | no       |
+| Name            | Type    | Description                                                                                              | Default | Required | Advanced |
+|-----------------|---------|----------------------------------------------------------------------------------------------------------|---------|----------|----------|
+| `unitID`        | text    | UID Unique Identifier. <br>If this thing is created in a thing-file this UID can be found in the logging | N/A     | yes      | no       |
+| `refreshDelay`  | integer | Refresh Delay in sec. <br>Only available for thing 'device' and 'DomesticHotWaterTank'                   | 15      | yes      | no       |
+
 Explanation Refresh Delay: <br>
 If a command is sent from the binding to OnectaCloud, it needs time to be processed by Daikin. 
 This can cause items to flip-flop. <br>For example: You switch a Unit 'On' with the binding. 
@@ -73,10 +74,10 @@ Other items will be updated during this time with a data refresh
 
 ```java
 Bridge onecta:account:bridge "Onecta Bridge" [userId="aaaaa@bbbbbbb.xx",password="***************", refreshInterval=5, rawdataLogging=false] {
-        Thing device livingRoom "Onecta living room Unit" [unitID="80100dc5-a289-47c1-bbdb-31feda0000000", refreshDelay=15]
-        Thing gateway livingRoom "Onecta living room Gateway" [unitID="80100dc5-a289-47c1-bbdb-31feda0000000", refreshDelay=15]
-        Thing domesticHotWaterTank livingRoom "Onecta living room Watertank" [unitID="80100dc5-a289-47c1-bbdb-31feda0000000", refreshDelay=15]
-        Thing indoorUnit livingRoom "Onecta Woonkamer living room" [unitID="80100dc5-a289-47c1-bbdb-31feda0000000", refreshDelay=15]
+        Thing device livingRoom "Onecta living room Unit" [unitID="80100dc5-a289-47c1-bbdb-****************", refreshDelay=15]
+        Thing gateway livingRoom "Onecta living room Gateway" [unitID="80100dc5-a289-47c1-bbdb-****************", refreshDelay=15]
+        Thing domesticHotWaterTank livingRoom "Onecta living room Watertank" [unitID="80100dc5-a289-47c1-bbdb-****************", refreshDelay=15]
+        Thing indoorUnit livingRoom "Onecta Woonkamer living room" [unitID="80100dc5-a289-47c1-bbdb-****************", refreshDelay=15]
         }
 ```
 
