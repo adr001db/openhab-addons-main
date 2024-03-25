@@ -20,7 +20,6 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.onecta.internal.OnectaConfiguration;
 import org.openhab.binding.onecta.internal.api.Enums;
-import org.openhab.binding.onecta.internal.service.ChannelsRefreshDelay;
 import org.openhab.binding.onecta.internal.service.DataTransportService;
 import org.openhab.core.library.types.*;
 import org.openhab.core.thing.ChannelUID;
@@ -50,7 +49,7 @@ public class OnectaGatewayHandler extends BaseThingHandler {
     private @Nullable ScheduledFuture<?> pollingJob;
 
     private final DataTransportService dataTransService;
-    private @Nullable ChannelsRefreshDelay channelsRefreshDelay;
+    // private @Nullable ChannelsRefreshDelay channelsRefreshDelay;
 
     public OnectaGatewayHandler(Thing thing) {
         super(thing);
@@ -62,7 +61,7 @@ public class OnectaGatewayHandler extends BaseThingHandler {
     public void handleCommand(ChannelUID channelUID, Command command) {
 
         try {
-            channelsRefreshDelay.add(channelUID.getId());
+            // channelsRefreshDelay.add(channelUID.getId());
 
             updateStatus(ThingStatus.ONLINE);
         } catch (Exception ex) {
@@ -74,8 +73,8 @@ public class OnectaGatewayHandler extends BaseThingHandler {
     @Override
     public void initialize() {
         config = getConfigAs(OnectaConfiguration.class);
-        channelsRefreshDelay = new ChannelsRefreshDelay(
-                Long.parseLong(thing.getConfiguration().get("refreshDelay").toString()) * 1000);
+        // channelsRefreshDelay = new ChannelsRefreshDelay(
+        // Long.parseLong(thing.getConfiguration().get("refreshDelay").toString()) * 1000);
         // DataTransportService dataTransService = new DataTransportService();
         // TODO: Initialize the handler.
         // The framework requires you to return from this method quickly, i.e. any network access must be done in
