@@ -1659,6 +1659,7 @@
 		<item-type>String</item-type>
 		<label>Fan Speed</label>
 		<description>Current fan speed setting of the AC unit</description>
+		<category>fan</category>
 		<state>
 			<options>
 				<option value="AUTO">Auto</option>
@@ -1684,6 +1685,7 @@
 		<item-type>String</item-type>
 		<label>Fan Swing Horizontal</label>
 		<description>Current fan horizontal swing setting of the AC unit</description>
+		<category>f7:arrow_right_arrow_left_circle</category>
 		<state>
 			<options>
 				<option value="STOPPED">Stopped</option>
@@ -1696,6 +1698,7 @@
 		<item-type>String</item-type>
 		<label>Fan Swing Vertical</label>
 		<description>Current fan vertical swing setting of the AC unit</description>
+		<category>f7:arrow_up_arrow_down_circle</category>
 		<state>
 			<options>
 				<option value="STOPPED">Stopped</option>
@@ -1709,6 +1712,7 @@
 		<item-type>String</item-type>
 		<label>Fan Swing</label>
 		<description>Current fan swing setting of the AC unit</description>
+		<category>f7:view_3d</category>
 		<state>
 			<options>
 				<option value="STOPPED">Stopped</option>
@@ -1725,17 +1729,20 @@
 		<item-type>Switch</item-type>
 		<label>Streamer</label>
 		<description>Streamer Mode</description>
+		<category>Switch</category>
 	</channel-type>
 	<channel-type id="acunit-powerfulmode">
 		<item-type>Switch</item-type>
 		<label>Powerful mode</label>
 		<description>Powerful mode</description>
+		<category>Switch</category>
 	</channel-type>
 
 	<channel-type id="acunit-holidaymode">
 		<item-type>Switch</item-type>
 		<label>Holiday</label>
 		<description>Holiday Mode (Not updatable)</description>
+		<category>Switch</category>
 	</channel-type>
 
 	<channel-type id="acunit-demandcontrol">
@@ -1752,11 +1759,11 @@
 		</state>
 	</channel-type>
 	<channel-type id="acunit-demandcontrolfixedvalue">
-		<item-type>Number:Dimensionless</item-type>
-		<label>Demand Control fixed Value (%)</label>
-		<description>Value of fixed demand control</description>
+		<item-type>Number</item-type>
+		<label>Demand Control fixed Value</label>
+		<description>Value of fixed demand control. Only available when Demand Control is set to FIXED</description>
 		<category>Demand Control</category>
-		<state pattern="%d "/>
+		<state pattern="%d %%"/>
 	</channel-type>
 	<channel-type id="acunit-demandcontrolfixedstepvalue">
 		<item-type>Number:Dimensionless</item-type>
