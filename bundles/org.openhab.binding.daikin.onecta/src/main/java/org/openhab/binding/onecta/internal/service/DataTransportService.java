@@ -196,7 +196,7 @@ public class DataTransportService {
 
     public void setCurrentTemperatureSet(float value) {
         if (value <= getCurrentTemperatureSetMax().floatValue())
-            OnectaConnectionClient.setCurrentTemperatureSet(unitId, managementPointType, getCurrentOperationMode(),
+            OnectaConnectionClient.setCurrentTemperatureRoomSet(unitId, managementPointType, getCurrentOperationMode(),
                     value);
     }
 
@@ -238,9 +238,9 @@ public class DataTransportService {
     }
 
     public void setCurrentTankTemperatureSet(float value) {
-        if (value <= getCurrentTemperatureSetMax().floatValue())
-            OnectaConnectionClient.setCurrentTemperatureSet(unitId, managementPointType, getCurrentOperationMode(),
-                    value);
+        if (value <= getCurrentTankTemperatureSetMax().floatValue())
+            OnectaConnectionClient.setCurrentTemperatureHotWaterSet(unitId, managementPointType,
+                    getCurrentOperationMode(), value);
     }
 
     public Number getCurrentTankTemperatureSetMin() {

@@ -211,10 +211,16 @@ public class OnectaConnectionClient {
                 OnectaProperties.getOperationModeCommand(operationMode));
     }
 
-    public static void setCurrentTemperatureSet(String unitId, Enums.ManagementPoint managementPointType,
+    public static void setCurrentTemperatureRoomSet(String unitId, Enums.ManagementPoint managementPointType,
             Enums.OperationMode currentMode, float value) {
         doBearerRequestPatch(OnectaProperties.getTemperatureControlUrl(unitId, managementPointType),
-                OnectaProperties.getTemperatureControlCommand(value, currentMode));
+                OnectaProperties.getTemperatureRoomControlCommand(value, currentMode));
+    }
+
+    public static void setCurrentTemperatureHotWaterSet(String unitId, Enums.ManagementPoint managementPointType,
+            Enums.OperationMode currentMode, float value) {
+        doBearerRequestPatch(OnectaProperties.getTemperatureControlUrl(unitId, managementPointType),
+                OnectaProperties.getTemperatureHotWaterControlCommand(value, currentMode));
     }
 
     public static void setFanSpeed(String unitId, Enums.ManagementPoint managementPointType,

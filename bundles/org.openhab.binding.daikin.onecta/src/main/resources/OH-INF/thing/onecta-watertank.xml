@@ -13,7 +13,7 @@
 		<description>Diakin Onecta Domestic HotWater Tank</description>
 
 		<channel-groups>
-			<channel-group id="hwtbasic" typeId="basicGroupWaterTank"/>
+			<channel-group id="basic" typeId="basicGroupWaterTank"/>
 		</channel-groups>
 
 		<properties>

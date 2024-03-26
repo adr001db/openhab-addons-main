@@ -36,7 +36,8 @@ public class OnectaProperties {
     private static final String COMMAND_TARGETTEMPERATURECONTROL = "targetTemperature";
     private static final String COMMAND_STREAMERMODE = "streamerMode";
     private static final String COMMAND_HOLIDAYMODE = "holidayMode";
-    private static final String COMMAND_SUBPATH_TEMPERATURECONTROL = "/operationModes/%s/setpoints/roomTemperature";
+    private static final String COMMAND_SUBPATH_TEMPERATURECONTROL_ROOM = "/operationModes/%s/setpoints/roomTemperature";
+    private static final String COMMAND_SUBPATH_TEMPERATURECONTROL_HOTWATERTANK = "/operationModes/%s/setpoints/domesticHotWaterTemperature";
     private static final String COMMAND_FANSPEED_CONTROL = "fanControl";
     private static final String COMMAND_DEMAND_CONTROL = "demandControl";
     private static final String COMMAND_SUBPATH_FANSPEED = "/operationModes/%s/fanSpeed/currentMode";
@@ -90,8 +91,13 @@ public class OnectaProperties {
                 COMMAND_TEMPERATURECONTROL);
     }
 
-    public static CommandFloat getTemperatureControlCommand(float value, Enums.OperationMode currentMode) {
-        return new CommandFloat(value, String.format(COMMAND_SUBPATH_TEMPERATURECONTROL, currentMode.getValue()));
+    public static CommandFloat getTemperatureRoomControlCommand(float value, Enums.OperationMode currentMode) {
+        return new CommandFloat(value, String.format(COMMAND_SUBPATH_TEMPERATURECONTROL_ROOM, currentMode.getValue()));
+    }
+
+    public static CommandFloat getTemperatureHotWaterControlCommand(float value, Enums.OperationMode currentMode) {
+        return new CommandFloat(value,
+                String.format(COMMAND_SUBPATH_TEMPERATURECONTROL_HOTWATERTANK, currentMode.getValue()));
     }
 
     public static String getTFanControlUrl(String unitId, Enums.ManagementPoint managementPointType) {
