@@ -189,26 +189,23 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
 
         for (Thing t : things) {
             // BaseThingHandler handler;
-            if (t.getThingTypeUID().equals(DEVICE_THING_TYPE)) {
-                OnectaDeviceHandler onectaDeviceHandler = (OnectaDeviceHandler) t.getHandler();
-                onectaDeviceHandler.refreshDevice();
-            } else if (t.getThingTypeUID().equals(GATEWAY_THING_TYPE)) {
-                OnectaGatewayHandler onectaGatewayHandler = (OnectaGatewayHandler) t.getHandler();
-                onectaGatewayHandler.refreshDevice();
-            } else if (t.getThingTypeUID().equals(WATERTANK_THING_TYPE)) {
-                OnectaWaterTankHandler onectaWaterTankHandler = (OnectaWaterTankHandler) t.getHandler();
-                onectaWaterTankHandler.refreshDevice();
-            } else if (t.getThingTypeUID().equals(INDOORUNIT_THING_TYPE)) {
-                OnectaIndoorUnitHandler onectaIndoorUnitHandler = (OnectaIndoorUnitHandler) t.getHandler();
-                onectaIndoorUnitHandler.refreshDevice();
-            } else
-                continue;
+            if (t.getStatus() == ThingStatus.ONLINE) {
 
-            // if (handler == null) {
-            // logger.trace("no handler for thing: {}", t.getUID());
-            // continue;
-            // }
-
+                if (t.getThingTypeUID().equals(DEVICE_THING_TYPE)) {
+                    OnectaDeviceHandler onectaDeviceHandler = (OnectaDeviceHandler) t.getHandler();
+                    onectaDeviceHandler.refreshDevice();
+                } else if (t.getThingTypeUID().equals(GATEWAY_THING_TYPE)) {
+                    OnectaGatewayHandler onectaGatewayHandler = (OnectaGatewayHandler) t.getHandler();
+                    onectaGatewayHandler.refreshDevice();
+                } else if (t.getThingTypeUID().equals(WATERTANK_THING_TYPE)) {
+                    OnectaWaterTankHandler onectaWaterTankHandler = (OnectaWaterTankHandler) t.getHandler();
+                    onectaWaterTankHandler.refreshDevice();
+                } else if (t.getThingTypeUID().equals(INDOORUNIT_THING_TYPE)) {
+                    OnectaIndoorUnitHandler onectaIndoorUnitHandler = (OnectaIndoorUnitHandler) t.getHandler();
+                    onectaIndoorUnitHandler.refreshDevice();
+                } else
+                    continue;
+            }
         }
     }
 

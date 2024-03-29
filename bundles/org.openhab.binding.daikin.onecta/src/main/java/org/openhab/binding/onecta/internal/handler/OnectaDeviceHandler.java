@@ -136,6 +136,18 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                         dataTransService.setTargetTemperatur(((QuantityType<?>) command).intValue());
                     }
                     break;
+                case CHANNEL_AC_SETPOINT_LEAVINGWATER_OFFSET:
+                    if (command instanceof QuantityType) {
+                        dataTransService.setSetpointLeavingWaterOffset(((QuantityType<?>) command).intValue(),
+                                Enums.OperationMode.HEAT);
+                    }
+                    break;
+                case CHANNEL_AC_SETPOINT_LEAVINGWATER_TEMP:
+                    if (command instanceof QuantityType) {
+                        dataTransService.setSetpointLeavingWaterTemperature(((QuantityType<?>) command).intValue(),
+                                Enums.OperationMode.COLD);
+                    }
+                    break;
             }
 
             updateStatus(ThingStatus.ONLINE);
@@ -232,6 +244,11 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                 updateState(CHANNEL_AC_TARGETTEMPMAX, getTargetTemperaturMax());
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_TARGETTEMPSTEP))
                 updateState(CHANNEL_AC_TARGETTEMPSTEP, getTargetTemperaturStep());
+
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_SETPOINT_LEAVINGWATER_OFFSET))
+                updateState(CHANNEL_AC_SETPOINT_LEAVINGWATER_OFFSET, getSetpointLeavingWaterOffset());
+            if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_SETPOINT_LEAVINGWATER_TEMP))
+                updateState(CHANNEL_AC_SETPOINT_LEAVINGWATER_TEMP, getSetpointLeavingWaterTemperature());
 
             // Fan
             if (channelsRefreshDelay.isDelayPassed(CHANNEL_AC_FANMOVEMENT))
@@ -337,6 +354,22 @@ public class OnectaDeviceHandler extends BaseThingHandler {
     private State getCurrentTemperatureSet() {
         try {
             return new DecimalType(dataTransService.getCurrentTemperatureSet());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getSetpointLeavingWaterTemperature() {
+        try {
+            return new DecimalType(dataTransService.getSetpointLeavingWaterTemperature());
+        } catch (Exception e) {
+            return UnDefType.UNDEF;
+        }
+    }
+
+    private State getSetpointLeavingWaterOffset() {
+        try {
+            return new DecimalType(dataTransService.getSetpointLeavingWaterOffset());
         } catch (Exception e) {
             return UnDefType.UNDEF;
         }

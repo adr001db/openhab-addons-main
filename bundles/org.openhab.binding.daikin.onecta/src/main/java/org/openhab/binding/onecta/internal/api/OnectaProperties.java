@@ -38,6 +38,8 @@ public class OnectaProperties {
     private static final String COMMAND_HOLIDAYMODE = "holidayMode";
     private static final String COMMAND_SUBPATH_TEMPERATURECONTROL_ROOM = "/operationModes/%s/setpoints/roomTemperature";
     private static final String COMMAND_SUBPATH_TEMPERATURECONTROL_HOTWATERTANK = "/operationModes/%s/setpoints/domesticHotWaterTemperature";
+    private static final String COMMAND_SUBPATH_TEMPERATURECONTROL_LEAVINGWATEROFFSET = "/operationModes/%s/setpoints/leavingWaterOffset";
+    private static final String COMMAND_SUBPATH_TEMPERATURECONTROL_LEAVINGWATERTEMP = "/operationModes/%s/setpoints/leavingWaterTemperature";
     private static final String COMMAND_FANSPEED_CONTROL = "fanControl";
     private static final String COMMAND_DEMAND_CONTROL = "demandControl";
     private static final String COMMAND_SUBPATH_FANSPEED = "/operationModes/%s/fanSpeed/currentMode";
@@ -93,6 +95,16 @@ public class OnectaProperties {
 
     public static CommandFloat getTemperatureRoomControlCommand(float value, Enums.OperationMode currentMode) {
         return new CommandFloat(value, String.format(COMMAND_SUBPATH_TEMPERATURECONTROL_ROOM, currentMode.getValue()));
+    }
+
+    public static CommandFloat getSetpointLeavingWaterOffsetCommand(float value, Enums.OperationMode currentMode) {
+        return new CommandFloat(value,
+                String.format(COMMAND_SUBPATH_TEMPERATURECONTROL_LEAVINGWATEROFFSET, currentMode.getValue()));
+    }
+
+    public static CommandFloat getSetpointLeavingWaterTemperatureCommand(float value, Enums.OperationMode currentMode) {
+        return new CommandFloat(value,
+                String.format(COMMAND_SUBPATH_TEMPERATURECONTROL_LEAVINGWATERTEMP, currentMode.getValue()));
     }
 
     public static CommandFloat getTemperatureHotWaterControlCommand(float value, Enums.OperationMode currentMode) {

@@ -273,6 +273,32 @@ public class DataTransportService {
         }
     }
 
+    public Number getSetpointLeavingWaterTemperature() {
+        try {
+            return getManagementPoint(this.managementPointType).getTemperatureControl().getValue().getOperationModes()
+                    .getOperationMode(Enums.OperationMode.COLD).getSetpoints().getLeavingWaterTemperature().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void setSetpointLeavingWaterTemperature(float value, Enums.OperationMode operationMode) {
+        OnectaConnectionClient.setSetpointLeavingWaterTemperature(unitId, managementPointType, operationMode, value);
+    }
+
+    public Number getSetpointLeavingWaterOffset() {
+        try {
+            return getManagementPoint(this.managementPointType).getTemperatureControl().getValue().getOperationModes()
+                    .getOperationMode(Enums.OperationMode.HEAT).getSetpoints().getLeavingWaterOffset().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void setSetpointLeavingWaterOffset(float value, Enums.OperationMode operationMode) {
+        OnectaConnectionClient.setSetpointLeavingWaterOffset(unitId, managementPointType, operationMode, value);
+    }
+
     public Number getIndoorTemperature() {
         try {
             return getManagementPoint(this.managementPointType).getSensoryData().getValue().getRoomTemperature()

@@ -322,4 +322,20 @@ public class OnectaConnectionClient {
         logger.debug(String.format("setRefreshToken: %s, %s, %s", unitId, managementPointType.getValue(), value));
         doBearerRequestPatch(getTargetTemperaturUrl(unitId, managementPointType), getTargetTemperaturCommand(value));
     }
+
+    public static void setSetpointLeavingWaterOffset(String unitId, Enums.ManagementPoint managementPointType,
+            Enums.OperationMode operationMode, Float value) {
+        logger.debug(String.format("setRefreshToken: %s, %s, %s, %s", unitId, managementPointType.getValue(),
+                operationMode, value));
+        doBearerRequestPatch(OnectaProperties.getTemperatureControlUrl(unitId, managementPointType),
+                OnectaProperties.getSetpointLeavingWaterOffsetCommand(value, operationMode));
+    }
+
+    public static void setSetpointLeavingWaterTemperature(String unitId, Enums.ManagementPoint managementPointType,
+            Enums.OperationMode operationMode, Float value) {
+        logger.debug(String.format("setRefreshToken: %s, %s, %s, %s", unitId, managementPointType.getValue(),
+                operationMode, value));
+        doBearerRequestPatch(OnectaProperties.getTemperatureControlUrl(unitId, managementPointType),
+                OnectaProperties.getSetpointLeavingWaterTemperatureCommand(value, operationMode));
+    }
 }
