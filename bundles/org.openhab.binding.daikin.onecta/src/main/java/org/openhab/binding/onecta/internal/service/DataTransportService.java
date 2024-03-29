@@ -196,7 +196,7 @@ public class DataTransportService {
 
     public void setCurrentTemperatureSet(float value) {
         if (value <= getCurrentTemperatureSetMax().floatValue())
-            OnectaConnectionClient.setCurrentTemperatureSet(unitId, managementPointType, getCurrentOperationMode(),
+            OnectaConnectionClient.setCurrentTemperatureRoomSet(unitId, managementPointType, getCurrentOperationMode(),
                     value);
     }
 
@@ -238,9 +238,9 @@ public class DataTransportService {
     }
 
     public void setCurrentTankTemperatureSet(float value) {
-        if (value <= getCurrentTemperatureSetMax().floatValue())
-            OnectaConnectionClient.setCurrentTemperatureSet(unitId, managementPointType, getCurrentOperationMode(),
-                    value);
+        if (value <= getCurrentTankTemperatureSetMax().floatValue())
+            OnectaConnectionClient.setCurrentTemperatureHotWaterSet(unitId, managementPointType,
+                    getCurrentOperationMode(), value);
     }
 
     public Number getCurrentTankTemperatureSetMin() {
@@ -271,6 +271,32 @@ public class DataTransportService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public Number getSetpointLeavingWaterTemperature() {
+        try {
+            return getManagementPoint(this.managementPointType).getTemperatureControl().getValue().getOperationModes()
+                    .getOperationMode(Enums.OperationMode.COLD).getSetpoints().getLeavingWaterTemperature().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void setSetpointLeavingWaterTemperature(float value, Enums.OperationMode operationMode) {
+        OnectaConnectionClient.setSetpointLeavingWaterTemperature(unitId, managementPointType, operationMode, value);
+    }
+
+    public Number getSetpointLeavingWaterOffset() {
+        try {
+            return getManagementPoint(this.managementPointType).getTemperatureControl().getValue().getOperationModes()
+                    .getOperationMode(Enums.OperationMode.HEAT).getSetpoints().getLeavingWaterOffset().getValue();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void setSetpointLeavingWaterOffset(float value, Enums.OperationMode operationMode) {
+        OnectaConnectionClient.setSetpointLeavingWaterOffset(unitId, managementPointType, operationMode, value);
     }
 
     public Number getIndoorTemperature() {

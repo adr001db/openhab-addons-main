@@ -25,6 +25,7 @@ import org.openhab.binding.onecta.internal.service.ChannelsRefreshDelay;
 import org.openhab.binding.onecta.internal.service.DataTransportService;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.OnOffType;
+import org.openhab.core.library.types.QuantityType;
 import org.openhab.core.library.types.StringType;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
@@ -75,6 +76,11 @@ public class OnectaWaterTankHandler extends BaseThingHandler {
                 case CHANNEL_HWT_POWERFUL_MODE:
                     if (command instanceof OnOffType) {
                         dataTransService.setPowerFulModeOnOff(Enums.OnOff.valueOf(command.toString()));
+                    }
+                    break;
+                case CHANNEL_HWT_SETTEMP:
+                    if (command instanceof QuantityType) {
+                        dataTransService.setCurrentTankTemperatureSet(((QuantityType<?>) command).floatValue());
                     }
                     break;
             }

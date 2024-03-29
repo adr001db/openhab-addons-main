@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class SensoryData {
     @SerializedName("ref")
     private String ref;
-    @SerializedName("settable")
+    @SerializedName(value = "settable", alternate = "")
     private boolean settable;
     @SerializedName("value")
     private SensoryDataValue value;
