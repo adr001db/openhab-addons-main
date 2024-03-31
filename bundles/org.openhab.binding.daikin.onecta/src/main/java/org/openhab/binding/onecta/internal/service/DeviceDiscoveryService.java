@@ -61,7 +61,7 @@ public class DeviceDiscoveryService extends AbstractDiscoveryService {
                 ThingUID thingUID = new ThingUID(DEVICE_THING_TYPE, bridgeUID, unitId);
                 DiscoveryResult discoveryResult = DiscoveryResultBuilder.create(thingUID).withProperties(properties)
                         .withBridge(bridgeHandler.getThing().getUID())
-                        .withLabel(String.format("Daikin Onecta Unit (%s)", unitName)).build();
+                        .withLabel(String.format("Daikin Onecta Unit ClimateControl (%s)", unitName)).build();
 
                 thingDiscovered(discoveryResult);
                 logger.info("Discovered a onecta unit thing with ID '{}' '{}'", unitId, unitName);
