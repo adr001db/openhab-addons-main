@@ -283,8 +283,9 @@ public class DataTransportService {
         }
     }
 
-    public void setSetpointLeavingWaterTemperature(float value, Enums.OperationMode operationMode) {
-        OnectaConnectionClient.setSetpointLeavingWaterTemperature(unitId, getEmbeddedId(), operationMode, value);
+    public void setSetpointLeavingWaterTemperature(float value) {
+        OnectaConnectionClient.setSetpointLeavingWaterTemperature(unitId, getEmbeddedId(), getCurrentOperationMode(),
+                value);
     }
 
     public Number getSetpointLeavingWaterOffset() {
@@ -296,8 +297,8 @@ public class DataTransportService {
         }
     }
 
-    public void setSetpointLeavingWaterOffset(float value, Enums.OperationMode operationMode) {
-        OnectaConnectionClient.setSetpointLeavingWaterOffset(unitId, getEmbeddedId(), operationMode, value);
+    public void setSetpointLeavingWaterOffset(float value) {
+        OnectaConnectionClient.setSetpointLeavingWaterOffset(unitId, getEmbeddedId(), getCurrentOperationMode(), value);
     }
 
     public Number getIndoorTemperature() {

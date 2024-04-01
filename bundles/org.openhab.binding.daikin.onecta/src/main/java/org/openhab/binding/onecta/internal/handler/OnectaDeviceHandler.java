@@ -138,14 +138,12 @@ public class OnectaDeviceHandler extends BaseThingHandler {
                     break;
                 case CHANNEL_AC_SETPOINT_LEAVINGWATER_OFFSET:
                     if (command instanceof QuantityType) {
-                        dataTransService.setSetpointLeavingWaterOffset(((QuantityType<?>) command).intValue(),
-                                Enums.OperationMode.HEAT);
+                        dataTransService.setSetpointLeavingWaterOffset(((QuantityType<?>) command).intValue());
                     }
                     break;
                 case CHANNEL_AC_SETPOINT_LEAVINGWATER_TEMP:
                     if (command instanceof QuantityType) {
-                        dataTransService.setSetpointLeavingWaterTemperature(((QuantityType<?>) command).intValue(),
-                                Enums.OperationMode.COLD);
+                        dataTransService.setSetpointLeavingWaterTemperature(((QuantityType<?>) command).intValue());
                     }
                     break;
             }
