@@ -273,7 +273,6 @@ public class DataTransportService {
         }
     }
 
-    // ToDo Alex
     public Number getSetpointLeavingWaterTemperature() {
         try {
             return getManagementPoint(this.managementPointType).getTemperatureControl().getValue().getOperationModes()

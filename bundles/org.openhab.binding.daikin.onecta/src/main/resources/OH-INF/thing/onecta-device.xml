@@ -1577,10 +1577,10 @@
 
 	<channel-type id="acunit-setleavingWaterOffset">
 		<item-type>Number:Temperature</item-type>
-		<label>SetPoint Leaving water offset</label>
-		<description>SetPoint Leaving water offset </description>
+		<label>SetPoint Leaving water offset.</label>
+		<description>SetPoint Leaving water offset.</description>
 		<category>Temperature</category>
-		<state step="1" pattern="%.1d %unit%" min="-100"/>
+		<state step="1" pattern="%.0f %unit%" min="-100"/>
 	</channel-type>
 
 	<channel-type id="acunit-setleavingWaterTemp">
