@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 
+import javax.ws.rs.core.MediaType;
+
 import org.eclipse.jetty.client.HttpContentResponse;
 import org.eclipse.jetty.client.api.Response;
 import org.eclipse.jetty.client.util.StringContentProvider;
@@ -36,6 +38,10 @@ import com.google.gson.JsonParser;
 public class OnectaConnectionClient {
 
     static private final Logger logger = LoggerFactory.getLogger(OnectaSignInClient.class);
+    public static final String HTTPHEADER_X_API_KEY = "x-api-key";
+    public static final String HTTPHEADER_BEARER = "Bearer %s";
+    public static final String USER_AGENT_VALUE = "Daikin/1.6.1.4681 CFNetwork/1209 Darwin/20.2.0";
+    public static final String HTTPHEADER_X_API_KEY_VALUE = "xw6gvOtBHq5b1pyceadRp6rujSNSZdjx2AqT03iC";
     static private JsonArray rawData = new JsonArray();
     static private Units onectaData = new Units();
 
@@ -47,7 +53,7 @@ public class OnectaConnectionClient {
 
     public static void SetConnectionClient(HttpClientFactory httpClientFactory) {
         // httpClient = httpClientFactory.getCommonHttpClient();
-        onectaSignInClient = new OnectaSignInClient(httpClientFactory);
+        onectaSignInClient = new OnectaSignInClient();
     }
 
     public static void startConnecton(String userId, String password, String refreshToken)
@@ -68,9 +74,9 @@ public class OnectaConnectionClient {
             }
             response = OnectaConfiguration.getHttpClient().newRequest(OnectaProperties.getBaseUrl(""))
                     .method(HttpMethod.GET)
-                    .header(HttpHeader.AUTHORIZATION, String.format("Bearer %s", onectaSignInClient.getToken()))
-                    .header(HttpHeader.USER_AGENT, "Daikin/1.6.1.4681 CFNetwork/1209 Darwin/20.2.0")
-                    .header("x-api-key", "xw6gvOtBHq5b1pyceadRp6rujSNSZdjx2AqT03iC").send();
+                    .header(HttpHeader.AUTHORIZATION, String.format(HTTPHEADER_BEARER, onectaSignInClient.getToken()))
+                    .header(HttpHeader.USER_AGENT, USER_AGENT_VALUE)
+                    .header(HTTPHEADER_X_API_KEY, HTTPHEADER_X_API_KEY_VALUE).send();
 
             if (response.getStatus() == HttpStatus.UNAUTHORIZED_401 && !refreshed) {
                 onectaSignInClient.fetchAccessToken();
@@ -103,10 +109,10 @@ public class OnectaConnectionClient {
                 onectaSignInClient.signIn();
             }
             response = OnectaConfiguration.getHttpClient().newRequest(url).method(HttpMethod.PATCH)
-                    .content(new StringContentProvider(new Gson().toJson(body)), "application/json")
-                    .header(HttpHeader.AUTHORIZATION, String.format("Bearer %s", onectaSignInClient.getToken()))
-                    .header(HttpHeader.USER_AGENT, "Daikin/1.6.1.4681 CFNetwork/1209 Darwin/20.2.0")
-                    .header("x-api-key", "xw6gvOtBHq5b1pyceadRp6rujSNSZdjx2AqT03iC").send();
+                    .content(new StringContentProvider(new Gson().toJson(body)), MediaType.APPLICATION_JSON)
+                    .header(HttpHeader.AUTHORIZATION, String.format(HTTPHEADER_BEARER, onectaSignInClient.getToken()))
+                    .header(HttpHeader.USER_AGENT, USER_AGENT_VALUE)
+                    .header(HTTPHEADER_X_API_KEY, HTTPHEADER_X_API_KEY_VALUE).send();
 
             logger.debug("Request : " + response.getRequest().getURI().toString());
             logger.debug("Body    : " + new Gson().toJson(body));
@@ -211,24 +217,31 @@ public class OnectaConnectionClient {
 
     public static void setCurrentOperationMode(String unitId, Enums.ManagementPoint managementPointType,
             Enums.OperationMode operationMode) {
+        logger.debug(String.format("setCurrentOperationMode : %s, %s, %s", unitId, managementPointType.getValue(),
+                operationMode.getValue()));
         doBearerRequestPatch(OnectaProperties.getOperationModeUrl(unitId, managementPointType),
                 OnectaProperties.getOperationModeCommand(operationMode));
     }
 
     public static void setCurrentTemperatureRoomSet(String unitId, String embeddedId, Enums.OperationMode currentMode,
             float value) {
+        logger.debug(
+                String.format("setCurrentTemperatureRoomSet : %s, %s, %s", unitId, embeddedId, currentMode.getValue()));
         doBearerRequestPatch(OnectaProperties.getTemperatureControlUrl(unitId, embeddedId),
                 OnectaProperties.getTemperatureRoomControlCommand(value, currentMode));
     }
 
     public static void setCurrentTemperatureHotWaterSet(String unitId, String embeddedId,
             Enums.OperationMode currentMode, float value) {
+        logger.debug(String.format("setCurrentTemperatureHotWaterSet : %s, %s, %s", unitId, embeddedId,
+                currentMode.getValue()));
         doBearerRequestPatch(OnectaProperties.getTemperatureControlUrl(unitId, embeddedId),
                 OnectaProperties.getTemperatureHotWaterControlCommand(value, currentMode));
     }
 
     public static void setFanSpeed(String unitId, String embeddedId, Enums.OperationMode currentMode,
             Enums.FanSpeed fanspeed) {
+        logger.debug(String.format("setFanSpeed : %s, %s, %s", unitId, embeddedId, currentMode.getValue()));
         doBearerRequestPatch(OnectaProperties.getTFanControlUrl(unitId, embeddedId),
                 getTFanSpeedCurrentCommand(currentMode, fanspeed));
         if (fanspeed.getValueMode().equals(Enums.FanSpeedMode.FIXED.getValue())) {
@@ -239,6 +252,7 @@ public class OnectaConnectionClient {
 
     public static void setCurrentFanDirection(String unitId, String embeddedId, Enums.OperationMode currentMode,
             Enums.FanMovement fanMovement) {
+        logger.debug(String.format("setCurrentFanDirection : %s, %s, %s", unitId, embeddedId, currentMode.getValue()));
         String url = getTFanControlUrl(unitId, embeddedId);
         switch (fanMovement) {
             case STOPPED:
@@ -276,12 +290,16 @@ public class OnectaConnectionClient {
 
     public static void setCurrentFanDirectionHor(String unitId, String embeddedId, Enums.OperationMode currentMode,
             Enums.FanMovementHor fanMovement) {
+        logger.debug(
+                String.format("setCurrentFanDirectionHor : %s, %s, %s", unitId, embeddedId, currentMode.getValue()));
         String url = getTFanControlUrl(unitId, embeddedId);
         doBearerRequestPatch(url, OnectaProperties.getTFanDirectionHorCommand(currentMode, fanMovement));
     }
 
     public static void setCurrentFanDirectionVer(String unitId, String embeddedId, Enums.OperationMode currentMode,
             Enums.FanMovementVer fanMovement) {
+        logger.debug(
+                String.format("setCurrentFanDirectionVer : %s, %s, %s", unitId, embeddedId, currentMode.getValue()));
         String url = getTFanControlUrl(unitId, embeddedId);
         doBearerRequestPatch(url, OnectaProperties.getTFanDirectionVerCommand(currentMode, fanMovement));
     }

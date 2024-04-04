@@ -53,7 +53,7 @@ public class DeviceDiscoveryService extends AbstractDiscoveryService {
             List<Unit> units = OnectaConnectionClient.getUnits().getAll();
             for (int i = 0; i < units.size(); i++) {
                 unitId = units.get(i).getId().toString();
-                unitName = units.get(i).findManagementPointsByType("climateControl").getNameValue();
+                unitName = units.get(i).findManagementPointsByType(CLIMATECONTROL).getNameValue();
                 unitName = !unitName.isEmpty() ? unitName : unitId;
                 properties = new LinkedHashMap<>();
                 properties.put("unitID", unitId);

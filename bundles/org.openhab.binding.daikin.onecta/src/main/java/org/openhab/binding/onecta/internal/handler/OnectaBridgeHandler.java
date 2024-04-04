@@ -71,36 +71,12 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
-        // if (CHANNEL_1.equals(channelUID.getId())) {
-        // if (command instanceof RefreshType) {
-        // // TODO: handle data refresh
-        // }
-        //
-        // // TODO: handle command
-        //
-        // // Note: if communication with thing fails for some reason,
-        // // indicate that by setting the status with detail information:
-        // // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
-        // // "Could not control device at IP address x.x.x.x");
-        // }
     }
 
     @Override
     public void initialize() {
         config = getConfigAs(OnectaConfiguration.class);
 
-        // TODO: Initialize the handler.
-        // The framework requires you to return from this method quickly, i.e. any network access must be done in
-        // the background initialization below.
-        // Also, before leaving this method a thing status from one of ONLINE, OFFLINE or UNKNOWN must be set. This
-        // might already be the real thing status in case you can decide it directly.
-        // In case you can not decide the thing status directly (e.g. for long running connection handshake using WAN
-        // access or similar) you should set status UNKNOWN here and then decide the real status asynchronously in the
-        // background.
-
-        // set the thing status to UNKNOWN temporarily and let the background task decide for the real status.
-        // the framework is then able to reuse the resources from the thing handler initialization.
-        // we set this upfront to reliably check status updates in unit tests.
         updateStatus(ThingStatus.UNKNOWN);
         try {
             String refreshToken = thing.getConfiguration().get(CHANNEL_REFRESH_TOKEN) == null ? ""
@@ -117,36 +93,11 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
         }
 
-        // Example for background initialization:
-        // scheduler.execute(() -> {
-
-        // try {
-        // //units = onactaConnectionClient.getUnits();
-        // updateStatus(ThingStatus.ONLINE);
-        // } catch (DaikinCommunicationException e) {
-        // updateStatus(ThingStatus.OFFLINE);
-        // }
-        //
-        // });
         pollingJob = scheduler.scheduleWithFixedDelay(this::pollDevices, 10,
                 Integer.parseInt(thing.getConfiguration().get(CHANNEL_REFRESHINTERVAL).toString()), TimeUnit.SECONDS);
 
         // Trigger discovery of Devices
         scheduler.submit(runnable);
-
-        // These logging types should be primarily used by bindings
-        // logger.trace("Example trace message");
-        // logger.debug("Example debug message");
-        // logger.warn("Example warn message");
-        //
-        // Logging to INFO should be avoided normally.
-        // See https://www.openhab.org/docs/developer/guidelines.html#f-logging
-
-        // Note: When initialization can NOT be done set the status with more details for further
-        // analysis. See also class ThingStatusDetail for all available status details.
-        // Add a description to give user information to understand why thing does not work as expected. E.g.
-        // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
-        // "Can not access device as username and/or password are invalid");
     }
 
     @Override
@@ -173,13 +124,6 @@ public class OnectaBridgeHandler extends BaseBridgeHandler {
         }
         try {
             OnectaConnectionClient.refreshUnitsData(getThing());
-            // if (thing.getConfiguration().get("showAvailableUnitsInLog").toString() == "true") {
-            //
-            // for (Unit unit : units.getAll()) {
-            // logger.info("Available Daikin unit UID : '{}' - '{}' .", unit.getId(), unit
-            // .findManagementPointsById(ManagementPoint.CLIMATECONTROL.getValue()).getName().getValue());
-            // }
-            // }
         } catch (DaikinCommunicationException e) {
             logger.debug("DaikinCommunicationException: " + e.getMessage());
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());

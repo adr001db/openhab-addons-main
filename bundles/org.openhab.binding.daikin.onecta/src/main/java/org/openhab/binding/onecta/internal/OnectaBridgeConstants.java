@@ -29,6 +29,7 @@ public class OnectaBridgeConstants {
     // List of all Device Types
     public static final String DEVICE = "device";
     public static final String GATEWAY = "gateway";
+    public static final String CLIMATECONTROL = "climateControl";
     public static final String WATERTANK = "domesticHotWaterTank";
     public static final String INDOORUNIT = "indoorUnit";
     public static final String CHANNEL_REFRESH_TOKEN = "refreshToken";
