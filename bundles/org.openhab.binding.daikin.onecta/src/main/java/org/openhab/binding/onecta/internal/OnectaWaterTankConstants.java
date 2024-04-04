@@ -32,11 +32,9 @@ public class OnectaWaterTankConstants {
     public static final String CHANNEL_HWT_IS_IN_WARNING_STATE = "basic#isinwarningstate";
     public static final String CHANNEL_HWT_IS_IN_INSTALLER_STATE = "basic#isininstallerstate";
     public static final String CHANNEL_HWT_IS_IN_EMERGENCY_STATE = "basic#isinemergencystate";
-    public static final String CHANNEL_HWT_IS_POWERFUL_MODE_ACTIVE = "basic#ispowerfulmodeactive";
     public static final String CHANNEL_HWT_POWERFUL_MODE = "basic#powerfulmode";
     public static final String CHANNEL_HWT_HEATUP_MODE = "basic#heatupmode";
     public static final String CHANNEL_HWT_TANK_TEMPERATURE = "basic#tanktemperature";
-    public static final String CHANNEL_HWT_OPERATION_MODE = "basic#operationmode";
     public static final String CHANNEL_HWT_SETPOINT_MODE = "basic#setpointmode";
     public static final String CHANNEL_HWT_SETTEMP = "basic#settemp";
     public static final String CHANNEL_HWT_SETTEMP_MIN = "basic#settempmin";

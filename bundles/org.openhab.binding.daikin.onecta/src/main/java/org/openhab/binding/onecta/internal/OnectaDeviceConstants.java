@@ -66,6 +66,5 @@ public class OnectaDeviceConstants {
     public static final String CHANNEL_AC_ENERGY_HEATING_CURRENT_YEAR = "consumptionDataHeating#energyheatingcurrentyear";
     public static final String CHANNEL_AC_ENERGY_COOLING_CURRENT_DAY = "consumptionDataCooling#energycoolingcurrentday";
     public static final String CHANNEL_AC_ENERGY_COOLING_CURRENT_YEAR = "consumptionDataCooling#energycoolingcurrentyear";
-
     public static final String PROPERTY_AC_NAME = "name";
 }

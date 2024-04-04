@@ -75,9 +75,8 @@ public class OnectaProperties {
                 COMMAND_OPERATIONMODE);
     }
 
-    public static String getTargetTemperaturUrl(String unitId, Enums.ManagementPoint managementPointType) {
-        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, managementPointType.getValue(),
-                COMMAND_TARGETTEMPERATURECONTROL);
+    public static String getTargetTemperaturUrl(String unitId, String embeddedId) {
+        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, embeddedId, COMMAND_TARGETTEMPERATURECONTROL);
     }
 
     public static CommandFloat getTargetTemperaturCommand(float value) {
@@ -88,9 +87,8 @@ public class OnectaProperties {
         return new CommandString(operationMode.getValue());
     }
 
-    public static String getTemperatureControlUrl(String unitId, Enums.ManagementPoint managementPointType) {
-        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, managementPointType.getValue(),
-                COMMAND_TEMPERATURECONTROL);
+    public static String getTemperatureControlUrl(String unitId, String embeddedId) {
+        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, embeddedId, COMMAND_TEMPERATURECONTROL);
     }
 
     public static CommandFloat getTemperatureRoomControlCommand(float value, Enums.OperationMode currentMode) {
@@ -112,9 +110,8 @@ public class OnectaProperties {
                 String.format(COMMAND_SUBPATH_TEMPERATURECONTROL_HOTWATERTANK, currentMode.getValue()));
     }
 
-    public static String getTFanControlUrl(String unitId, Enums.ManagementPoint managementPointType) {
-        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, managementPointType.getValue(),
-                COMMAND_FANSPEED_CONTROL);
+    public static String getTFanControlUrl(String unitId, String embeddedId) {
+        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, embeddedId, COMMAND_FANSPEED_CONTROL);
     }
 
     public static CommandString getTFanSpeedCurrentCommand(Enums.OperationMode currentMode, Enums.FanSpeed fanspeed) {
@@ -139,19 +136,16 @@ public class OnectaProperties {
                 String.format(COMMAND_SUBPATH_FANDITECTION_VER, currentMode.getValue()));
     }
 
-    public static String getStreamerMode(String unitId, Enums.ManagementPoint managementPointType) {
-        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, managementPointType.getValue(),
-                COMMAND_STREAMERMODE);
+    public static String getStreamerMode(String unitId, String embeddedId) {
+        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, embeddedId, COMMAND_STREAMERMODE);
     }
 
-    public static String getHolidayMode(String unitId, Enums.ManagementPoint managementPointType) {
-        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, managementPointType.getValue(),
-                COMMAND_HOLIDAYMODE);
+    public static String getHolidayMode(String unitId, String embeddedId) {
+        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, embeddedId, COMMAND_HOLIDAYMODE);
     }
 
-    public static String getTDemandControlUrl(String unitId, Enums.ManagementPoint managementPointType) {
-        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, managementPointType.getValue(),
-                COMMAND_DEMAND_CONTROL);
+    public static String getTDemandControlUrl(String unitId, String embeddedId) {
+        return String.format(getBaseUrl(unitId) + BASE_URL_COMMAND, embeddedId, COMMAND_DEMAND_CONTROL);
     }
 
     public static CommandString getTDemandControlCommand(Enums.DemandControl value) {

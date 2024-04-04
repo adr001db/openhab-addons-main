@@ -9,8 +9,8 @@
 			<bridge-type-ref id="account"/>
 		</supported-bridge-type-refs>
 
-		<label>Diakin Onecta device</label>
-		<description>Diakin Onecta device</description>
+		<label>Diakin Onecta device climateControl</label>
+		<description>Diakin Onecta device climateControl</description>
 
 		<channel-groups>
 			<channel-group id="basic" typeId="basicGroup"/>
@@ -1577,10 +1577,10 @@
 
 	<channel-type id="acunit-setleavingWaterOffset">
 		<item-type>Number:Temperature</item-type>
-		<label>SetPoint Leaving water offset</label>
-		<description>SetPoint Leaving water offset </description>
+		<label>SetPoint Leaving water offset.</label>
+		<description>SetPoint Leaving water offset.</description>
 		<category>Temperature</category>
-		<state step="1" pattern="%.1d %unit%" min="-100"/>
+		<state step="1" pattern="%.0f %unit%" min="-100"/>
 	</channel-type>
 
 	<channel-type id="acunit-setleavingWaterTemp">
@@ -1600,22 +1600,22 @@
 	</channel-type>
 	<channel-type id="acunit-targetTempMin">
 		<item-type>Number:Temperature</item-type>
-		<label>Target Temperatur Min value</label>
+		<label>Target Temperature Min value</label>
 		<description>The target min temperature</description>
 		<category>Temperature</category>
 		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
 	<channel-type id="acunit-targetTempMax">
 		<item-type>Number:Temperature</item-type>
-		<label>Target Temperatur Max value</label>
+		<label>Target Temperature Max value</label>
 		<description>The target max temperature</description>
 		<category>Temperature</category>
 		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>
 	<channel-type id="acunit-targetTempStep">
 		<item-type>Number:Temperature</item-type>
-		<label>Target Temperatur value step</label>
-		<description>The target temperatur value step</description>
+		<label>Target Temperature value step</label>
+		<description>The target temperature value step</description>
 		<category>Temperature</category>
 		<state readOnly="true" pattern="%.1f %unit%"/>
 	</channel-type>

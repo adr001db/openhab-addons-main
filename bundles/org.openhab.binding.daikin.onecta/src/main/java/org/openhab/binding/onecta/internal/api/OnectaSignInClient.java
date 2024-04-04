@@ -7,6 +7,8 @@ import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.ws.rs.core.MediaType;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jetty.client.HttpClient;
@@ -19,7 +21,6 @@ import org.openhab.binding.onecta.internal.OnectaConfiguration;
 import org.openhab.binding.onecta.internal.api.dto.authentication.*;
 import org.openhab.binding.onecta.internal.exception.DaikinCommunicationException;
 import org.openhab.binding.onecta.internal.exception.DaikinCommunicationForbiddenException;
-import org.openhab.core.io.net.http.HttpClientFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,15 +30,31 @@ import com.google.gson.JsonParser;
 
 @NonNullByDefault
 public class OnectaSignInClient {
+
     private final Logger logger = LoggerFactory.getLogger(OnectaSignInClient.class);
 
-    private static final String API_HOST = "https://jbv1-api.emotorwerks.com/";
+    public static final String PARAM_LOGIN_ID = "loginID";
+    public static final String PARAM_PASSWORD = "password";
+    public static final String PARAM_SESSION_EXPIRATION = "sessionExpiration";
+    public static final String PARAM_TARGET_ENV = "targetEnv";
+    public static final String PARAM_INCLUDE = "include";
+    public static final String PARAM_LOGIN_MODE = "loginMode";
+    public static final String PARAM_RISK_CONTEXT = "riskContext";
+    public static final String PARAM_API_KEY = "APIKey";
+    public static final String PARAM_SDK = "sdk";
+    public static final String PARAM_AUTH_MODE = "authMode";
+    public static final String PARAM_PAGE_URL = "pageURL";
+    public static final String PARAM_SDK_BUILD = "sdkBuild";
+    public static final String PARAM_SAML_CONTEXT = "samlContext";
+    public static final String PARAM_LOGIN_TOKEN = "loginToken";
+    public static final String PARAM_SAML_RESPONSE = "SAMLResponse";
+    public static final String PARAM_RELAY_STATE = "RelayState";
+    public static final String HTTPHEADER_X_AMZ_TARGET = "x-amz-target";
+
     private static final String DAIKIN_ISSUER = "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_SLI9qJpc7/.well-known/openid-configuration";
-    private static final String DAIKIN_CLOUD_URL = "https://daikin-unicloud-prod.auth.eu-west-1.amazoncognito.com";
     private static final String APIKEY = "3_xRB3jaQ62bVjqXU1omaEsPDVYC0Twi1zfq1zHPu_5HFT0zWkDvZJS97Yw1loJnTm";
     private static final String APIKEY_2 = "3_QebFXhxEWDc8JhJdBWmvUd1e0AaWJCISbqe4QIHrk_KzNVJFJ4xsJ2UZbl8OIIFY";
     private static final String OPENID_CLIENT_ID = "7rk39602f0ds8lk0h076vvijnb";
-    private static final String DAIKIN_CLOUD_VERION = "v1.3.5 - 02.06.2023";
 
     private String refreshToken = "";
     private String userId = "";
@@ -47,10 +64,6 @@ public class OnectaSignInClient {
 
     private RespAuthenticationRoot respAuthenticationRoot = new RespAuthenticationRoot();
 
-    public OnectaSignInClient(HttpClientFactory httpClientFactory) {
-        // this.httpClient = httpClientFactory.getCommonHttpClient();
-    }
-
     public String getToken() {
         return respAuthenticationRoot.getAuthenticationResult().getAccessToken();
     }
@@ -58,7 +71,7 @@ public class OnectaSignInClient {
     public static String getSamlContext(String query) {
         String[] params = query.split("&");
         for (String param : params) {
-            if (param.split("=")[0].equals("samlContext")) {
+            if (param.split("=")[0].equals(PARAM_SAML_CONTEXT)) {
                 return param.split("=")[1];
             }
             String value = param.split("=")[1];
@@ -149,7 +162,7 @@ public class OnectaSignInClient {
             logger.debug("Prepare request to get single-sign-on cookie");
             url = String.format("https://cdc.daikin.eu/accounts.webSdkBootstrap?apiKey=%s&sdk=js_latest&format=json",
                     APIKEY);
-            response = httpClient.GET(url);
+            httpClient.GET(url);
             // Get ssoCookie
             String ssoCookieString = "";
             for (HttpCookie cookie : httpClient.getCookieStore().getCookies()) {
@@ -165,14 +178,21 @@ public class OnectaSignInClient {
 
             logger.debug("User logon to Daikin");
             response = httpClient.newRequest("https://cdc.daikin.eu/accounts.login").method(HttpMethod.POST)
-                    .header("content-type", "application/x-www-form-urlencoded").header("cookie", ssoCookieString)
-                    .param("loginID", userId).param("password", password).param("sessionExpiration", "31536000")
-                    .param("targetEnv", "jssdk").param("include", "profile,").param("loginMode", "standard")
-                    .param("riskContext", "{\"b0\":7527,\"b2\":4,\"b5\":1").param("APIKey", APIKEY)
-                    .param("sdk", "js_latest").param("authMode", "cookie")
-                    .param("pageURL",
-                            "https://my.daikin.eu/content/daikinid-cdc-saml/en/login.html?samlContext=" + samlContext)
-                    .param("sdkBuild", "12208").param("format", "json").send();
+                    .header(HttpHeader.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED) //
+                    .header(HttpHeader.COOKIE, ssoCookieString) //
+                    .param(PARAM_LOGIN_ID, userId)//
+                    .param(PARAM_PASSWORD, password)//
+                    .param(PARAM_SESSION_EXPIRATION, "31536000")//
+                    .param(PARAM_TARGET_ENV, "jssdk")//
+                    .param(PARAM_INCLUDE, "profile,")//
+                    .param(PARAM_LOGIN_MODE, "standard")//
+                    .param(PARAM_RISK_CONTEXT, "{\"b0\":7527,\"b2\":4,\"b5\":1")//
+                    .param(PARAM_API_KEY, APIKEY)//
+                    .param(PARAM_SDK, "js_latest") //
+                    .param(PARAM_AUTH_MODE, "cookie")//
+                    .param(PARAM_PAGE_URL,
+                            "https://my.daikin.eu/content/daikinid-cdc-saml/en/login.html?samlContext=" + samlContext)//
+                    .param(PARAM_SDK_BUILD, "12208").param("format", "json").send();
 
             // step 7 extract login-token
             logger.debug("Extract login-token");
@@ -195,8 +215,10 @@ public class OnectaSignInClient {
             ssoCookieString += String.format("gig_loginToken_%s_visited=%s; ", APIKEY_2, "%2C" + APIKEY);
 
             url = String.format("https://cdc.daikin.eu/saml/v2.0/%s/idp/sso/continue", APIKEY);
-            response = httpClient.newRequest(url).method(HttpMethod.POST).header("cookie", ssoCookieString)
-                    .param("samlContext", samlContext).param("loginToken", loginToken).send();
+            response = httpClient.newRequest(url).method(HttpMethod.POST)//
+                    .header(HttpHeader.COOKIE, ssoCookieString)//
+                    .param(PARAM_SAML_CONTEXT, samlContext)//
+                    .param(PARAM_LOGIN_TOKEN, loginToken).send();
 
             pattern = Pattern.compile("name=\"SAMLResponse\" value=\"([^\"]+)");
             matcher = pattern.matcher(response.getContentAsString());
@@ -213,8 +235,10 @@ public class OnectaSignInClient {
             httpClient.setFollowRedirects(false);
             httpClient.setRequestBufferSize(20000);
             response = httpClient.newRequest(saml2Endpoint).method(HttpMethod.POST)
-                    .header("content-type", "application/x-www-form-urlencoded").header("cookie", cookieString)
-                    .param("SAMLResponse", samlResponse).param("RelayState", relayState).send();
+                    .header(HttpHeader.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)//
+                    .header(HttpHeader.COOKIE, cookieString)//
+                    .param(PARAM_SAML_RESPONSE, samlResponse)//
+                    .param(PARAM_RELAY_STATE, relayState).send();
 
             String daikinUnified = response.getHeaders().get(HttpHeader.LOCATION).split("code=")[1];
             httpClient.setFollowRedirects(true);
@@ -225,7 +249,8 @@ public class OnectaSignInClient {
                     + createdClientSecret + "&client_id=" + OPENID_CLIENT_ID
                     + "&redirect_uri=daikinunified%3A%2F%2Flogin";
             response = httpClient.newRequest(url).method(HttpMethod.POST)
-                    .header("content-type", "application/x-www-form-urlencoded").header("cookie", cookieString).send();
+                    .header(HttpHeader.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)//
+                    .header(HttpHeader.COOKIE, cookieString).send();
 
             jsonResponse = JsonParser.parseString(response.getContentAsString()).getAsJsonObject();
             RespTokenResult respTokenResult = Objects
@@ -233,6 +258,8 @@ public class OnectaSignInClient {
 
             this.refreshToken = respTokenResult.getRefreshToken();
             fetchAccessToken();
+            logger.debug("Login successful");
+
         } catch (InterruptedException e) {
             logger.warn("Login failed" + e.getMessage());
         } catch (ExecutionException e) {
@@ -257,11 +284,11 @@ public class OnectaSignInClient {
 
         Request request = httpClient.POST("https://cognito-idp.eu-west-1.amazonaws.com");
 
-        request.header("x-amz-target", "AWSCognitoIdentityProviderService.InitiateAuth");
-        request.header("Content-Type", "application/x-amz-json-1.1");
+        request.header(HTTPHEADER_X_AMZ_TARGET, "AWSCognitoIdentityProviderService.InitiateAuth");
+        request.header(HttpHeader.CONTENT_TYPE, "application/x-amz-json-1.1");
         request.content(
                 new StringContentProvider(new Gson().toJson(reqAuthenticationRoot, ReqAuthenticationRoot.class)),
-                "application/json");
+                MediaType.APPLICATION_JSON);
 
         ContentResponse response = null;
         respAuthenticationRoot.getAuthenticationResult().setAccessToken("");
